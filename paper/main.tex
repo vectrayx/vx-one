@@ -95,7 +95,7 @@ with a modified per-task reference uncertainty so that task-scale differences (l
 
 \subsection{Decision controller semantics}
 \label{sec:gates}
-The controller composes three binary gates from calibrated head outputs: the trained gate ($p^{\mathrm{cal}} \ge \tau_{\mathrm{det}}$, default 0.5); a drop gate on the exact CORN marginal $C_2 = \mathbb{P}(\mathrm{sev}\ge 2 \mid x)$; and a low-urgency gate on the \texttt{recon} coordinate of the choice head. The severity rubric makes both implications exact---$\mathrm{sev}\ge 2 \Rightarrow \text{attack}$ and $\text{recon} \Rightarrow \mathrm{sev}{=}1$---and they are verified with zero rule violations on 3{,}09M labeled flows, so each gate's target event coincides with exactly the event its own head estimates.
+The controller composes three binary gates from calibrated head outputs: the trained gate ($p^{\mathrm{cal}} \ge \tau_{\mathrm{det}}$, default 0.5); a drop gate on the exact CORN marginal $C_2 = \mathbb{P}(\mathrm{sev}\ge 2 \mid x)$; and a low-urgency gate on the \texttt{recon} coordinate of the choice head. The severity rubric makes both implications exact---$\mathrm{sev}\ge 2 \Rightarrow \text{attack}$ and $\text{recon} \Rightarrow \mathrm{sev}{=}1$---and they are verified with zero rule violations on 3.09M labeled flows, so each gate's target event coincides with exactly the event its own head estimates.
 
 \paragraph{Gates are single-head functionals, by design.} For single-head functionals, post-processing (de-tilt, temperature, thresholding) keeps the calibration error within a bound determined by the head's own deficiency (Appendix~\ref{app:formal}, Lemma~1). Across heads, \emph{no useful composition bound exists}: two perfectly-calibrated heads can combine into a joint policy whose calibration error is $1/4$ in the worst case, whatever the marginal ECEs say (Appendix~\ref{app:formal}, Prop.~4)---and the $A{=}B$ case that attains it (two heads estimating the same underlying question) is the realistic one in security. The controller therefore composes \emph{boolean decisions} between gates and never \emph{probabilities} between heads; any future composed gate must be rubric-reducible to a single head, or measure its own joint calibration.
 
@@ -219,7 +219,7 @@ webattack      & 0.9792 & 0.1550 & 0.00 & 327 \\
 \subsection{E4 --- Latency}
 \label{sec:e4}
 
-Tables measure single-event, batch=1, single-thread CPU, 3{,}000 events, on each model's exact released weights (Table~\ref{tab:e4}).
+Measurements use single-events, batch=1, single-thread CPU, 3{,}000 timed events per model, on each model's exact released weights (Table~\ref{tab:e4}).
 
 \begin{table}[t]
 \caption{E4 latency (single-event, batch=1, 1 thread, CPU). Well within a $<$10\,ms design budget with margin $\ge 5\times$.}
