@@ -44,8 +44,15 @@ no de los números aspiracionales del draft antiguo.
 ## Estado
 
 - [x] Experimentos E1–E6 ejecutados (ver `docs/EXPERIMENTS.md`).
-- [x] Paper `paper/main.tex` completo (ACM sigconf, con Apéndice A formal desde el advisory Opus) + `paper/refs.bib` (39 entradas; las 12 fuentes System One/productos con URLs verificadas 2026-10-16).
-- [ ] Compilar el PDF (no hay `pdflatex` local; compilar en Overleaf o con `tectonic`: `tectonic -X compile paper/main.tex`).
+- [x] **Paper `paper/main.tex` completo (ACM sigconf, con Apéndice A formal desde el advisory Opus) + `paper/refs.bib` (39 entradas; las 12 fuentes System One/productos con URLs verificadas 2026-10-16).**
+- [x] **PDF compilado localmente**: `paper/main.pdf` (9 páginas, ACM sigconf, 0 citas/referencias sin resolver). Para recompilar:
+  ```bash
+  pdflatex -interaction=nonstopmode paper/main.tex   # desde la raíz del repo
+  BIBINPUTS=paper: BSTINPUTS=paper: bibtex main
+  pdflatex -interaction=nonstopmode paper/main.tex
+  pdflatex -interaction=nonstopmode paper/main.tex   # los artefactos quedan en la raíz
+  ```
+  Los paquetes ACM que la TeX Live 2024 de Fedora no traía (`acmart`, `libertine`, `newtx`, `ec`, `cm-super`, etc.) están instalados en `~/texmf` (TEXMFHOME), fetched del histórico TL2024 — no hace falta repetir nada.
 - [ ] E7 (baseline comercial vía API) — no ejecutado; queda como pendiente barato (~$2).
 - [ ] Pendientes mínimos del advisory que reusan logits ya computados (§12 de `docs/EXPERIMENTS.md`): sweep de τ_abs + risk-coverage, reliability por condicional CORN, classwise calibration, diagnóstico Bayes-vs-Chow.
 - [ ] 3 seeds en las 4 corridas principales de tablas (diferencias <1 pt son ruido hasta entonces).
