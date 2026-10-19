@@ -1,0 +1,388 @@
+%% VX-One paper — ACM sigconf
+%% arXiv tags: cs.CL, cs.CR, cs.LG
+%% Compile: pdflatex -> bibtex -> pdflatex x2
+\documentclass[sigconf,anonymous=false]{acmart}
+
+%% ------------------------------------------------------------- metadata
+\acmConference[VX-One '26]{Security \& ML Workshop (draft for submission)}{October 2026}{}
+\acmYear{2026}
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+
+\begin{document}
+
+\title{VX-One: Typed, Calibrated Decision Heads for Real-Time Perimeter Triage\\
+  {\normalsize An empirical study of unknown-attack honesty, cascade gray zones, and calibration under drift}}
+
+\author{Juan Santillana}
+\email{juan@jsantillana.com}
+\affiliation{\institution{Independent research}\city{}\country{}}
+
+%% -----------------------------------------------------------------------
+\begin{abstract}
+Perimeter triage faces a latency/semantics trade-off: signature engines are fast and format-safe but blind to unseen attacks, while generative models are semantic but slow and produce unparseable output. In late 2026 a class of commercial \emph{System One} decision models (TypeSafe Jev; Microsoft-Decision-1) began selling typed decision primitives---binary gates, closed-set choices, ordinal scores---as product APIs, with no academic treatment or independent evaluation. We present \emph{VX-One}: a small multi-head network (100K--10M parameters) whose outputs \emph{are} these primitives—a calibrated \emph{gate}, a \emph{choice} over a closed candidate set that always includes an explicit \texttt{unknown} option, and an ordinal \emph{score} (conditional ordinal regression), trained multi-task, temperature-calibrated per head ($\sim$0.7--1.7\,ms single-event latency p50 on CPU). We evaluate it on three public benchmarks (UNSW-NB15, CIC-IDS2017, EMBER2024) against calibrated XGBoost, Random-Forest, MLP, and Kitsune baselines, and measure a two-phase cascade (Suricata with 52{,}674 Emerging-Threats rules $\to$ VX-One) over five days of CIC-IDS2017. Our findings are deliberately double-sided: (i) VX-One wins \emph{detection} (AUROC/FPR@95\%TPR) against every calibrated baseline on UNSW-NB15 and under temporal drift on CIC-IDS2017 (0.711 vs.\ 0.637), but calibrated XGBoost wins multi-class \emph{attribution} on all three benchmarks; (ii) under leave-one-family-out the gate detects never-seen families on 9/9 UNSW folds yet drops below chance on CIC's \emph{recon} family, and an abstention threshold calibrated on one benchmark transfers poorly to another; (iii) signature engines resolve only $\sim$0.1\% of daily flows on payload-less traffic---the operational \emph{gray zone} is $\sim$99.9\% of the traffic, which Phase 2 recovers (combined recall $\ge$0.978); (iv) probability calibration collapses under temporal drift (ECE 0.04$\to$0.40) for \emph{every} method while ranking partially survives. We contribute not novel estimators but a measured account of where typed calibrated decisions help perimeter triage, and where they fail.
+\end{abstract}
+
+\keywords{intrusion detection, calibrated decisions, out-of-distribution detection, malware classification, two-phase triage}
+
+\maketitle
+
+%% ================================================================ INTRO
+\section{Introduction}
+\label{sec:intro}
+
+Operating a mitigation policy on the network boundary requires, simultaneously: nanosecond-scale decisions on the line of fire, calibrated confidences that a controller can threshold, and honest behavior on events that training has never seen. Three incumbent technology classes each miss at least one requirement.
+
+\begin{enumerate}
+  \item \textbf{Deterministic engines} (Snort~\cite{roesch1999snort}, Suricata~\cite{suricata}, Zeek/Bro~\cite{paxson1999bro}, YARA~\cite{yara}) are fast and format-safe but structurally blind to zero-day and low-and-slow offensives; the recurring failure mode is a rule explosion that no operations team can maintain.
+  \item \textbf{Text LLMs for security} (e.g., SecureBERT~\cite{aghaei2022securebert})---~\emph{bidirectional encoders, not autoregressive models}, a conflation we correct---bring domain semantics, but as fine-grained decision engines on the line of fire they are heavy, and decoder-style LLM agents add generation latency and output-format fragility that a mitigation controller cannot tolerate.
+  \item \textbf{Classical ML for intrusion detection} performs well on tabular attribution---XGBoost~\cite{chen2016xgboost} wins our attribution benchmarks---but treats every event as a membership test, producing confident misattributions on families the model never saw (Section~\ref{sec:e2}).
+\end{enumerate}
+
+During October 2026, a commercial class of models positioned exactly at this gap began to ship: \emph{System One} decision models, sold as APIs that take a structured \texttt{state} plus typed questions and return calibrated option probabilities (TypeSafe's Jev~\cite{jevdocs,typesafejev}; Microsoft-Decision-1~\cite{msdecision1,mslearn-decision1}). No peer-reviewed academic literature covers the class, its evaluation is vendor-reported, and no security-domain assessment exists.
+
+This paper occupies the gap \emph{by building the primitives ourselves} rather than remoting into a vendor API. VX-One maps a fixed-size event state to three typed decisions in a single forward pass, then evaluates the whole pipeline---including a real signature engine in front of it---on public data with anti-strawman baselines. The contributions are:
+
+\begin{itemize}
+\item \textbf{A typed decision engine} (Section~\ref{sec:design}): shared encoder + three primitive heads---\emph{gate} (calibrated sigmoid), \emph{choice} (softmax over a declared closed set that \emph{always contains} \texttt{unknown}), \emph{score} (CORN conditional ordinal regression~\cite{shi2023corn})---with per-head temperature calibration on validation data, trained multi-task with a homoscedastic weighting scheme~\cite{kendall2018multitask}.
+\item \textbf{Unknown-attack honesty, measured} (Section~\ref{sec:e2}): leave-one-attack-family-out across 9 UNSW-NB15 and 7 CIC-IDS2017 families, plus 4 months of EMBER2024 family drift, reporting both unseen-family detection (gate AUROC) and \emph{attribution honesty} (how often the \texttt{unknown} option absorbs what the model should not claim to know).
+\item \textbf{A measured gray zone} (Section~\ref{sec:e5}): Suricata 7 with 52{,}674 live Emerging-Threats rules over flow-reconstructed CIC-IDS2017 traffic resolves only $\sim$0.1\% of daily flows without payload access; the combined cascade recovers it with recall $\ge 0.978$, at the cost of a measured precision drop on web-attack days where Phase~1 is entirely blind.
+\item \textbf{Negative results, measured} (Sections~\ref{sec:e1}--\ref{sec:e6}): calibration collapses under drift for every method (ECE 0.04$\to$0.40); class-weight tilts that help weak-label attribution can \emph{hurt} it on saturated benchmarks; a fixed abstention threshold is not portable across calibrations; dropping the \texttt{unknown} option raises macro-F1 by up to $+11.2$ points---the honesty/utility trade-off is real and quantifiable.
+\end{itemize}
+
+Our heads are standard estimators; we say so. The claim is about their \emph{packaging and evaluation}: event-level honesty instead of confident misattribution, measured end-to-end on data with audited labels~\cite{engels2021,rosay2022errors}.
+
+%% ============================================================= RELATED
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{System One decision models.} Microsoft's announcement~\cite{msdecision1} and documentation~\cite{mslearn-decision1} define the primitive triad (binary gate / closed-set choice / ordinal score) with calibrated option probabilities and single-pass scoring; TypeSafe's Jev~\cite{jevdocs,typesafejev} commercialized the framing earlier in 2026. Both are vendor announcements without peer-reviewed evaluation; benchmarks cited (193.6$\times$ faster, 444.6$\times$ cheaper) are industry claims. Our work is the first academic instantiation and security-domain evaluation of the triad; we use their \emph{names} only for attribution, define our own formal objects (Section~\ref{sec:design}), and deliberately avoid inheriting vendor terminology as if it were neutral vocabulary.
+
+\paragraph{Single-pass inference.} ``Non-autoregressive'' originates in neural machine translation~\cite{gu2018nat}: full output in one forward pass, no decoding loop. We use the term strictly for architecture (shared trunk, parallel typed heads). We do not claim novelty from single-pass-ness---BERT-family classifiers are also single-pass---and our baselines include appropriate encoders; the differentiator is typed calibrated outputs, not one-pass-ness alone. Fast early-exit decision layers for per-event actions predate this design in spirit---the Viola--Jones cascade~\cite{violajones2001} is their ancestor.
+
+\paragraph{Calibration and abstention.} Platt scaling~\cite{platt1999}, multiclass probability transforms~\cite{zadrozny2002}, empirical per-family calibration gaps~\cite{niculescu2005}, and temperature scaling~\cite{guo2017calibration} define our post-hoc protocol; conformal prediction~\cite{vovk2005,angelopoulos2021} is an optional wrapper we defer, noting that distribution-free coverage claims need exchangeability that temporal splits violate~\cite{barber2023}. Chow's reject option~\cite{chow1970} and selective classification~\cite{geifman2017} ground our abstention semantics: with symmetric rejection cost the Bayes-optimal threshold is $1-\lambda_r = 0.5$, which is the threshold we initially set, and we measure how poorly it transfers where the model is overconfident (Section~\ref{sec:e2}).
+
+\paragraph{Signature engines and their limits.} Snort~\cite{roesch1999snort}, Zeek~\cite{paxson1999bro}, YARA~\cite{yara}, and Suricata~\cite{suricata} anchor the deterministic tier. The DARPA-critique tradition~\cite{mchugh2000,mahoney2003} set the standard for dataset skepticism; audits of CICIDS2017~\cite{engels2021,rosay2022errors} document systematic labeling errors. We use both stratified and temporal splits and audit against the corrected labels.
+
+\paragraph{ML on network traffic and malware.} Kitsune~\cite{mirsky2018kitsune} is the canonical packet-level unsupervised ensemble; we adapt it to flows (documented) and report its Platt-calibrated but weakly discriminative AUROC ($\approx$0.61) as a concrete instance of ``calibration creates no signal''. Boosted trees~\cite{chen2016xgboost} are the attribution baseline our engine \emph{loses to} on all three benchmarks---we calibrate them with the same protocol to make the comparison non-strawman. EMBER2018~\cite{anderson2018ember} and EMBER2024~\cite{botacin2024ember}, UNSW-NB15~\cite{moustafa2015unsw}, and CIC-IDS2017~\cite{sharafaldin2018cicids} supply the data tiers. Viola--Jones~\cite{violajones2001} is the ancestor of our second-phase-only-when-needed cascade.
+
+%% ============================================================= 3 DESIGN
+\section{VX-One Design}
+\label{sec:design}
+
+\subsection{State object}
+Each telemetry event is compiled to a flat state
+\[
+S \;=\; \bigl(x_{\mathrm{num}} \in \mathbb{R}^{d},\; x_{\mathrm{txt}}\bigr),
+\]
+where $d \in \{39 \text{ (UNSW)}, 77 \text{ (CIC-IDS2017)}, 2568 \text{ (EMBER2024)}\}$ and $x_{\mathrm{txt}}$ are protocol-level categorical fields (proto, service, state) when the benchmark provides them (UNSW only). The feature stage $\phi$ (median imputation of non-finite values with a row flag; signed $\log 1p$; robust scaling by train median/IQR; clip to $\pm8$) normalizes arbitrarily heavy-tailed benchmark features into a fixed-size vector. Everything is byte-level reproducible from frozen JSON configs with a single \texttt{SEED=42}.
+
+\subsection{Trunk and typed heads}
+A small pre-norm MLP trunk ($L\in\{2..8\}$ blocks of [Linear $\to$ LayerNorm $\to$ GELU $\to$ Dropout 0.1], residual from block 2) maps $\phi(S)$ plus text-lookup embeddings to a shared representation $h = f_\theta(S)$, feeding four heads---one per typed primitive:
+
+\begin{align}
+\text{\emph{gate}}: \quad & \operatorname{gate}(S) = \sigma(w_1^{\top} h + b) \in [0,1]; \tag{Gate}\\[-2pt]
+\text{\emph{choice}}: \quad & \mathbf{p} = \mathrm{softmax}(W_C h), \quad \mathcal{C} \ni \texttt{unknown}; \tag{Choice}\\[-2pt]
+\text{\emph{score}}: \quad & \pi_k = \prod_{i\le k} \sigma_q(h), \tag{Score}
+\end{align}
+where the Score head is conditional ordinal regression (CORN~\cite{shi2023corn}) over four severity levels---benign, low, high, critical---and the choice head is a closed candidate set declared per dataset. We deliberately use \emph{neutral} head names rather than vendor naming conventions. Trunk depth/width by scale ($L,w$): $2/224$ (Nano), $3/576$ (Small), $4/1280$ (Base), with reduced input projections on EMBER2024 (whose 2568-dim feature projection dominates the parameter budget); verified parameter counts on UNSW-NB15 are 97K / 914K / 5.9M, inside a hard $100\mathrm{K}/1\mathrm{M}/5$--$10\mathrm{M}$ budget that is enforced by unit test. The choice head's open-set semantics are \emph{hybrid}: where the training data offers a real \texttt{unknown} population (EMBER2024's 2.19M-file unknown ground truth), the option is a trained class; where it does not (UNSW, CIC), unknown is realized as abstention at decision time via $(\max_k p_k < \tau_{\mathrm{abs}})$, with $\tau_{\mathrm{abs}}$ and any composed policy belonging to the mitigation controller, not the network.
+
+\subsection{Training formulation}
+Multi-task loss
+\[
+\mathcal{L} ~ = ~ \sum_q \mathcal{L}_q,
+\]
+with a modified homoscedastic balancing~\cite{kendall2018multitask}: per-task reference uncertainty
+with a modified per-task reference uncertainty so that task-scale differences (ln~$K$ vs.\ ln~2 for Choice vs.\ Gate) do not dominate the initialization. Per-class loss weights on Choice use sqrt-normalized, mean-1 tilts $\omega_k$ with an \emph{analytic de-tilt} in inference ($z \mapsto z - \log\omega$) applied before calibration, so the recovered posterior remains population-correct. The gate loss is \emph{unweighted} BCE: weighting shifts the optimal logit by $\log(\omega_+/\omega_-)$, an offset temperature calibration cannot undo. Training uses AdamW (weight decay $10^{-2}$ on 2D weight matrices only), linear warmup ($5\%$) + cosine decay, gradient clipping at 1.0, mixed precision, and early stopping (patience 4) on validation loss. All backbone hyperparameters are frozen across datasets and scales (D11-like discipline).
+
+\subsection{Decision controller semantics}
+\label{sec:gates}
+The controller composes three binary gates from calibrated head outputs: the trained gate ($p^{\mathrm{cal}} \ge \tau_{\mathrm{det}}$, default 0.5); a drop gate on the exact CORN marginal $C_2 = \mathbb{P}(\mathrm{sev}\ge 2 \mid x)$; and a low-urgency gate on the \texttt{recon} coordinate of the choice head. The severity rubric makes both implications exact---$\mathrm{sev}\ge 2 \Rightarrow \text{attack}$ and $\text{recon} \Rightarrow \mathrm{sev}{=}1$---and they are verified with zero rule violations on 3.09M labeled flows, so each gate's target event coincides with exactly the event its own head estimates.
+
+\paragraph{Gates are single-head functionals, by design.} For single-head functionals, post-processing (de-tilt, temperature, thresholding) keeps the calibration error within a bound determined by the head's own deficiency (Appendix~\ref{app:formal}, Lemma~1). Across heads, \emph{no useful composition bound exists}: two perfectly-calibrated heads can combine into a joint policy whose calibration error is $1/4$ in the worst case, whatever the marginal ECEs say (Appendix~\ref{app:formal}, Prop.~4)---and the $A{=}B$ case that attains it (two heads estimating the same underlying question) is the realistic one in security. The controller therefore composes \emph{boolean decisions} between gates and never \emph{probabilities} between heads; any future composed gate must be rubric-reducible to a single head, or measure its own joint calibration.
+
+\paragraph{Thresholds are cost statements, not constants.} With uniform misclassification cost and escalation cost $\lambda_r$, the Bayes rule with rejection abstains iff $\max_k p_k < 1-\lambda_r$~\cite{chow1970,cortes2016rejection}: $\tau_{\mathrm{abs}}=0.5$ \emph{is} the statement $\lambda_r=0.5$ (unknown costs as much as a wrong attribution), and $\tau_{\mathrm{det}}=0.5$ \emph{is} the statement that missing an attack costs the same as a false alarm. For operators who hold different cost ratios, the mapping is the standard cost-sensitive one, $\tau^{*} = c_{\mathrm{FP}}/(c_{\mathrm{FP}}{+}c_{\mathrm{FN}})$~\cite{elkan2001}---e.g., a 10:1 miss:alarm ratio implies $\tau^{*}\approx0.091$; we keep 0.5 as the declared default and expose the mapping rather than tune silently. General policies with a full cost matrix live in the controller---max-prob abstraction can deviate from true Bayes when costs are asymmetric (an event with $\max_k p_k$ above threshold may have lower expected cost elsewhere)---and we measure the deviation of the abstraction on validation data rather than assume it away.
+
+%% ============================================================ 4 SETUP
+\section{Experimental Setup}
+\label{sec:setup}
+
+\paragraph{Data.} \emph{UNSW-NB15}~\cite{moustafa2015unsw}: 149{,}039 / 26{,}302 / 82{,}332 flows (official split); 9 attack families. \emph{CIC-IDS2017}~\cite{sharafaldin2018cicids} (MLCVE-corrected variant): 2.83M flows; two splits, stratified (sanity) and by-day (temporal drift). \emph{EMBER2024}~\cite{botacin2024ember}: 3.85M binaries; temporal split by week, with the public challenge set held out; 2.19M ground-truth-unknown training rows. Label errors in the original CICIDS2017 are documented~\cite{engels2021,rosay2022errors}; on top of the audited variant, we repair raw-label encoding artifacts (U+FFFD mojibake in the web-attack labels) and a singular/plural naming drift (\texttt{Backdoor}), which a naive ingestion would silently route to the \texttt{unknown} class; micro-classes (11 Heartbleed, 36 Infiltration flows) are retained rather than dropped and stratified exactly. Every count is checked against the frozen schema in code before any experiment runs.
+
+\paragraph{Baselines.} XGBoost (500 boosted trees, hist mode), Random Forest (300 trees, min-leaf 1), an MLP (2$\times$256), and Kitsune (9-autoencoder ensemble with feature bagging, Platt-calibrated on validation)---all trained with the \emph{same} feature stage, the same per-class loss weights where analogues exist, and the \emph{same} per-head temperature-scaling calibration as VX-One. This is anti-strawman discipline: boosted trees \emph{benefit} from the calibration fix~\cite{niculescu2005}, and we report them raw \emph{and} calibrated. A zero-shot API baseline from the commercial System One class (Section~\ref{sec:e7}) was planned; it was not executed this cycle.
+
+\paragraph{Metrics.} Detection: AUROC and \textbf{FPR@95\%TPR} (the FPR at the threshold capturing 95\% of true attacks---an operational line-of-fire number that accuracy-style metrics hide). Attribution: label-aware macro-F1 (GT-unknown rows excluded by label, as they have no known counterpart). Calibration: 15-bin ECE, MCE, Brier, NLL, and reliability diagrams, reported on raw and calibrated heads. Latency: single-thread, batch=1, 3{,}000 timed events, model-exact hardware recorded with each result.
+
+\paragraph{Infrastructure.} Training on serverless GPUs (L4) with atomic checkpointing and tested resumption; evaluation computed \emph{locally} from dumped raw logits so that all metric code is inspectable. 60 unit tests including end-to-end smoke training ($\mathtt{pytest}$, 60/60 green).
+
+%% ============================================================ 5 RESULTS
+\section{Results}
+\label{sec:results}
+
+\subsection{E1/E3 --- Detection, attribution, calibration}
+\label{sec:e1}
+
+Table~\ref{tab:e1} summarizes the two-tier comparison on test (calibrated temperatures). Three findings:
+
+\begin{table}[t]
+\caption{Test-set comparison (calibrated). VX: VX-One at three sizes. FPR@95 is FPR@95\%TPR. $^{\dagger}$ = under temporal drift. $^{a}$ = attribution benefiting from drift; $^{b}$ = detection plateau of saturation (all models $\approx$ 1.0). Full per-dataset table in the released results.}
+\label{tab:e1}
+\small
+\begin{tabular}{llccc}
+\toprule
+Dataset & Model & AUROC & FPR@95 & macro-F1 \\
+\midrule
+UNSW-NB15 & VX Small & \textbf{0.9834} & \textbf{0.1211} & 0.4571 \\
+          & XGBoost  & 0.9818 & 0.1369 & \textbf{0.4968} \\
+          & RF       & 0.9792 & 0.1399 & 0.4378 \\
+          & MLP      & 0.9821 & 0.1279 & 0.4445 \\
+          & Kitsune  & 0.6086 & 0.5617 & --- \\
+\midrule
+CIC stratified$^{b}$ & VX Small & 0.9999 & 0.0003 & 0.8826 \\
+                     & XGBoost & 1.0000 & 0.0002 & \textbf{0.9416} \\
+                     & Kitsune & 0.6227 & 0.6910 & --- \\
+\midrule
+CIC by-day$^{\dagger}$ & VX Small & \textbf{0.7112} & \textbf{0.5731}$^{a}$ & 0.4518 \\
+                       & XGBoost & 0.6372 & 1.0000$^{a}$ & \textbf{0.8336} \\
+                       & RF & 0.6308 & 1.0000 & 0.4207 \\
+                       & MLP & 0.5959 & 1.0000 & 0.4579 \\
+\midrule
+EMBER2024 & VX Small & 0.9969 & 0.0119 & 0.7549 \\
+          & XGBoost  & \textbf{0.9981} & \textbf{0.0053} & \textbf{0.8094} \\
+          & MLP      & 0.9970 & 0.0098 & 0.7733 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{(i) VX-One wins detection, not attribution.} On UNSW-NB15 and temporal CIC, VX-One tops AUROC and FPR@95\%TPR. On CIC by-day \emph{every} method's achievable FPR@95 is degraded, but the trees' degradation is total (FPR@95 = 1.0 --- no threshold reaches 95\% TPR at nontrivial FPR), while VX-One retains a partially usable operating point. Attribution (macro-F1) inverts this: calibrated XGBoost wins on UNSW, stratified CIC, and EMBER2024---by 4--8 points. \emph{We report the inversion rather than hide it}: our contribution does not rest on attribution wins, and we are explicit about the loss.
+
+\textbf{(ii) Saturation makes stratified CIC a sanity benchmark, not a selling point.} All methods land at $\sim$1.0 with ECE $\le$0.001. Headline numbers on saturated benchmark splits are best treated as pipeline-correctness checks.
+
+\textbf{(iii) Kitsune: calibration does not equal signal.} With Platt calibration on validation, Kitsune is well-calibrated (ECE 0.037) yet near-chance on discrimination (AUROC 0.608). Its ensemble-of-autoencoders signal does not survive hostile-stage re-fit to benign-only data---we re-fit \emph{its} feature stage to its own training distribution (benign only), as a real unsupervised deployment would. Platt on a useless score calibrates a useless probability.
+
+Calibration (E3): all methods' in-distribution ECE stays $\le$ 0.065 on UNSW-NB15 but drift to 0.39--0.45 on temporal CIC (Table~\ref{tab:e1}). The policy-level implication is precise: \emph{`Noul/gate feedbacks are calibrated'} is a claim about the training distribution; it silently degrades exactly when novel-attack pressure appears, which is the moment the claim was bought for. Section~\ref{sec:e6} shows the effect is \emph{additive on top of}, not independent of, class-tilt choices.
+
+%% ------------------------------------------------------ E2 unknown
+\subsection{E2 --- Unknown-attack honesty}
+\label{sec:e2}
+
+Leave-one-family-out (LOAO): train without family $F$, test against $F$'s held-out rows. Table~\ref{tab:e2} reports unseen-family \emph{detection} (gate AUROC / FPR@95 without any retraining), \emph{attribution honesty} (how much the choice head attributes to \texttt{unknown}), and a control (macro-F1 on \emph{known} families, which must not collapse).
+
+\begin{table}[t]
+\caption{LOAO---unseen-family detection (gate) and attribution honesty (choice abstention). The control---macro-F1 on \emph{known} families---stays at 0.38--0.56 across folds, i.e., the family that is excluded does not degrade attribution of the others. UNSW Small.}
+\label{tab:e2}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccc}
+\toprule
+Excluded family & gate AUROC & FPR@95 & abst.\ (\%) & $n$ test \\
+\midrule
+analysis        & 0.9992 & 0.0002 & 92.0 & 677 \\
+backdoor        & 0.9989 & 0.0028 & 63.0 & 583 \\
+dos             & 0.9941 & 0.0202 & 3.0  & 4{,}089 \\
+exploitation    & 0.9550 & 0.4177 & 8.0  & 11{,}132 \\
+fuzzing         & 0.8519 & 0.3899 & 28.0 & 6{,}062 \\
+generic         & 0.9957 & 0.0128 & 50.0 & 18{,}871 \\
+recon           & 0.9523 & 0.1777 & 28.0 & 3{,}496 \\
+shellcode       & 0.9688 & 0.1305 & 42.0 & 378 \\
+worms           & 0.9871 & 0.0642 & 23.0 & 44 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{UNSW: the gate generalizes.} Nine of nine never-seen families are detected with gate AUROC $\ge$ 0.85, most above 0.95, while macro-F1 on known families is preserved (0.38--0.56). The abstention rate on the excluded family ramps 3--92\%---feature-dependent, not tune-dependent, which is exactly the honesty modulation we want (an unseen-but-gatelike family still realizes $\texttt{unknown}$ 28--92\% of the time instead of being absorbed into \texttt{normal}).
+
+\textbf{CIC: the failures are structural, not accidental.} On stratified CIC-Small LOAO (Table~\ref{tab:e2cic}), the gate remains strong where families are textually distinctive (\texttt{bruteforce} 0.967, \texttt{webattack} 0.979, \texttt{exploitation} 0.970, \texttt{dos\_ddos} 0.852), but drops below chance on \texttt{recon} (0.426) and near chance on \texttt{infiltration} (0.533, $n=5$): in 77 flow-statistics features, port scans from a datacenter look exactly like a benign port-touching client. \textbf{The abstention threshold is non-portable}: on UNSW, $\tau_{\mathrm{abs}}=0.5$ abstains 3--92\% on excluded families; on CIC, where calibration is saturated (Table~\ref{tab:e1}, ECE $\le$0.001), the same fixed threshold abstains on \emph{zero} rows---every excluded-family event gets assigned to \texttt{normal} with high confidence. A fixed threshold is not a portable guarantee across benchmarks; under-saturated models are correctly selective, over-saturated ones are confidently wrong. The controller's proper response is a per-deployment threshold measured on \emph{its} data, or selective-classification by margin~\cite{geifman2017} rather than by fixed cut.
+
+\begin{table}[t]
+\caption{LOAO on stratified CIC (Small). Softmax confidence saturates: the fixed threshold abstains on nothing, and unseen families get attributed to \texttt{normal} with high confidence.}
+\label{tab:e2cic}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Excluded family & gate AUROC & FPR@95 & abst.\ (\%) & $n$ test \\
+\midrule
+botnet         & 0.7499 & 0.4038 & 0.00 & 295 \\
+bruteforce     & 0.9674 & 0.0778 & 0.05 & 2{,}076 \\
+dos\_ddos      & 0.8524 & 0.3394 & 0.00 & 57{,}103 \\
+exploitation   & 0.9703 & 0.0297 & 0.00 & 1 \\
+infiltration   & 0.5329 & 0.8262 & 0.00 & 5 \\
+recon          & 0.4259 & 0.8685 & 0.00 & 23{,}840 \\
+webattack      & 0.9792 & 0.1550 & 0.00 & 327 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{EMBER2024 drift: trained-unknown as an honesty mechanism.} The EMBER run trains on weeks 0--45 and validates/tests on later weeks; family composition drifts measurably at test time. Gate-robustness is high (AUROC 0.997, FPR@95 0.012). The family-conditional table is the interesting one: \emph{berbew}, which grew 34.5K$\to$92K rows in test, retains recall 0.998; \emph{wacatac}, which mutated, falls to recall 0.129 with \textbf{85\%$\to$unknown}; \emph{grandoreiro} ($n=226$, almost absent from train) falls to 0.221 with 78\%$\to$unknown. The model does not reduce drift into false attribution; the \texttt{unknown} option absorbs what the model should not claim to know, and the gate keeps the operator's safety threshold honest on the detection side simultaneously. This is the strongest single argument for the trained-unknown semantics (and contrasts directly with Table~\ref{tab:e2cic} on two ways of switching unknown on/off in Section~\ref{sec:e6}).
+
+\paragraph{What \texttt{unknown} means under LOAO.} The two unknown mechanisms carry the same typed meaning but are not the same estimator. On EMBER2024, \texttt{unknown} is a trained class with real ground truth (benign and tail malware), so its probability is an in-distribution rejection statement. Under LOAO on UNSW/CIC, the excluded family is not a candidate: abstention runs on max-softmax confidence over the \emph{seen} families, which is out-of-distribution similarity detection~\cite{hendrycks2017}---the classic max-softmax baseline, with its known overconfidence failure modes---not a calibrated probability about the excluded family. We therefore report unseen-family \emph{detection} (gate) and \emph{abstention} separately and never describe the latter as a probability of the unseen event. Both mechanisms lose informative honesty modes measurably (Tables~\ref{tab:e2}--\ref{tab:e2cic}); the design lesson is that distribution shift has no single calibrated fix---the honest object is the pair (gate, abstention), not one number.
+
+%% ------------------------------------------------------ E4 latency
+\subsection{E4 --- Latency}
+\label{sec:e4}
+
+Measurements use single-events, batch=1, single-thread CPU, 3{,}000 timed events per model, on each model's exact released weights (Table~\ref{tab:e4}).
+
+\begin{table}[t]
+\caption{E4 latency (single-event, batch=1, 1 thread, CPU). Well within a $<$10\,ms design budget with margin $\ge 5\times$.}
+\label{tab:e4}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Scale & p50 ($\mu$s) & p95 ($\mu$s) & p99 ($\mu$s) & max ($\mu$s) \\
+\midrule
+Nano  & 675    & 715    & 773    & 853    \\
+Small & 955    & 999    & 1{,}022  & 1{,}059  \\
+Base  & 1{,}652  & 1{,}795  & 2{,}082  & 2{,}335  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Interpretation: VX-One's typed decisions carry a p50 inference cost of $\sim$1\,ms on Small, making VX-One a \emph{per-event inline} decision component rather than a sampled-batch tool. The commercial System One class's headline latency claims are API-level; level-by-level comparison is not apples-to-apples, and we treat them as context, not as competition.
+
+%% ------------------------------------------------------ E5 cascade
+\subsection{E5 --- Two-phase cascade: how much of the line of fire is actually a gray zone}
+\label{sec:e5}
+
+We reconstruct five days of CIC-IDS2017 into PCAPs (documented reconstruction, no payload--- attacks' HTTP bodies are not recovered, so content-only signature rules are expected to underperform and this is the \emph{lower bound} they encounter on this traffic in the deployed position), run Suricata 7.0.10 with fresh Emerging-Threats Open rules (52{,}674 of them, concatenated) plus 8 of our own structural rules to level the playing field for header-only signals, then measure per family which attacks Phase~1 catches and what lands in the gray zone for Phase~2 to handle. Table~\ref{tab:e5} collates per day.
+
+\begin{table}[t]
+\caption{E5 cascade over five days of CIC-IDS2017. ``F1 acc'' is Phase 1 (Suricata) alone; ``comb'' is the estimated combined cascade; P/R = precision/recall of the combined cascade on that day's test rows. \emph{Stats are estimates} with a documented independence assumption (Section~\ref{sec:limits}).}
+\label{tab:e5}
+\small
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Day & flows & attack & F1 acc & F2 acc & comb acc & comb P & comb R \\
+\midrule
+Mon 03 & 529{,}450 & 0        & 0.9989 & 0.9996 & 0.9985 & ---    & ---    \\
+Tue 04 & 445{,}641 & 13{,}832 & 0.9681 & 0.9994 & 0.9985 & 0.958 & 0.996 \\
+Wed 05 & 691{,}390 & 251{,}722 & 0.6359 & 0.9986 & 0.9979 & 0.997 & 0.997 \\
+Thu 06 & 458{,}483 & 2{,}216  & 0.9942 & 0.9971 & 0.9961 & 0.552 & 0.978 \\
+Fri 07 & 702{,}713 & 288{,}785 & 0.5887 & 0.9979 & 0.9974 & 0.998 & 0.996 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{The headline number is the gray zone, not the accuracy}. Suricata with ET rules over flow-reconstructed traffic detects only $\sim$0.1\% of daily attacks by volume; the \emph{gray zone} is 99.9\% of each day, and Phase 2 is what actually classifies it: the combined cascade retains recall $\ge$0.978 while precision stays $\ge$0.95 on every day except Thursday. \textbf{The Thursday failure is the real lesson}: on a web-attack day of 456K benign and only 2.2K attacks, Phase 1 is structurally blind without payload (precision 0.059), Phase 2 absorbs all of it, and the FP rate of Phase 2 across 456K benign rows dominates the combined precision (0.552). A cascade is not free: \emph{every} false flag from the blind-detection phase is multiplied by three orders of magnitude of innocent traffic; the correct operating posture there is Phase 2 as advisory (block with abstention, not auto-drop). This measurement---a live-tier engine's real gray-zone share on a public benchmark---is, we believe, the crudest and most defensible novel number in this paper.
+
+%% ------------------------------------------------------ E6 ablations
+\subsection{E6 --- Ablations}
+\label{sec:e6}
+
+Table~\ref{tab:e6} summarizes the ablation suite (full 14-run table and per-dataset effects in the released results). Four findings survive sanity checks and are worth their ink:
+
+\begin{table}[t]
+\caption{Ablations (ref = corresponding Small reference run).}
+\label{tab:e6}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llccc}
+\toprule
+Run & Effect tested & AUROC & m-F1 & ECE-ch \\
+\midrule
+UNSW ref    & ---             & 0.9834 & 0.4571 & 0.0496 \\
+UNSW a1     & no text branch  & 0.9716 & 0.4079 & 0.0509 \\
+UNSW a3     & no calibration  & 0.9834 & 0.4571 & \textbf{0.0980} \\
+UNSW a4     & no class tilt   & 0.9838 & 0.4545 & 0.0488 \\
+UNSW a6     & no dropout      & 0.9839 & 0.4507 & 0.0451 \\
+\midrule
+CIC ref     & ---             & 0.9999 & 0.8826 & 0.0003 \\
+CIC a3      & no calibration  & 0.9999 & 0.8826 & 0.0007 \\
+CIC a4      & no class tilt   & 0.9999 & \textbf{0.9313} & 0.0002 \\
+CIC a6      & no dropout      & 0.9999 & 0.7360 & 0.0007 \\
+\midrule
+EMBER ref   & ---             & 0.9969 & 0.7549 & 0.0076 \\
+EMBER a3    & no calibration  & 0.9969 & 0.7549 & 0.0112 \\
+EMBER a4    & no class tilt   & 0.9969 & 0.7506 & 0.0061 \\
+EMBER a5    & unknown off     & 0.9961 & \textbf{0.8674} & 0.0022 \\
+EMBER a6    & no dropout      & 0.9966 & 0.7821 & 0.0081 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Text branch (a1).} On UNSW the protocol/service/state lookups are worth $\sim$5 macro-F1 points and nontrivial AUROC. Text-free benchmarks pay a measurable features cost.
+
+\textbf{Calibration changes probability, never ranking (a3).} Temperature scaling leaves argmax and AUROC untouched and improves ECE (e.g., 0.0496$\to$0.0980 when removed, on the same logits). This is the expected signature of a well-behaved calibration layer, and worth saying plainly because calibration \emph{is} our semantic differentiator.
+
+\textbf{Class tilts are not free (a4).} On saturated CIC, removing the tilt $\omega$ \emph{improves} attribution by $+4.9$ macro-F1---the de-tilt pushes minority classes \emph{down} in a regime where the weighted cross-entropy had already pushed them up. On weakly-distributed EMBER the tilt matters less. There is no free class-tilt knob; its effect is deployment-regime-dependent, and our own loss design contains a knob whose default is wrong for saturated datasets. We say so and flag the design revision.
+
+\textbf{Dropout is dataset-dependent (a6).} on CIC, zero dropout costs $-14.7$ macro-F1; on EMBER it \emph{gains} $+2.7$ (the majority class dominates and early stopping regulates). No universal recipe; report per dataset.
+
+\textbf{Unknown is a measurable trade-off (a5-wide).} Removing the trained-unknown option from EMBER's 11-way choice improves macro-F1 by $+11.2$ points (10-way is more balanced). ``Honesty'' is not free accuracy; making the \texttt{unknown} option available is a deliberate spend.
+
+%% ------------------------------------------------------ E7, discussion
+\subsection{E7 --- The commercial System One baseline we did not run}
+\label{sec:e7}
+
+We planned a zero-shot API comparison (1--5K stratified test events, $\sim$\$2 billed) against Microsoft-Decision-1. It was not executed in this cycle; the paper's positioning therefore \emph{does not lean} on beating a commercial model. What we show instead is that the class's primitive triad can be built, trained, calibrated, and stress-tested on public security data for the cost of a GPU rental, and that the evaluation discipline around it (audited labels, temporal splits, calibrated baselines, offline metric code) is entirely within reach of an academic lab. Running the vendor API remains the cheapest urgent follow-up (Section~\ref{sec:conclusion}).
+
+\subsection{Discussion}
+Three threads bind the results together.
+
+\textbf{(1) The honest triage division of labor.} Where the benchmark is saturable (stratified CIC), trees win attribution and a typed cascade adds nothing but a latency reduction; where the deployment regime is adversarial (temporal drift, attack families that did not exist in training), the gate/unknown semantics earn their keep in \emph{detection robustness and attribution honesty} even while losing the calibration war (E3). The contribution is the measured boundary of where typed decisions help, not a uniform ``we win everywhere''.
+
+\textbf{(2) Honesty is a distinct axis from accuracy.} Section~\ref{sec:e2} and the EMBER drift table are the clearest pair of the paper: a benchmark-optimal system (no \texttt{unknown} option, accurate operating threshold) maximizes macro-F1 while \emph{falsely attributing} 85\% of a mutated family; the honesty-first system gives up 11 macro-F1 points on the choice metric and absorbs the mutation into an honest abstention. These are different products under drift, and the macro-F1 column alone cannot distinguish them.
+
+\textbf{(3) Saturation is a deployment regime, not a benchmark property.} The same dataset (CIDS2017) produces a saturated benchmark under stratified splitting and a hard unsaturated one under by-day splitting, in both ranking and calibration. Any paper reporting ``F1 0.94'' on IDS2017-stratified is measuring the model's ability to fit a monotone flow of re-used capture artifacts; papers should report the by-day numbers alongside (we do both).
+
+%% ============================================================ 6 LIMITS
+\section{Limitations}
+\label{sec:limits}
+
+\begin{itemize}
+\item \textbf{Severity scores are rubric-derived}, not human-labeled; the Score head's ground truth is a documented family$\to$level mapping, so cross-level claims are approximations above benign/low/high/critical.
+
+\item \textbf{Benchmark data, audited} (Section~\ref{sec:setup}): LOAO measures generalization \emph{across benchmark families}, not robustness against real-world novel attacks; an honest reading of E2 is ``the gate generalizes \emph{more} than the choice head, on these families''---not ``we detect zero-days''.
+
+\item \textbf{One seed per run.} Differences under 1 macro-F1 point (a2, a4-UNSW) are noise until we re-run with 3 seeds; we plan to. Conclusions that rest on differences $>$ 5 points are robust to this.
+
+\item \textbf{Phase 1 is a reference implementation} (Suricata + ET Open + 8 structural rules), not our C++ engine; the claims of Section~\ref{sec:e5} are about the \emph{architecture}, and the reconstruction means payload-content rules are at a lower bound by construction. The ``combined cascade'' result is a documented two-sample estimate under an independence assumption that is exact for full-family-invisibility cases and optimistic where Phase 1 fails on exactly the stealthiest subset; we state it as an estimate, and the per-day F1/gray-zone table it rests on is a real measurement.
+
+\item \textbf{Calibration under drift} (ECE 0.40 on temporal CIC) is measured but not repaired; per-window online recalibration is the immediate follow-up and we expect the fix to be straightforward but non-trivial (the val window lies about the future in a measurable way).
+
+\item \textbf{Conformal wrappers are scoped, not promised.} Exact distribution-free coverage applies only under exchangeability: on the official UNSW split and stratified CIC, split-conformal coverage is exact~\cite{papadopoulos2002,tibshirani2019}; on every temporal split, family-composition drift is real and measured, and coverage degrades at a rate bounded by the calibration--test total-variation gap~\cite{barber2023}. A domain classifier certifies that gap only \emph{from below} ($d_{\mathrm{TV}} \ge 1-2\,\mathrm{BER}$; Appendix~\ref{app:formal})---under drift we report empirical weekly coverage with exact binomial intervals and weighted variants~\cite{tibshirani2019}, and make no distribution-free coverage promise.
+
+\item \textbf{Cost-per-million} is not yet measured from real Modal billing (the draft's ``\$0.05'' was aspirational and we repudiate it); latency, not cost, is the number we claim.
+
+\item \textbf{Text-field attack surface} (indirect prompt injection through \texttt{user\_agent}, URIs) is real~\cite{greshake2023injection}; V0.1 has no sanitization layer and our text-branch vocabulary lookup (bounded 135-slot vocabularies, not free max-k) is only partial mitigation.
+
+\item \textbf{Vendor-API baseline not run} (Section~\ref{sec:e7}); the paper's claims do not currently compare against the commercial System One models it cites.
+\end{itemize}
+
+%% ============================================================ 7 CONCLU
+\section{Conclusion}
+\label{sec:conclusion}
+
+We built, trained, calibrated, and stress-tested a typed decision engine for perimeter triage---the first published instantiation and public-data evaluation of the \emph{System One} primitive triad---and report the boundary of its advantage rather than a uniform win: detection robustness and attribution honesty under unknown families and drift, a measurable gray zone of a live signature engine, and four cleanly-measured negative results (calibration collapse under drift, non-portable abstention thresholds, regime-dependent class tilts, unknown-option accuracy cost). The cheapest urgent next steps are (i) the $\sim$\$2 vendor-API comparison deferred from Section~\ref{sec:e7}, (ii) per-window online recalibration under drift, (iii) 3-seed re-runs of the main tables, (iv) the abstention-threshold sweep already specified in Section~\ref{sec:gates} (risk-coverage curves over $\tau_{\mathrm{abs}} \in \{0.05..0.95\}$---the LOAO logits are already computed; no retraining is needed), and (v) a payload-inclusive Phase-1 measurement to replace the lower-bound cascade estimate. All code, configs, tests, and measured results accompany the paper.
+
+%% ============================================================ APPENDIX
+\appendix
+\section{Formal statements}
+\label{app:formal}
+
+Throughout, $\mathrm{cal}_A(f) = \mathbb{E}\big[\,|\,\mathbb{P}(A \mid f(X)) - f(X)\,|\,\big]$ is the $\ell_1$ calibration error of an estimator $f\in[0,1]$ for event $A$; the binned ECE (15 bins) is its empirical estimator~\cite{kumar2019}, with its known estimator caveats, which is why we co-report MCE and reliability diagrams and frame multiclass notions through the vector/classwise/confidence hierarchy~\cite{vaicenavicius2019}.
+
+\paragraph{Lemma 1 (closure under single-head post-processing).} If head $f$ is calibrated for an event $A$ of its own output and $h:[0,1]\to[0,1]$ is measurable, then
+$\mathrm{cal}_A(h\!\circ\!f) \le \mathrm{cal}_A(f) + \mathbb{E}\,|h(f(X)) - f(X)|.$
+\emph{Proof.} Let $m(v) = \mathbb{P}(A \mid f(X){=}v)$. Tower property: $\mathbb{E}[\mathbf{1}_A \mid h\circ f] = \mathbb{E}[m(f)\mid h\circ f]$. Jensen: $\big|\mathbb{E}[m(f)\mid h\circ f] - h(f)\big| \le \mathbb{E}\big[\,|m(f)-h(f)|\,\big|\,h\circ f\big]$. Triangle: $|m(f)-h(f)| \le |m(f)-f| + |f-h(f)|$; take expectations. \hfill$\square$
+
+So de-tilt, temperature scaling, and thresholding do not destabilize a gate's calibration beyond the size of the transformation; the practical consequence is that each derived gate's calibration error is \emph{bounded by its own head's measured deficiency}, and E3 measures each gate's ECE directly anyway.
+
+\paragraph{Lemma 2 (CORN chain rule: exactness and degradation).} With true conditionals $\pi_1(x) = \mathbb{P}(\mathrm{sev}\ge1 \mid x)$ and $\pi_2(x) = \mathbb{P}(\mathrm{sev}\ge2 \mid \mathrm{sev}\ge1,\,x)$: (i) $\mathbb{P}(\mathrm{sev}\ge2 \mid x) = \pi_1(x)\,\pi_2(x)$ \emph{exactly}---CORN conditions the second step on $\mathrm{sev}\ge1$, so there is no hidden independence assumption; (ii) for estimates $(q_1, q_2)$,
+$\mathrm{cal}_{\mathrm{sev}\ge2}(q_1 q_2) \;\le\; \mathbb{E}\,|\pi_1 - q_1| + \mathbb{E}\,|\pi_2 - q_2|.$
+\emph{Proof of (ii).} $\pi_1\pi_2 - q_1 q_2 = \pi_2(\pi_1 - q_1) + q_1(\pi_2 - q_2)$; triangle inequality with $0 \le \pi_2, q_1 \le 1$. The bound is on \emph{conditional deviations}, not marginal ECEs (conditioning on extra information changes the base rate~\cite{kleinberg2017}); hence the drop gate's ECE is measured directly rather than inferred from its conditional heads. \hfill$\square$
+
+\paragraph{Proposition 3 (no-go: marginal ECEs do not compose).} Let $X$ be trivial and $f_1 \equiv a$, $f_2 \equiv b$ be perfectly calibrated for events $A, B$ with $\mathbb{P}(A){=}a$, $\mathbb{P}(B){=}b$ ($\mathrm{cal} = 0$ for both). The naive AND policy $g = f_1 f_2 = ab$ estimates $A\wedge B$ with
+$\sup\,\big|\,\mathbb{P}(A\wedge B) - ab\,\big| = 1/4,$
+attained at $a=b=\tfrac12$ with $A{=}B$ or $A\cap B{=}\emptyset$ (the joint law is free within the Fr\'echet bounds), and identically for the OR variant. Therefore no non-trivial function of the marginal ECEs bounds composed-policy calibration error; the attainable case $A{=}B$---two heads estimating the same question, e.g., ``is this an attack?''---is realistic in security, not pathological. This is why Section~\ref{sec:gates} restricts the controller to composing boolean decisions and forbids cross-head probability composition: every gate of v0.1 is a functional of exactly one head, verified rubric-reducible. \hfill$\square$
+
+\paragraph{Lemma 4 (BER--TV; drift certification is one-sided).} For any two distributions $P, Q$, $d_{\mathrm{TV}}(P,Q) = 1 - 2\,\mathrm{BER}^{*}$, where $\mathrm{BER}^{*} = \inf_h \tfrac12\big(\mathbb{P}_P(h{=}1) + \mathbb{P}_Q(h{=}0)\big)$ is the optimal balanced error (the likelihood-ratio test attains error $(1-d_{\mathrm{TV}})/2$). Consequently a domain classifier with balanced error $\mathrm{BER}$ \emph{certifies} $d_{\mathrm{TV}} \ge 1 - 2\,\mathrm{BER}$: detecting drift quantifies it and plugs into the coverage-gap bound of~\cite{barber2023}; failure to separate certifies nothing---absence of evidence of drift is not evidence of exchangeability. \hfill$\square$
+
+\paragraph{Bayes rule with rejection (abstention thresholds).} With uniform misclassification cost and escalation cost $\lambda_r$, the expected cost of an action is $C(a\mid x) = 1 - p_a(x)$ under typed outputs, so Bayes abstains iff $\min_a C(a\mid x) > \lambda_r$, i.e., iff $\max_k p_k(x) < 1-\lambda_r$---Chow's 1970 rule as the 0--1-cost case~\cite{chow1970, cortes2016rejection}, with risk--coverage curves as the primary object~\cite{elyaniv2010, geifman2017}. Asymmetric matr\'ices of cost live in the controller: max-prob abstraction can deviate from full Bayes there (a one-line counterexample: $p = (0.55, 0.40, 0.05)$ with a 3-fold penalty on confusing the second class yields abstention under full Bayes but attribution under max-prob), which is why the deviation is measured on validation data in the controller's calibration report rather than assumed away.
+
+%% =========================================================== BIB
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+
+\end{document}
