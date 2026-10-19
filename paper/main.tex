@@ -6,7 +6,8 @@
 %% ------------------------------------------------------------- metadata
 \acmConference[VX-One '26]{Security \& ML Workshop (draft for submission)}{October 2026}{}
 \acmYear{2026}
-\rights{Copyright held by the authors. Draft for review.}
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
 
 \begin{document}
 
@@ -80,7 +81,7 @@ where $d \in \{39 \text{ (UNSW)}, 77 \text{ (CIC-IDS2017)}, 2568 \text{ (EMBER20
 A small pre-norm MLP trunk ($L\in\{2..8\}$ blocks of [Linear $\to$ LayerNorm $\to$ GELU $\to$ Dropout 0.1], residual from block 2) maps $\phi(S)$ plus text-lookup embeddings to a shared representation $h = f_\theta(S)$, feeding four heads---one per typed primitive:
 
 \begin{align}
-\text{\emph{gate}}: \quad & \gate(S) = \sigma(w_1^{\top} h + b) \in [0,1]; \tag{Gate}\\[-2pt]
+\text{\emph{gate}}: \quad & \operatorname{gate}(S) = \sigma(w_1^{\top} h + b) \in [0,1]; \tag{Gate}\\[-2pt]
 \text{\emph{choice}}: \quad & \mathbf{p} = \mathrm{softmax}(W_C h), \quad \mathcal{C} \ni \texttt{unknown}; \tag{Choice}\\[-2pt]
 \text{\emph{score}}: \quad & \pi_k = \prod_{i\le k} \sigma_q(h), \tag{Score}
 \end{align}
@@ -89,8 +90,9 @@ where the Score head is conditional ordinal regression (CORN~\cite{shi2023corn})
 \subsection{Training formulation}
 Multi-task loss
 \[
-\mathcal{L} ~ = ~ \sum_q \mathcal{L}_q \text{ under } \text{modified homoscedastic balancing}~\cite{kendall2018multitask},
+\mathcal{L} ~ = ~ \sum_q \mathcal{L}_q,
 \]
+with a modified homoscedastic balancing~\cite{kendall2018multitask}: per-task reference uncertainty
 with a modified per-task reference uncertainty so that task-scale differences (ln~$K$ vs.\ ln~2 for Choice vs.\ Gate) do not dominate the initialization. Per-class loss weights on Choice use sqrt-normalized, mean-1 tilts $\omega_k$ with an \emph{analytic de-tilt} in inference ($z \mapsto z - \log\omega$) applied before calibration, so the recovered posterior remains population-correct. The gate loss is \emph{unweighted} BCE: weighting shifts the optimal logit by $\log(\omega_+/\omega_-)$, an offset temperature calibration cannot undo. Training uses AdamW (weight decay $10^{-2}$ on 2D weight matrices only), linear warmup ($5\%$) + cosine decay, gradient clipping at 1.0, mixed precision, and early stopping (patience 4) on validation loss. All backbone hyperparameters are frozen across datasets and scales (D11-like discipline).
 
 \subsection{Decision controller semantics}
