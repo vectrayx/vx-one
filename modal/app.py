@@ -67,7 +67,7 @@ def _boot() -> None:
 def train_vx(source: str, scale: str, scheme: str,
              exclude_family: str | None = None,
              ckpt_every_steps: int = 2000, resume: bool = True,
-             ablation: str | None = None) -> dict:
+             ablation: str | None = None, seed: int = 42) -> dict:
     _boot()
     import torch
     from src.models import build_run, train_run
@@ -77,11 +77,13 @@ def train_vx(source: str, scale: str, scheme: str,
     fam = f"_loao_{exclude_family}" if exclude_family else ""
     abl = f"_abl_{ablation}" if ablation else ""
     rid = f"{source}_{scale}_{scheme}{fam}{abl}"
+    if seed != 42:
+        rid = f"{rid}_s{seed}"     # corridas de varianza (3 seeds) no pisan la oficial
     out = f"{RESULTS}/artifacts/{rid}.pt"
     res = train_run(run, out, device=dev,
                     ckpt_path=f"{RESULTS}/ckpts/{rid}.ckpt.pt",
                     ckpt_every_steps=ckpt_every_steps, resume=resume,
-                    ablation=ablation)
+                    ablation=ablation, seed=seed)
     print(f"[modal] {rid}: M_val={res['m_val']:.4f} T={res['temperatures']}")
     # dump de logits val/test en el mismo job (E1-E3 se computan local)
     from src.eval.dump_outputs import dump_run
@@ -143,6 +145,33 @@ def probe() -> dict:
 @app.local_entrypoint()
 def probe_main():
     print(probe.remote())
+
+
+@app.local_entrypoint()
+def seeds_main(seeds: str = "42,43,44",
+               runs: str = "unsw_small_oficial,cic_small_strat,"
+                           "cic_small_time,ember_small_temporal"):
+    """Varianza multi-seed de las corridas principales de las tablas.
+    Lanza |seeds|×|runs| jobs L4 en paralelo; rid lleva sufijo _s<seed>
+    (salvo la 42, que es la oficial ya publicada y se re-valida)."""
+    s_list = [int(x) for x in seeds.split(",")]
+    r_list = [tuple(x.split("_")) for x in runs.split(",") if x]
+    jobs = []
+    for s in s_list:
+        for (src, sc, sm) in r_list:
+            seed = 42 if s == 42 else s
+            jobs.append((src, sc, sm, seed))
+    print(f"[seeds_main] {len(jobs)} jobs: {jobs}")
+    handles = [train_vx.spawn(source=s, scale=sc, scheme=sm, seed=sd)
+               for (s, sc, sm, sd) in jobs]
+    for ((s, sc, sm, sd), h) in zip(jobs, handles):
+        try:
+            r = h.get()
+            tag = "" if sd == 42 else f"_s{sd}"
+            print(f"[seeds] {s}_{sc}_{sm}{tag}: M_val={r['m_val']:.4f} "
+                  f"wall={r['wall_time_s']/60:.1f} min")
+        except Exception as e:
+            print(f"[seeds] {s}_{sc}_{sm}_s{sd}: FALLÓ {e!r}")
 
 
 @app.local_entrypoint()
