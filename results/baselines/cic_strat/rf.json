@@ -1,0 +1,21 @@
+{
+  "run_id": "cic_strat",
+  "model": "rf",
+  "candidates": [
+    "normal",
+    "dos_ddos",
+    "recon",
+    "bruteforce",
+    "webattack",
+    "botnet",
+    "infiltration",
+    "exploitation"
+  ],
+  "temperatures": {
+    "noul": 1.532034348975904,
+    "choice": 1.6683348793782486,
+    "score": 1.475306518052382,
+    "ddos": 0.6955526002643948
+  },
+  "fit_s": 272.1
+}

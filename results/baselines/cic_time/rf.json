@@ -1,0 +1,19 @@
+{
+  "run_id": "cic_time",
+  "model": "rf",
+  "candidates": [
+    "normal",
+    "dos_ddos",
+    "bruteforce",
+    "webattack",
+    "infiltration",
+    "exploitation"
+  ],
+  "temperatures": {
+    "noul": 3.5680329392547954,
+    "choice": 3.6770923168610903,
+    "score": 2.786710210858385,
+    "ddos": null
+  },
+  "fit_s": 291.7
+}

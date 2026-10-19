@@ -1,0 +1,46 @@
+{
+  "day": "2017-07-03",
+  "n_flows": 529450,
+  "n_attack": 0,
+  "n_alerts": 517,
+  "f1": {
+    "resolved": 0.0011,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "accuracy": 0.9989,
+    "latency_s": {
+      "median": 0.0,
+      "p90": 0.0
+    }
+  },
+  "f2": {
+    "n_test": 79544,
+    "recall_by_fam": {
+      "normal": 0.0004
+    },
+    "fpr_benign": 0.0004,
+    "accuracy": 0.9996,
+    "f1": 0.0,
+    "latency_us_p50": 955.2
+  },
+  "gray_zone": {
+    "n": 528875,
+    "share_of_day": 0.9989,
+    "composition": {
+      "normal": 528875
+    }
+  },
+  "combined_estimate": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "accuracy": 0.9985
+  },
+  "per_class": {
+    "normal": {
+      "n": 529450,
+      "f1_resolved": 0.0011
+    }
+  }
+}

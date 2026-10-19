@@ -1,0 +1,19 @@
+{
+  "run_id": "cic_time",
+  "model": "mlp",
+  "candidates": [
+    "normal",
+    "dos_ddos",
+    "bruteforce",
+    "webattack",
+    "infiltration",
+    "exploitation"
+  ],
+  "temperatures": {
+    "noul": 2.9798129745326323,
+    "choice": 4.161725482874761,
+    "score": 2.5501280985217534,
+    "ddos": null
+  },
+  "fit_s": 288.9
+}

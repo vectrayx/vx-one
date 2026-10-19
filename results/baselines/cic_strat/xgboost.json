@@ -1,0 +1,21 @@
+{
+  "run_id": "cic_strat",
+  "model": "xgboost",
+  "candidates": [
+    "normal",
+    "dos_ddos",
+    "recon",
+    "bruteforce",
+    "webattack",
+    "botnet",
+    "infiltration",
+    "exploitation"
+  ],
+  "temperatures": {
+    "noul": 1.0697179215922055,
+    "choice": 1.1928669647076493,
+    "score": 1.1518298852322757,
+    "ddos": 1.123701563928917
+  },
+  "fit_s": 308.4
+}

@@ -1,0 +1,24 @@
+{
+  "run_id": "ember_temporal",
+  "model": "xgboost",
+  "candidates": [
+    "berbew",
+    "cosmu",
+    "wacatac",
+    "sfone",
+    "upatre",
+    "grandoreiro",
+    "glupteba",
+    "expiro",
+    "sinowal",
+    "flystudio",
+    "unknown"
+  ],
+  "temperatures": {
+    "noul": 0.9052799790003363,
+    "choice": 1.579344628044169,
+    "score": null,
+    "ddos": null
+  },
+  "fit_s": 3386.6
+}

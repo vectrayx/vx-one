@@ -1,0 +1,23 @@
+{
+  "run_id": "unsw_oficial",
+  "model": "mlp",
+  "candidates": [
+    "normal",
+    "dos",
+    "recon",
+    "exploitation",
+    "shellcode",
+    "backdoor",
+    "analysis",
+    "fuzzing",
+    "generic",
+    "worms"
+  ],
+  "temperatures": {
+    "noul": 1.010919438261475,
+    "choice": 1.0195321762387617,
+    "score": 1.0331385689535053,
+    "ddos": null
+  },
+  "fit_s": 35.9
+}
