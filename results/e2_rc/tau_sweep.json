@@ -1,0 +1,4748 @@
+{
+  "sweep": {
+    "cic_small_strat_loao_botnet": {
+      "fold": "cic_small_strat_loao_botnet",
+      "exclude": "botnet",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.0287593539842605,
+        "score": 0.7311622419937125,
+        "ddos": 0.9387220551643125,
+        "choice": 1.036137544484102
+      },
+      "candidates": [
+        "normal",
+        "dos_ddos",
+        "recon",
+        "bruteforce",
+        "webattack",
+        "infiltration",
+        "exploitation"
+      ],
+      "n_test": 424612,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 295,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.9999859438107744,
+        "conf_p50": 0.9999998869708805,
+        "conf_p90": 0.999999918999054
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.9999772917818754,
+        "margin_p50": 0.9999998307725594,
+        "margin_p90": 0.9999998683344744
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.002111527017948034
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.002111527017948034
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.002111527017948034
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.002111527017948034
+          },
+          {
+            "tau": 0.25,
+            "coverage": 1.0,
+            "risk_selected": 0.002111527017948034
+          },
+          {
+            "tau": 0.3,
+            "coverage": 1.0,
+            "risk_selected": 0.002111527017948034
+          },
+          {
+            "tau": 0.35,
+            "coverage": 1.0,
+            "risk_selected": 0.002111527017948034
+          },
+          {
+            "tau": 0.4,
+            "coverage": 1.0,
+            "risk_selected": 0.002111527017948034
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.9999880026873981,
+            "risk_selected": 0.0021115523509016576
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.9999880026873981,
+            "risk_selected": 0.0021115523509016576
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.9991961800556676,
+            "risk_selected": 0.001765023713753977
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.9982723869853153,
+            "risk_selected": 0.0015142774733198916
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.9967247336596602,
+            "risk_selected": 0.0012758940285751974
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.9955369997120646,
+            "risk_selected": 0.0011689563750301168
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.9938333813225837,
+            "risk_selected": 0.0009898838697216528
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.9935214511949323,
+            "risk_selected": 0.000869439211708456
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.993125539879067,
+            "risk_selected": 0.0006523393614322748
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.9922857279969287,
+            "risk_selected": 0.0005561668016781374
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.9901022171033689,
+            "risk_selected": 0.00041198638021500145
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.8226557251175737,
+            "risk_selected": 0.00029167274318220304
+          }
+        ],
+        "aurc": 0.00037850633850909475
+      },
+      "known_risk_at_0.5": 0.0021115523509016576
+    },
+    "cic_small_strat_loao_bruteforce": {
+      "fold": "cic_small_strat_loao_bruteforce",
+      "exclude": "bruteforce",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 0.9703334865292613,
+        "score": 0.6542780994574842,
+        "ddos": 1.0177336797111454,
+        "choice": 0.9962039786892168
+      },
+      "candidates": [
+        "normal",
+        "dos_ddos",
+        "recon",
+        "webattack",
+        "botnet",
+        "infiltration",
+        "exploitation"
+      ],
+      "n_test": 424612,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 2076,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.7085741811175337
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 2076,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.7085741811175337
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 2076,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.7085741811175337
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 2076,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.7085741811175337
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 2076,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.7085741811175337
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 2076,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.7085741811175337
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 2076,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.7085741811175337
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 2076,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.7085741811175337
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 2076,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.7085741811175337
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 2076,
+          "abstain_rate": 0.0004816955684007707,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.708092485549133
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 2076,
+          "abstain_rate": 0.0009633911368015414,
+          "false_attack_rate": 0.29142581888246627,
+          "normal_absorption": 0.7076107899807321
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 2076,
+          "abstain_rate": 0.0019267822736030828,
+          "false_attack_rate": 0.2904624277456647,
+          "normal_absorption": 0.7076107899807321
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 2076,
+          "abstain_rate": 0.0019267822736030828,
+          "false_attack_rate": 0.2904624277456647,
+          "normal_absorption": 0.7076107899807321
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 2076,
+          "abstain_rate": 0.0024084778420038534,
+          "false_attack_rate": 0.28998073217726394,
+          "normal_absorption": 0.7076107899807321
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 2076,
+          "abstain_rate": 0.0024084778420038534,
+          "false_attack_rate": 0.28998073217726394,
+          "normal_absorption": 0.7076107899807321
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 2076,
+          "abstain_rate": 0.0024084778420038534,
+          "false_attack_rate": 0.28998073217726394,
+          "normal_absorption": 0.7076107899807321
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 2076,
+          "abstain_rate": 0.0024084778420038534,
+          "false_attack_rate": 0.28998073217726394,
+          "normal_absorption": 0.7076107899807321
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 2076,
+          "abstain_rate": 0.002890173410404624,
+          "false_attack_rate": 0.28998073217726394,
+          "normal_absorption": 0.7071290944123314
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 2076,
+          "abstain_rate": 0.002890173410404624,
+          "false_attack_rate": 0.28998073217726394,
+          "normal_absorption": 0.7071290944123314
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 2076,
+          "abstain_rate": 0.12572254335260116,
+          "false_attack_rate": 0.19653179190751446,
+          "normal_absorption": 0.6777456647398844
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.9846512166403945,
+        "conf_p50": 0.9995765080401388,
+        "conf_p90": 0.9999673806995805
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.9693141451834717,
+        "margin_p50": 0.9991559196599453,
+        "margin_p90": 0.9999497387976377
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.003579703571122139
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.003579703571122139
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.003579703571122139
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.003579703571122139
+          },
+          {
+            "tau": 0.25,
+            "coverage": 1.0,
+            "risk_selected": 0.003579703571122139
+          },
+          {
+            "tau": 0.3,
+            "coverage": 1.0,
+            "risk_selected": 0.003579703571122139
+          },
+          {
+            "tau": 0.35,
+            "coverage": 1.0,
+            "risk_selected": 0.003579703571122139
+          },
+          {
+            "tau": 0.4,
+            "coverage": 1.0,
+            "risk_selected": 0.003579703571122139
+          },
+          {
+            "tau": 0.45,
+            "coverage": 1.0,
+            "risk_selected": 0.003579703571122139
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.9999019259295583,
+            "risk_selected": 0.0035064919142258066
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.9987250370842579,
+            "risk_selected": 0.002504081407195602
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.9982346667320494,
+            "risk_selected": 0.002235130853402434
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.9958073334886173,
+            "risk_selected": 0.002105159487375219
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.9922031113998848,
+            "risk_selected": 0.0020880953851856177
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.9914920743891824,
+            "risk_selected": 0.002003041655847748
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.990891370707727,
+            "risk_selected": 0.0019052803483941005
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.9898861114856996,
+            "risk_selected": 0.0017709855596561574
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.9867477412315652,
+            "risk_selected": 0.0017144986954901187
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.9689963344816173,
+            "risk_selected": 0.0014802257027909382
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.8130463032205073,
+            "risk_selected": 0.0010705508059287716
+          }
+        ],
+        "aurc": 0.0009446126901159607
+      },
+      "known_risk_at_0.5": 0.0035064919142258066
+    },
+    "cic_small_strat_loao_dos_ddos": {
+      "fold": "cic_small_strat_loao_dos_ddos",
+      "exclude": "dos_ddos",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.0024965726145854,
+        "score": 1.4865955353228908,
+        "choice": 1.1542050984171863
+      },
+      "candidates": [
+        "normal",
+        "recon",
+        "bruteforce",
+        "webattack",
+        "botnet",
+        "infiltration",
+        "exploitation"
+      ],
+      "n_test": 424612,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 57103,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.026916274101185578,
+          "normal_absorption": 0.9730837258988144
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 57103,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.026916274101185578,
+          "normal_absorption": 0.9730837258988144
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 57103,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.026916274101185578,
+          "normal_absorption": 0.9730837258988144
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 57103,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.026916274101185578,
+          "normal_absorption": 0.9730837258988144
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 57103,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.026916274101185578,
+          "normal_absorption": 0.9730837258988144
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 57103,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.026916274101185578,
+          "normal_absorption": 0.9730837258988144
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 57103,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.026916274101185578,
+          "normal_absorption": 0.9730837258988144
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 57103,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.026916274101185578,
+          "normal_absorption": 0.9730837258988144
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 57103,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.026916274101185578,
+          "normal_absorption": 0.9730837258988144
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 57103,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.026916274101185578,
+          "normal_absorption": 0.9730837258988144
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 57103,
+          "abstain_rate": 0.012188501479782147,
+          "false_attack_rate": 0.020944608864683117,
+          "normal_absorption": 0.9668668896555347
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 57103,
+          "abstain_rate": 0.025988126718386073,
+          "false_attack_rate": 0.014937919198641052,
+          "normal_absorption": 0.9590739540829729
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 57103,
+          "abstain_rate": 0.039700190883140994,
+          "false_attack_rate": 0.009018790606447998,
+          "normal_absorption": 0.951281018510411
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 57103,
+          "abstain_rate": 0.05271176645710383,
+          "false_attack_rate": 0.004167907115212861,
+          "normal_absorption": 0.9431203264276833
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 57103,
+          "abstain_rate": 0.06376197397684885,
+          "false_attack_rate": 0.0009981962418787104,
+          "normal_absorption": 0.9352398297812724
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 57103,
+          "abstain_rate": 0.07446193720119784,
+          "false_attack_rate": 0.0004378053692450484,
+          "normal_absorption": 0.9251002574295571
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 57103,
+          "abstain_rate": 0.08687809747298741,
+          "false_attack_rate": 0.0004202931544752465,
+          "normal_absorption": 0.9127016093725373
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 57103,
+          "abstain_rate": 0.10791026741151953,
+          "false_attack_rate": 0.0004027809397054445,
+          "normal_absorption": 0.891686951648775
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 57103,
+          "abstain_rate": 0.14316235574313083,
+          "false_attack_rate": 0.00038526872493564263,
+          "normal_absorption": 0.8564523755319335
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 57103,
+          "abstain_rate": 0.1977829536101431,
+          "false_attack_rate": 0.0003152198658564349,
+          "normal_absorption": 0.8019018265240004
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.8818582061462837,
+        "conf_p50": 0.998916876508128,
+        "conf_p90": 0.9998408208677302
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.7674103968597996,
+        "margin_p50": 0.9978460945896785,
+        "margin_p90": 0.999688156143118
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.01133966244725737
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.01133966244725737
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.01133966244725737
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.01133966244725737
+          },
+          {
+            "tau": 0.25,
+            "coverage": 1.0,
+            "risk_selected": 0.01133966244725737
+          },
+          {
+            "tau": 0.3,
+            "coverage": 1.0,
+            "risk_selected": 0.01133966244725737
+          },
+          {
+            "tau": 0.35,
+            "coverage": 1.0,
+            "risk_selected": 0.01133966244725737
+          },
+          {
+            "tau": 0.4,
+            "coverage": 0.999962326702833,
+            "risk_selected": 0.011340089665825226
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.9998869801084991,
+            "risk_selected": 0.011265589088579886
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.9997739602169982,
+            "risk_selected": 0.011153817167834812
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.9989828209764918,
+            "risk_selected": 0.010823245465173326
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.996534056660639,
+            "risk_selected": 0.010320580674429203
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.9945373719107896,
+            "risk_selected": 0.010000378802227372
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.9943866787221217,
+            "risk_selected": 0.009888236408410633
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.9942736588306209,
+            "risk_selected": 0.009813579872688716
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.9939722724532851,
+            "risk_selected": 0.009627046694966612
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.9936708860759493,
+            "risk_selected": 0.00940248710949343
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.9892254370102471,
+            "risk_selected": 0.005750628379922351
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.9856088004822182,
+            "risk_selected": 0.005389496215885581
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.724005424954792,
+            "risk_selected": 0.004422936830055124
+          }
+        ],
+        "aurc": 0.004465552918861432
+      },
+      "known_risk_at_0.5": 0.011153817167834812
+    },
+    "cic_small_strat_loao_exploitation": {
+      "fold": "cic_small_strat_loao_exploitation",
+      "exclude": "exploitation",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.0845185526177823,
+        "score": 0.7080093941297085,
+        "ddos": 1.032626282774022,
+        "choice": 1.0814279113401501
+      },
+      "candidates": [
+        "normal",
+        "dos_ddos",
+        "recon",
+        "bruteforce",
+        "webattack",
+        "botnet",
+        "infiltration"
+      ],
+      "n_test": 424612,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 1,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.999405281148372,
+        "conf_p50": 0.999405281148372,
+        "conf_p90": 0.999405281148372
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.9989472411431318,
+        "margin_p50": 0.9989472411431318,
+        "margin_p90": 0.9989472411431318
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.003622408722473325
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.003622408722473325
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.003622408722473325
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.003622408722473325
+          },
+          {
+            "tau": 0.25,
+            "coverage": 1.0,
+            "risk_selected": 0.003622408722473325
+          },
+          {
+            "tau": 0.3,
+            "coverage": 1.0,
+            "risk_selected": 0.003622408722473325
+          },
+          {
+            "tau": 0.35,
+            "coverage": 1.0,
+            "risk_selected": 0.003622408722473325
+          },
+          {
+            "tau": 0.4,
+            "coverage": 1.0,
+            "risk_selected": 0.003622408722473325
+          },
+          {
+            "tau": 0.45,
+            "coverage": 1.0,
+            "risk_selected": 0.003622408722473325
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.9999880448557014,
+            "risk_selected": 0.003610496742184277
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.9996891662482367,
+            "risk_selected": 0.0035398230088495852
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.9990316333118141,
+            "risk_selected": 0.0033746185604021095
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.9965688735863042,
+            "risk_selected": 0.0033349728283688096
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.9930181957296225,
+            "risk_selected": 0.003202427102646177
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.9916792195681802,
+            "risk_selected": 0.003110307414104896
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.9898500824904957,
+            "risk_selected": 0.0029952776066766162
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.9888817158023098,
+            "risk_selected": 0.0028773151506359396
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.9844702675561294,
+            "risk_selected": 0.0017851287842908237
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.9658202424503264,
+            "risk_selected": 0.0017081956255338149
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.822011811682567,
+            "risk_selected": 0.0012943948340556899
+          }
+        ],
+        "aurc": 0.0011860677311922798
+      },
+      "known_risk_at_0.5": 0.003610496742184277
+    },
+    "cic_small_strat_loao_infiltration": {
+      "fold": "cic_small_strat_loao_infiltration",
+      "exclude": "infiltration",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.025352233259425,
+        "score": 1.07813561318537,
+        "ddos": 0.9842425105915138,
+        "choice": 1.0190350840242581
+      },
+      "candidates": [
+        "normal",
+        "dos_ddos",
+        "recon",
+        "bruteforce",
+        "webattack",
+        "botnet",
+        "exploitation"
+      ],
+      "n_test": 424612,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 5,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 1.0
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.9999995522690318,
+        "conf_p50": 0.9999998942384626,
+        "conf_p90": 0.999999951769499
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.9999991954566874,
+        "margin_p50": 0.999999815250107,
+        "margin_p90": 0.9999999188169102
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.003024796155041698
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.003024796155041698
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.003024796155041698
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.003024796155041698
+          },
+          {
+            "tau": 0.25,
+            "coverage": 1.0,
+            "risk_selected": 0.003024796155041698
+          },
+          {
+            "tau": 0.3,
+            "coverage": 1.0,
+            "risk_selected": 0.003024796155041698
+          },
+          {
+            "tau": 0.35,
+            "coverage": 1.0,
+            "risk_selected": 0.003024796155041698
+          },
+          {
+            "tau": 0.4,
+            "coverage": 1.0,
+            "risk_selected": 0.003024796155041698
+          },
+          {
+            "tau": 0.45,
+            "coverage": 1.0,
+            "risk_selected": 0.003024796155041698
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.9999760885679443,
+            "risk_selected": 0.003000956480153083
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.9992467898902465,
+            "risk_selected": 0.0024288397803275963
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.9984696683484374,
+            "risk_selected": 0.0017961060421006758
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.9981109968676024,
+            "risk_selected": 0.0016649896986249413
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.9973816981899046,
+            "risk_selected": 0.0012346714934730052
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.9965926209320676,
+            "risk_selected": 0.000959727437407798
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.9960067908467038,
+            "risk_selected": 0.0008042444903250123
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.9949546878362545,
+            "risk_selected": 0.0006729151646238662
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.9923602974582147,
+            "risk_selected": 0.0006505788947387403
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.9899213313885369,
+            "risk_selected": 0.0005072525030495045
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.8272518591138424,
+            "risk_selected": 0.00030349890884917574
+          }
+        ],
+        "aurc": 0.0002377395246312553
+      },
+      "known_risk_at_0.5": 0.003000956480153083
+    },
+    "cic_small_strat_loao_recon": {
+      "fold": "cic_small_strat_loao_recon",
+      "exclude": "recon",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.0708984415132274,
+        "score": 0.7408121218674928,
+        "ddos": 1.1167872646800352,
+        "choice": 1.1084485414497547
+      },
+      "candidates": [
+        "normal",
+        "dos_ddos",
+        "bruteforce",
+        "webattack",
+        "botnet",
+        "infiltration",
+        "exploitation"
+      ],
+      "n_test": 424612,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 23840,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0016359060402684564,
+          "normal_absorption": 0.9983640939597316
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 23840,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0016359060402684564,
+          "normal_absorption": 0.9983640939597316
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 23840,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0016359060402684564,
+          "normal_absorption": 0.9983640939597316
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 23840,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0016359060402684564,
+          "normal_absorption": 0.9983640939597316
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 23840,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0016359060402684564,
+          "normal_absorption": 0.9983640939597316
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 23840,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0016359060402684564,
+          "normal_absorption": 0.9983640939597316
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 23840,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0016359060402684564,
+          "normal_absorption": 0.9983640939597316
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 23840,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0016359060402684564,
+          "normal_absorption": 0.9983640939597316
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 23840,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0016359060402684564,
+          "normal_absorption": 0.9983640939597316
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 23840,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0016359060402684564,
+          "normal_absorption": 0.9983640939597316
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 23840,
+          "abstain_rate": 0.00046140939597315436,
+          "false_attack_rate": 0.0014681208053691276,
+          "normal_absorption": 0.9980704697986578
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 23840,
+          "abstain_rate": 0.001174496644295302,
+          "false_attack_rate": 0.0012583892617449664,
+          "normal_absorption": 0.9975671140939597
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 23840,
+          "abstain_rate": 0.0017197986577181209,
+          "false_attack_rate": 0.0012164429530201343,
+          "normal_absorption": 0.9970637583892618
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 23840,
+          "abstain_rate": 0.0022231543624161073,
+          "false_attack_rate": 0.0011325503355704698,
+          "normal_absorption": 0.9966442953020134
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 23840,
+          "abstain_rate": 0.002726510067114094,
+          "false_attack_rate": 0.0010906040268456375,
+          "normal_absorption": 0.9961828859060403
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 23840,
+          "abstain_rate": 0.0035654362416107383,
+          "false_attack_rate": 0.0010906040268456375,
+          "normal_absorption": 0.9953439597315437
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 23840,
+          "abstain_rate": 0.004404362416107382,
+          "false_attack_rate": 0.0010906040268456375,
+          "normal_absorption": 0.994505033557047
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 23840,
+          "abstain_rate": 0.00625,
+          "false_attack_rate": 0.0010486577181208054,
+          "normal_absorption": 0.9927013422818792
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 23840,
+          "abstain_rate": 0.009144295302013423,
+          "false_attack_rate": 0.0010486577181208054,
+          "normal_absorption": 0.9898070469798658
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 23840,
+          "abstain_rate": 0.016317114093959733,
+          "false_attack_rate": 0.0010067114093959733,
+          "normal_absorption": 0.9826761744966444
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.9999969955211229,
+        "conf_p50": 0.9999992856861247,
+        "conf_p90": 0.9999998097442379
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.9999944882768196,
+        "margin_p50": 0.9999986203758328,
+        "margin_p90": 0.9999996662150449
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.0032604879027539058
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.0032604879027539058
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.0032604879027539058
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.0032604879027539058
+          },
+          {
+            "tau": 0.25,
+            "coverage": 1.0,
+            "risk_selected": 0.0032604879027539058
+          },
+          {
+            "tau": 0.3,
+            "coverage": 1.0,
+            "risk_selected": 0.0032604879027539058
+          },
+          {
+            "tau": 0.35,
+            "coverage": 1.0,
+            "risk_selected": 0.0032604879027539058
+          },
+          {
+            "tau": 0.4,
+            "coverage": 1.0,
+            "risk_selected": 0.0032604879027539058
+          },
+          {
+            "tau": 0.45,
+            "coverage": 1.0,
+            "risk_selected": 0.0032604879027539058
+          },
+          {
+            "tau": 0.5,
+            "coverage": 1.0,
+            "risk_selected": 0.0032604879027539058
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.9990302138545655,
+            "risk_selected": 0.003146496175668201
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.9909542361262059,
+            "risk_selected": 0.0028178044747410036
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.989298911498654,
+            "risk_selected": 0.0026366048641979223
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.9886969752704533,
+            "risk_selected": 0.0024690940454246135
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.9884127276071363,
+            "risk_selected": 0.0023852217748756566
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.9877606300265855,
+            "risk_selected": 0.002200592467202722
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.9869246074874178,
+            "risk_selected": 0.0019483269800931735
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.9855368100723996,
+            "risk_selected": 0.0018323097282073597
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.9638503854063906,
+            "risk_selected": 0.0010235059415387715
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.9433343922952163,
+            "risk_selected": 0.000389946470984448
+          }
+        ],
+        "aurc": 0.0006740807215699386
+      },
+      "known_risk_at_0.5": 0.0032604879027539058
+    },
+    "cic_small_strat_loao_webattack": {
+      "fold": "cic_small_strat_loao_webattack",
+      "exclude": "webattack",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 0.9748066540674893,
+        "score": 0.6990721605987926,
+        "ddos": 1.0545227494848732,
+        "choice": 0.9538253769913516
+      },
+      "candidates": [
+        "normal",
+        "dos_ddos",
+        "recon",
+        "bruteforce",
+        "botnet",
+        "infiltration",
+        "exploitation"
+      ],
+      "n_test": 424612,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 327,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9327217125382263
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 327,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9327217125382263
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 327,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9327217125382263
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 327,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9327217125382263
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 327,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9327217125382263
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 327,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9327217125382263
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 327,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9327217125382263
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 327,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9327217125382263
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 327,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9327217125382263
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 327,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9327217125382263
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 327,
+          "abstain_rate": 0.0030581039755351682,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9296636085626911
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 327,
+          "abstain_rate": 0.0030581039755351682,
+          "false_attack_rate": 0.0672782874617737,
+          "normal_absorption": 0.9296636085626911
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 327,
+          "abstain_rate": 0.012232415902140673,
+          "false_attack_rate": 0.06116207951070336,
+          "normal_absorption": 0.926605504587156
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 327,
+          "abstain_rate": 0.012232415902140673,
+          "false_attack_rate": 0.06116207951070336,
+          "normal_absorption": 0.926605504587156
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 327,
+          "abstain_rate": 0.01529051987767584,
+          "false_attack_rate": 0.0581039755351682,
+          "normal_absorption": 0.926605504587156
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 327,
+          "abstain_rate": 0.04281345565749235,
+          "false_attack_rate": 0.0581039755351682,
+          "normal_absorption": 0.8990825688073395
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 327,
+          "abstain_rate": 0.44036697247706424,
+          "false_attack_rate": 0.0581039755351682,
+          "normal_absorption": 0.5015290519877675
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 327,
+          "abstain_rate": 0.8470948012232415,
+          "false_attack_rate": 0.03669724770642202,
+          "normal_absorption": 0.1162079510703364
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 327,
+          "abstain_rate": 0.8990825688073395,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.10091743119266056
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 327,
+          "abstain_rate": 0.9051987767584098,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.09480122324159021
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.8114406673477388,
+        "conf_p50": 0.8523076940582526,
+        "conf_p90": 0.9479115655257873
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.7107487870022628,
+        "margin_p50": 0.7702886305789731,
+        "margin_p90": 0.9127131005547827
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.003216514642342738
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.003216514642342738
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.003216514642342738
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.003216514642342738
+          },
+          {
+            "tau": 0.25,
+            "coverage": 1.0,
+            "risk_selected": 0.003216514642342738
+          },
+          {
+            "tau": 0.3,
+            "coverage": 1.0,
+            "risk_selected": 0.003216514642342738
+          },
+          {
+            "tau": 0.35,
+            "coverage": 1.0,
+            "risk_selected": 0.003216514642342738
+          },
+          {
+            "tau": 0.4,
+            "coverage": 1.0,
+            "risk_selected": 0.003216514642342738
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.9999879980796927,
+            "risk_selected": 0.0032045511828034945
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.9999759961593855,
+            "risk_selected": 0.00319258743608819
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.9997719635141623,
+            "risk_selected": 0.0030491830830362554
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.9984037445991358,
+            "risk_selected": 0.0019714618870737555
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.9981637061929909,
+            "risk_selected": 0.0019478879844169183
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.992774843975036,
+            "risk_selected": 0.001910104209482788
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.9920307249159865,
+            "risk_selected": 0.0018631436314363592
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.9916106577052328,
+            "risk_selected": 0.0018155190568983626
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.9911905904944791,
+            "risk_selected": 0.0017557455258760957
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.989066250600096,
+            "risk_selected": 0.0015896322003664531
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.9855136821891503,
+            "risk_selected": 0.0013396173565696223
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.856072971675468,
+            "risk_selected": 0.00042059219380885526
+          }
+        ],
+        "aurc": 0.00030891807250540114
+      },
+      "known_risk_at_0.5": 0.00319258743608819
+    },
+    "unsw_small_oficial_loao_analysis": {
+      "fold": "unsw_small_oficial_loao_analysis",
+      "exclude": "analysis",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.051840384225164,
+        "score": 0.8678258635294112,
+        "choice": 1.077809325504079
+      },
+      "candidates": [
+        "normal",
+        "dos",
+        "recon",
+        "exploitation",
+        "shellcode",
+        "backdoor",
+        "fuzzing",
+        "generic",
+        "worms"
+      ],
+      "n_test": 82332,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 677,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9985228951255539,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 677,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9985228951255539,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 677,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9985228951255539,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 677,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9985228951255539,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 677,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9985228951255539,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 677,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9985228951255539,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 677,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9985228951255539,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 677,
+          "abstain_rate": 0.0014771048744460858,
+          "false_attack_rate": 0.9970457902511078,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 677,
+          "abstain_rate": 0.707533234859675,
+          "false_attack_rate": 0.29098966026587886,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 677,
+          "abstain_rate": 0.9231905465288035,
+          "false_attack_rate": 0.07533234859675036,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 677,
+          "abstain_rate": 0.9379615952732644,
+          "false_attack_rate": 0.060561299852289516,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 677,
+          "abstain_rate": 0.9586410635155096,
+          "false_attack_rate": 0.03988183161004431,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 677,
+          "abstain_rate": 0.9793205317577548,
+          "false_attack_rate": 0.019202363367799114,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 677,
+          "abstain_rate": 0.9940915805022157,
+          "false_attack_rate": 0.004431314623338257,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 677,
+          "abstain_rate": 0.9970457902511078,
+          "false_attack_rate": 0.0014771048744460858,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 677,
+          "abstain_rate": 0.9985228951255539,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 677,
+          "abstain_rate": 0.9985228951255539,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 677,
+          "abstain_rate": 0.9985228951255539,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 677,
+          "abstain_rate": 0.9985228951255539,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0014771048744460858
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 677,
+          "abstain_rate": 0.9985228951255539,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0014771048744460858
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.42275179188262274,
+        "conf_p50": 0.4401915933706293,
+        "conf_p90": 0.47675870592758673
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.023498412192653806,
+        "margin_p50": 0.0631157870562658,
+        "margin_p90": 0.1091216028915678
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.22013212406225502
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.22013212406225502
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.22013212406225502
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.22013212406225502
+          },
+          {
+            "tau": 0.25,
+            "coverage": 0.9995297279140074,
+            "risk_selected": 0.21985481919612848
+          },
+          {
+            "tau": 0.3,
+            "coverage": 0.9955212182286418,
+            "risk_selected": 0.2177932740974019
+          },
+          {
+            "tau": 0.35,
+            "coverage": 0.9880416526704736,
+            "risk_selected": 0.21427438181364888
+          },
+          {
+            "tau": 0.4,
+            "coverage": 0.9777628485052066,
+            "risk_selected": 0.20947276808208515
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.8304557160452357,
+            "risk_selected": 0.13809189947147016
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.7723435225618632,
+            "risk_selected": 0.10249644814288617
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.7355951181278693,
+            "risk_selected": 0.08271432050657579
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.7016683462098309,
+            "risk_selected": 0.06590495643570671
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.6756018363005263,
+            "risk_selected": 0.054493022639132915
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.6514835964617623,
+            "risk_selected": 0.044032723772858495
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.6278132348001344,
+            "risk_selected": 0.035134653112181224
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.5989698801925876,
+            "risk_selected": 0.02508692563651993
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.5673944687045124,
+            "risk_selected": 0.01633974030074592
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.5310267607210839,
+            "risk_selected": 0.008476363176316837
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.4746836860373978,
+            "risk_selected": 0.0023116478746992852
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.4034710558728026,
+            "risk_selected": 0.000388521951490306
+          }
+        ],
+        "aurc": 0.04988311433180575
+      },
+      "known_risk_at_0.5": 0.10249644814288617
+    },
+    "unsw_small_oficial_loao_backdoor": {
+      "fold": "unsw_small_oficial_loao_backdoor",
+      "exclude": "backdoor",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.0836643203780514,
+        "score": 0.9530680677704149,
+        "choice": 1.077809325504079
+      },
+      "candidates": [
+        "normal",
+        "dos",
+        "recon",
+        "exploitation",
+        "shellcode",
+        "analysis",
+        "fuzzing",
+        "generic",
+        "worms"
+      ],
+      "n_test": 82332,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 583,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 583,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 583,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 583,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 583,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 583,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 583,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 583,
+          "abstain_rate": 0.0017152658662092624,
+          "false_attack_rate": 0.9982847341337907,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 583,
+          "abstain_rate": 0.14751286449399656,
+          "false_attack_rate": 0.8524871355060034,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 583,
+          "abstain_rate": 0.6346483704974271,
+          "false_attack_rate": 0.3653516295025729,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 583,
+          "abstain_rate": 0.8970840480274442,
+          "false_attack_rate": 0.10291595197255575,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 583,
+          "abstain_rate": 0.9210977701543739,
+          "false_attack_rate": 0.07890222984562607,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 583,
+          "abstain_rate": 0.9416809605488851,
+          "false_attack_rate": 0.058319039451114926,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 583,
+          "abstain_rate": 0.9554030874785592,
+          "false_attack_rate": 0.044596912521440824,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 583,
+          "abstain_rate": 0.9708404802744426,
+          "false_attack_rate": 0.029159519725557463,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 583,
+          "abstain_rate": 0.9794168096054888,
+          "false_attack_rate": 0.02058319039451115,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 583,
+          "abstain_rate": 0.9914236706689536,
+          "false_attack_rate": 0.008576329331046312,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 583,
+          "abstain_rate": 1.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 583,
+          "abstain_rate": 1.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 583,
+          "abstain_rate": 1.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.44176564268028284,
+        "conf_p50": 0.4799635643846425,
+        "conf_p90": 0.5501058348023878
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.0921688745913633,
+        "margin_p50": 0.15915201961896336,
+        "margin_p90": 0.26881604819879
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.22775927953697295
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.22775927953697295
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.22775927953697295
+          },
+          {
+            "tau": 0.2,
+            "coverage": 0.9999776531319136,
+            "risk_selected": 0.22774202198980964
+          },
+          {
+            "tau": 0.25,
+            "coverage": 0.9998435719233949,
+            "risk_selected": 0.22763846050690628
+          },
+          {
+            "tau": 0.3,
+            "coverage": 0.999128472144629,
+            "risk_selected": 0.227264594050548
+          },
+          {
+            "tau": 0.35,
+            "coverage": 0.995150729625243,
+            "risk_selected": 0.22527620587442743
+          },
+          {
+            "tau": 0.4,
+            "coverage": 0.9825694428925786,
+            "risk_selected": 0.2204052855420865
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.9106572213904222,
+            "risk_selected": 0.189492282397978
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.8138729357080605,
+            "risk_selected": 0.13904448105436573
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.7614248363091912,
+            "risk_selected": 0.10753382443577031
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.7319269704350935,
+            "risk_selected": 0.09080084267090038
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.7064962345527275,
+            "risk_selected": 0.07724181559386367
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.6803280520235089,
+            "risk_selected": 0.06257390618841152
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.6513441641153992,
+            "risk_selected": 0.049404741482828474
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.6244608818074147,
+            "risk_selected": 0.036752075579730925
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.594046794341773,
+            "risk_selected": 0.02422600910356243
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.5609734295738452,
+            "risk_selected": 0.013305182647492364
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.5143802096136226,
+            "risk_selected": 0.0053870883656268465
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.46152986658919753,
+            "risk_selected": 0.0008231249697380205
+          }
+        ],
+        "aurc": 0.05334402383002844
+      },
+      "known_risk_at_0.5": 0.13904448105436573
+    },
+    "unsw_small_oficial_loao_dos": {
+      "fold": "unsw_small_oficial_loao_dos",
+      "exclude": "dos",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.0274579496711476,
+        "score": 0.9182944733696758,
+        "choice": 1.0339674654038764
+      },
+      "candidates": [
+        "normal",
+        "recon",
+        "exploitation",
+        "shellcode",
+        "backdoor",
+        "analysis",
+        "fuzzing",
+        "generic",
+        "worms"
+      ],
+      "n_test": 82332,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 4089,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9921741257031059,
+          "normal_absorption": 0.007825874296894107
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 4089,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9921741257031059,
+          "normal_absorption": 0.007825874296894107
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 4089,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9921741257031059,
+          "normal_absorption": 0.007825874296894107
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 4089,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9921741257031059,
+          "normal_absorption": 0.007825874296894107
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 4089,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9921741257031059,
+          "normal_absorption": 0.007825874296894107
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 4089,
+          "abstain_rate": 0.0009782342871117633,
+          "false_attack_rate": 0.9911958914159942,
+          "normal_absorption": 0.007825874296894107
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 4089,
+          "abstain_rate": 0.002690144289557349,
+          "false_attack_rate": 0.9894839814135485,
+          "normal_absorption": 0.007825874296894107
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 4089,
+          "abstain_rate": 0.007336757153338224,
+          "false_attack_rate": 0.9855710442651014,
+          "normal_absorption": 0.0070921985815602835
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 4089,
+          "abstain_rate": 0.018341892883345562,
+          "false_attack_rate": 0.975299584250428,
+          "normal_absorption": 0.006358522866226461
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 4089,
+          "abstain_rate": 0.02763511861090731,
+          "false_attack_rate": 0.966984592809978,
+          "normal_absorption": 0.005380288579114698
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 4089,
+          "abstain_rate": 0.05967229151381756,
+          "false_attack_rate": 0.9364147713377354,
+          "normal_absorption": 0.003912937148447053
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 4089,
+          "abstain_rate": 0.24235754463193934,
+          "false_attack_rate": 0.7547077525067254,
+          "normal_absorption": 0.00293470286133529
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 4089,
+          "abstain_rate": 0.5776473465394962,
+          "false_attack_rate": 0.4194179505991685,
+          "normal_absorption": 0.00293470286133529
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 4089,
+          "abstain_rate": 0.764490095377843,
+          "false_attack_rate": 0.2330643189043776,
+          "normal_absorption": 0.002445585717779408
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 4089,
+          "abstain_rate": 0.797260943996087,
+          "false_attack_rate": 0.20053802885791147,
+          "normal_absorption": 0.0022010271460014674
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 4089,
+          "abstain_rate": 0.813890926876987,
+          "false_attack_rate": 0.1839080459770115,
+          "normal_absorption": 0.0022010271460014674
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 4089,
+          "abstain_rate": 0.8334556126192223,
+          "false_attack_rate": 0.16458791880655416,
+          "normal_absorption": 0.0019564685742235266
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 4089,
+          "abstain_rate": 0.8566886769381267,
+          "false_attack_rate": 0.14135485448764978,
+          "normal_absorption": 0.0019564685742235266
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 4089,
+          "abstain_rate": 0.8958180484225972,
+          "false_attack_rate": 0.1024700415749572,
+          "normal_absorption": 0.0017119100024455857
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 4089,
+          "abstain_rate": 0.9618488628026413,
+          "false_attack_rate": 0.03643922719491318,
+          "normal_absorption": 0.0017119100024455857
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.5637600366162335,
+        "conf_p50": 0.6416105191161576,
+        "conf_p90": 0.9552379299933261
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.41464486676014034,
+        "margin_p50": 0.5307171565006379,
+        "margin_p90": 0.9290336722878478
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.1556870256770846
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.1556870256770846
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.1556870256770846
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.1556870256770846
+          },
+          {
+            "tau": 0.25,
+            "coverage": 0.9999757534611934,
+            "risk_selected": 0.15566655351340863
+          },
+          {
+            "tau": 0.3,
+            "coverage": 0.9994423296074485,
+            "risk_selected": 0.15536147501213005
+          },
+          {
+            "tau": 0.35,
+            "coverage": 0.9971874014984361,
+            "risk_selected": 0.15403506212463836
+          },
+          {
+            "tau": 0.4,
+            "coverage": 0.9916106975729214,
+            "risk_selected": 0.15096461843166975
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.9819120820502873,
+            "risk_selected": 0.1453440995629306
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.9693038818708629,
+            "risk_selected": 0.13968031618180454
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.9417840603253885,
+            "risk_selected": 0.12828896555275215
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.879009771355139,
+            "risk_selected": 0.10233635837034172
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.7893218243095798,
+            "risk_selected": 0.062327210173865
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.733118347355915,
+            "risk_selected": 0.03505754729461574
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.7062046892806052,
+            "risk_selected": 0.025509853738927446
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.6857891036054603,
+            "risk_selected": 0.01969311271390184
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.6659311883228669,
+            "risk_selected": 0.014636810486073237
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.6436486191596149,
+            "risk_selected": 0.009568296541851873
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.6163470164633998,
+            "risk_selected": 0.00428796223446104
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.559149431418665,
+            "risk_selected": 0.0011274446034430508
+          }
+        ],
+        "aurc": 0.029007481389691614
+      },
+      "known_risk_at_0.5": 0.13968031618180454
+    },
+    "unsw_small_oficial_loao_exploitation": {
+      "fold": "unsw_small_oficial_loao_exploitation",
+      "exclude": "exploitation",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 0.9966863275785993,
+        "score": 0.7443884385039348,
+        "choice": 1.0488414086945674
+      },
+      "candidates": [
+        "normal",
+        "dos",
+        "recon",
+        "shellcode",
+        "backdoor",
+        "analysis",
+        "fuzzing",
+        "generic",
+        "worms"
+      ],
+      "n_test": 82332,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 11132,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9027128997484729,
+          "normal_absorption": 0.09728710025152713
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 11132,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9027128997484729,
+          "normal_absorption": 0.09728710025152713
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 11132,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9027128997484729,
+          "normal_absorption": 0.09728710025152713
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 11132,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9027128997484729,
+          "normal_absorption": 0.09728710025152713
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 11132,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9027128997484729,
+          "normal_absorption": 0.09728710025152713
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 11132,
+          "abstain_rate": 0.0006288178224937119,
+          "false_attack_rate": 0.9020840819259791,
+          "normal_absorption": 0.09728710025152713
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 11132,
+          "abstain_rate": 0.004581386992454186,
+          "false_attack_rate": 0.8984908372260151,
+          "normal_absorption": 0.09692777578153072
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 11132,
+          "abstain_rate": 0.017786561264822136,
+          "false_attack_rate": 0.8875314408911247,
+          "normal_absorption": 0.09468199784405318
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 11132,
+          "abstain_rate": 0.03566295364714337,
+          "false_attack_rate": 0.8729787998562702,
+          "normal_absorption": 0.09135824649658641
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 11132,
+          "abstain_rate": 0.08192597915918073,
+          "false_attack_rate": 0.830309019044197,
+          "normal_absorption": 0.08776500179662235
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 11132,
+          "abstain_rate": 0.24083722601509164,
+          "false_attack_rate": 0.6766079770032339,
+          "normal_absorption": 0.08255479698167445
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 11132,
+          "abstain_rate": 0.3740567732662594,
+          "false_attack_rate": 0.5492274523895078,
+          "normal_absorption": 0.07671577434423284
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 11132,
+          "abstain_rate": 0.4225655767157743,
+          "false_attack_rate": 0.5038627380524614,
+          "normal_absorption": 0.07357168523176429
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 11132,
+          "abstain_rate": 0.4567912324829321,
+          "false_attack_rate": 0.4733201581027668,
+          "normal_absorption": 0.06988860941430111
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 11132,
+          "abstain_rate": 0.49766439094502335,
+          "false_attack_rate": 0.4360402443406396,
+          "normal_absorption": 0.06629536471433704
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 11132,
+          "abstain_rate": 0.543298598634567,
+          "false_attack_rate": 0.3930111390585699,
+          "normal_absorption": 0.0636902623068631
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 11132,
+          "abstain_rate": 0.6116600790513834,
+          "false_attack_rate": 0.32806324110671936,
+          "normal_absorption": 0.06027667984189723
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 11132,
+          "abstain_rate": 0.7318541142651814,
+          "false_attack_rate": 0.21074380165289255,
+          "normal_absorption": 0.05740208408192598
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 11132,
+          "abstain_rate": 0.8870822853036292,
+          "false_attack_rate": 0.06027667984189723,
+          "normal_absorption": 0.05264103485447359
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 11132,
+          "abstain_rate": 0.9550844412504491,
+          "false_attack_rate": 0.001167804527488322,
+          "normal_absorption": 0.04374775422206252
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.5054933886361588,
+        "conf_p50": 0.7521199871278885,
+        "conf_p90": 0.9540629006258617
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.27828908137830816,
+        "margin_p50": 0.5948558434121647,
+        "margin_p90": 0.929803428230366
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.16660818713450287
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.16660818713450287
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.16660818713450287
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.16660818713450287
+          },
+          {
+            "tau": 0.25,
+            "coverage": 1.0,
+            "risk_selected": 0.16660818713450287
+          },
+          {
+            "tau": 0.3,
+            "coverage": 0.9996491228070176,
+            "risk_selected": 0.16637416637416635
+          },
+          {
+            "tau": 0.35,
+            "coverage": 0.9973099415204678,
+            "risk_selected": 0.16500527735428638
+          },
+          {
+            "tau": 0.4,
+            "coverage": 0.9912573099415205,
+            "risk_selected": 0.16147016312203177
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.9819883040935673,
+            "risk_selected": 0.1562053358742258
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.9531578947368421,
+            "risk_selected": 0.14151174918706666
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.8520175438596491,
+            "risk_selected": 0.09482137341706987
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.7676315789473684,
+            "risk_selected": 0.0570220546223289
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.7366081871345029,
+            "risk_selected": 0.0416005080978088
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.7171345029239766,
+            "risk_selected": 0.032414580445241814
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.7007017543859649,
+            "risk_selected": 0.02545484894007677
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.6804678362573099,
+            "risk_selected": 0.01894981093159165
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.659766081871345,
+            "risk_selected": 0.014492111327778723
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.637719298245614,
+            "risk_selected": 0.008757450710683123
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.6103216374269006,
+            "risk_selected": 0.004503425477890066
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.5749415204678363,
+            "risk_selected": 0.002847988608045582
+          }
+        ],
+        "aurc": 0.03303046878147454
+      },
+      "known_risk_at_0.5": 0.14151174918706666
+    },
+    "unsw_small_oficial_loao_fuzzing": {
+      "fold": "unsw_small_oficial_loao_fuzzing",
+      "exclude": "fuzzing",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.040477702644553,
+        "score": 0.8931978129487457,
+        "choice": 1.1355499318713167
+      },
+      "candidates": [
+        "normal",
+        "dos",
+        "recon",
+        "exploitation",
+        "shellcode",
+        "backdoor",
+        "analysis",
+        "generic",
+        "worms"
+      ],
+      "n_test": 82332,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 6062,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.41966347740019794,
+          "normal_absorption": 0.5803365225998021
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 6062,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.41966347740019794,
+          "normal_absorption": 0.5803365225998021
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 6062,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.41966347740019794,
+          "normal_absorption": 0.5803365225998021
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 6062,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.41966347740019794,
+          "normal_absorption": 0.5803365225998021
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 6062,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.41966347740019794,
+          "normal_absorption": 0.5803365225998021
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 6062,
+          "abstain_rate": 0.0004948861761794787,
+          "false_attack_rate": 0.41933355328274496,
+          "normal_absorption": 0.5801715605410755
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 6062,
+          "abstain_rate": 0.006103596172880237,
+          "false_attack_rate": 0.4153744638733091,
+          "normal_absorption": 0.5785219399538106
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 6062,
+          "abstain_rate": 0.024084460574067965,
+          "false_attack_rate": 0.4049818541735401,
+          "normal_absorption": 0.570933685252392
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 6062,
+          "abstain_rate": 0.13559881227317716,
+          "false_attack_rate": 0.3073243154074563,
+          "normal_absorption": 0.5570768723193665
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 6062,
+          "abstain_rate": 0.2840646651270208,
+          "false_attack_rate": 0.18442758165621906,
+          "normal_absorption": 0.5315077532167601
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 6062,
+          "abstain_rate": 0.3561530847904982,
+          "false_attack_rate": 0.13147476080501486,
+          "normal_absorption": 0.5123721544044869
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 6062,
+          "abstain_rate": 0.4100956779940614,
+          "false_attack_rate": 0.09798746288353678,
+          "normal_absorption": 0.49191685912240185
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 6062,
+          "abstain_rate": 0.4493566479709667,
+          "false_attack_rate": 0.07786209171890465,
+          "normal_absorption": 0.4727812603101287
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 6062,
+          "abstain_rate": 0.48993731441768396,
+          "false_attack_rate": 0.05592213790828109,
+          "normal_absorption": 0.45414054767403494
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 6062,
+          "abstain_rate": 0.5381062355658198,
+          "false_attack_rate": 0.034477070273837014,
+          "normal_absorption": 0.4274166941603431
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 6062,
+          "abstain_rate": 0.5775321676014517,
+          "false_attack_rate": 0.016166281755196306,
+          "normal_absorption": 0.40630155064335205
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 6062,
+          "abstain_rate": 0.6118442758165622,
+          "false_attack_rate": 0.006268558231606731,
+          "normal_absorption": 0.3818871659518311
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 6062,
+          "abstain_rate": 0.6583635763774331,
+          "false_attack_rate": 0.001814582645991422,
+          "normal_absorption": 0.33982184097657536
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 6062,
+          "abstain_rate": 0.7231936654569449,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.2768063345430551
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 6062,
+          "abstain_rate": 0.8660508083140878,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.13394919168591224
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.44108523570214586,
+        "conf_p50": 0.7101658060164018,
+        "conf_p90": 0.9926716685111102
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.0829642817000061,
+        "margin_p50": 0.5220466118061137,
+        "margin_p90": 0.9890580086356092
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.19131652661064424
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.19131652661064424
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.19131652661064424
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.19131652661064424
+          },
+          {
+            "tau": 0.25,
+            "coverage": 0.9999745352686529,
+            "risk_selected": 0.1912959331788434
+          },
+          {
+            "tau": 0.3,
+            "coverage": 0.9994397759103641,
+            "risk_selected": 0.19106706074194868
+          },
+          {
+            "tau": 0.35,
+            "coverage": 0.9970460911637382,
+            "risk_selected": 0.1898656586811054
+          },
+          {
+            "tau": 0.4,
+            "coverage": 0.991240132416603,
+            "risk_selected": 0.18748394389354162
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.9318309141838553,
+            "risk_selected": 0.1624900937337742
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.8408708938120703,
+            "risk_selected": 0.11613821507525512
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.7787114845938375,
+            "risk_selected": 0.07877697841726616
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.7441558441558441,
+            "risk_selected": 0.061253122540464666
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.7241914947797301,
+            "risk_selected": 0.051584092267660586
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.700916730328495,
+            "risk_selected": 0.04178019981834691
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.6757066462948816,
+            "risk_selected": 0.03312605992085926
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.654367201426025,
+            "risk_selected": 0.026111997509436935
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.6201680672268908,
+            "risk_selected": 0.017697298185103016
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.5762923351158645,
+            "risk_selected": 0.00879324819937255
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.536236312706901,
+            "risk_selected": 0.0039889828093836455
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.4696715049656226,
+            "risk_selected": 0.0007048362611147274
+          }
+        ],
+        "aurc": 0.03887307203783354
+      },
+      "known_risk_at_0.5": 0.11613821507525512
+    },
+    "unsw_small_oficial_loao_generic": {
+      "fold": "unsw_small_oficial_loao_generic",
+      "exclude": "generic",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.1653631691130926,
+        "score": 1.0143265589863102,
+        "choice": 1.009618033948362
+      },
+      "candidates": [
+        "normal",
+        "dos",
+        "recon",
+        "exploitation",
+        "shellcode",
+        "backdoor",
+        "analysis",
+        "fuzzing",
+        "worms"
+      ],
+      "n_test": 82332,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 18871,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9990461554766573,
+          "normal_absorption": 0.0009538445233426952
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 18871,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9990461554766573,
+          "normal_absorption": 0.0009538445233426952
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 18871,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9990461554766573,
+          "normal_absorption": 0.0009538445233426952
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 18871,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9990461554766573,
+          "normal_absorption": 0.0009538445233426952
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 18871,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9990461554766573,
+          "normal_absorption": 0.0009538445233426952
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 18871,
+          "abstain_rate": 0.0012188013353823326,
+          "false_attack_rate": 0.9978803455036829,
+          "normal_absorption": 0.0009008531609347676
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 18871,
+          "abstain_rate": 0.10656562980234222,
+          "false_attack_rate": 0.892533517036723,
+          "normal_absorption": 0.0009008531609347676
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 18871,
+          "abstain_rate": 0.25075512691431295,
+          "false_attack_rate": 0.7483440199247523,
+          "normal_absorption": 0.0009008531609347676
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 18871,
+          "abstain_rate": 0.34931906099305815,
+          "false_attack_rate": 0.649833077208415,
+          "normal_absorption": 0.0008478617985268401
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 18871,
+          "abstain_rate": 0.49960256478194054,
+          "false_attack_rate": 0.49960256478194054,
+          "normal_absorption": 0.0007948704361189126
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 18871,
+          "abstain_rate": 0.6361613057071698,
+          "false_attack_rate": 0.36325578930634306,
+          "normal_absorption": 0.0005829049864872026
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 18871,
+          "abstain_rate": 0.7326585766520057,
+          "false_attack_rate": 0.26691749244873086,
+          "normal_absorption": 0.00042393089926342006
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 18871,
+          "abstain_rate": 0.8334481479518838,
+          "false_attack_rate": 0.1662868952360765,
+          "normal_absorption": 0.0002649568120396375
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 18871,
+          "abstain_rate": 0.9006941868475439,
+          "false_attack_rate": 0.09904085634041651,
+          "normal_absorption": 0.0002649568120396375
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 18871,
+          "abstain_rate": 0.9585077632345927,
+          "false_attack_rate": 0.0412272799533676,
+          "normal_absorption": 0.0002649568120396375
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 18871,
+          "abstain_rate": 0.98542737533782,
+          "false_attack_rate": 0.014360659212548355,
+          "normal_absorption": 0.00021196544963171003
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 18871,
+          "abstain_rate": 0.9893487361560066,
+          "false_attack_rate": 0.010439298394361718,
+          "normal_absorption": 0.00021196544963171003
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 18871,
+          "abstain_rate": 0.9930581315245615,
+          "false_attack_rate": 0.006782894388214721,
+          "normal_absorption": 0.00015897408722378252
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 18871,
+          "abstain_rate": 0.997774362778867,
+          "false_attack_rate": 0.0021196544963171,
+          "normal_absorption": 0.00010598272481585502
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 18871,
+          "abstain_rate": 0.9997880345503682,
+          "false_attack_rate": 0.00015897408722378252,
+          "normal_absorption": 5.299136240792751e-05
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.3467119420446373,
+        "conf_p50": 0.5000843316782674,
+        "conf_p90": 0.6983677488896194
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.06275986653191745,
+        "margin_p50": 0.26024090614612294,
+        "margin_p90": 0.5788997593540706
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.3678999281962133
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.3678999281962133
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.3678999281962133
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.3678999281962133
+          },
+          {
+            "tau": 0.25,
+            "coverage": 0.9993197535996372,
+            "risk_selected": 0.3676209204704458
+          },
+          {
+            "tau": 0.3,
+            "coverage": 0.9939911567967953,
+            "risk_selected": 0.36586571363394416
+          },
+          {
+            "tau": 0.35,
+            "coverage": 0.9826915082574355,
+            "risk_selected": 0.3632273199246241
+          },
+          {
+            "tau": 0.4,
+            "coverage": 0.902913722081554,
+            "risk_selected": 0.33915118031140135
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.7094969955783984,
+            "risk_selected": 0.2583359965910301
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.592532406182684,
+            "risk_selected": 0.1868741628930416
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.5284002872151469,
+            "risk_selected": 0.1489057359462166
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.4861494274592797,
+            "risk_selected": 0.12383395522388063
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.4407618759684063,
+            "risk_selected": 0.10117465489153732
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.4045954423491176,
+            "risk_selected": 0.08266392677003553
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.36695514152904274,
+            "risk_selected": 0.06889804325437698
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.32935263217565475,
+            "risk_selected": 0.054618473895582276
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.2851744076187597,
+            "risk_selected": 0.03988868274582558
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.24322587959638714,
+            "risk_selected": 0.02858918582970793
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.17214013075847473,
+            "risk_selected": 0.016684961580680557
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.04021012055477873,
+            "risk_selected": 0.014097744360902276
+          }
+        ],
+        "aurc": 0.15649883454926705
+      },
+      "known_risk_at_0.5": 0.1868741628930416
+    },
+    "unsw_small_oficial_loao_recon": {
+      "fold": "unsw_small_oficial_loao_recon",
+      "exclude": "recon",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.100109818219474,
+        "score": 0.9374960439095704,
+        "choice": 1.0722806183113978
+      },
+      "candidates": [
+        "normal",
+        "dos",
+        "exploitation",
+        "shellcode",
+        "backdoor",
+        "analysis",
+        "fuzzing",
+        "generic",
+        "worms"
+      ],
+      "n_test": 82332,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 3496,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9376430205949656,
+          "normal_absorption": 0.062356979405034325
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 3496,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9376430205949656,
+          "normal_absorption": 0.062356979405034325
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 3496,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9376430205949656,
+          "normal_absorption": 0.062356979405034325
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 3496,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9376430205949656,
+          "normal_absorption": 0.062356979405034325
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 3496,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.9376430205949656,
+          "normal_absorption": 0.062356979405034325
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 3496,
+          "abstain_rate": 0.002860411899313501,
+          "false_attack_rate": 0.9350686498855835,
+          "normal_absorption": 0.062070938215102976
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 3496,
+          "abstain_rate": 0.044050343249427915,
+          "false_attack_rate": 0.9030320366132724,
+          "normal_absorption": 0.052917620137299774
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 3496,
+          "abstain_rate": 0.09839816933638444,
+          "false_attack_rate": 0.8538329519450801,
+          "normal_absorption": 0.04776887871853547
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 3496,
+          "abstain_rate": 0.18735697940503432,
+          "false_attack_rate": 0.7705949656750573,
+          "normal_absorption": 0.04204805491990847
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 3496,
+          "abstain_rate": 0.2823226544622426,
+          "false_attack_rate": 0.6867848970251716,
+          "normal_absorption": 0.030892448512585814
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 3496,
+          "abstain_rate": 0.3589816933638444,
+          "false_attack_rate": 0.6175629290617849,
+          "normal_absorption": 0.02345537757437071
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 3496,
+          "abstain_rate": 0.43249427917620137,
+          "false_attack_rate": 0.5483409610983981,
+          "normal_absorption": 0.01916475972540046
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 3496,
+          "abstain_rate": 0.4914187643020595,
+          "false_attack_rate": 0.49284897025171626,
+          "normal_absorption": 0.015732265446224258
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 3496,
+          "abstain_rate": 0.5234553775743707,
+          "false_attack_rate": 0.46252860411899316,
+          "normal_absorption": 0.014016018306636156
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 3496,
+          "abstain_rate": 0.5460526315789473,
+          "false_attack_rate": 0.44336384439359267,
+          "normal_absorption": 0.010583524027459955
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 3496,
+          "abstain_rate": 0.580091533180778,
+          "false_attack_rate": 0.41304347826086957,
+          "normal_absorption": 0.006864988558352402
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 3496,
+          "abstain_rate": 0.7159610983981693,
+          "false_attack_rate": 0.27831807780320367,
+          "normal_absorption": 0.005720823798627002
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 3496,
+          "abstain_rate": 0.8935926773455377,
+          "false_attack_rate": 0.10383295194508009,
+          "normal_absorption": 0.002574370709382151
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 3496,
+          "abstain_rate": 0.977116704805492,
+          "false_attack_rate": 0.02231121281464531,
+          "normal_absorption": 0.0005720823798627002
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 3496,
+          "abstain_rate": 0.9994279176201373,
+          "false_attack_rate": 0.0002860411899313501,
+          "normal_absorption": 0.0002860411899313501
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.40214747403565926,
+        "conf_p50": 0.6580169872462568,
+        "conf_p90": 0.9042018381976329
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.08413249422797048,
+        "margin_p50": 0.465977737315354,
+        "margin_p90": 0.8503173041442964
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.23563438187207186
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.23563438187207186
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.23563438187207186
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.23563438187207186
+          },
+          {
+            "tau": 0.25,
+            "coverage": 0.9998087771297447,
+            "risk_selected": 0.2355360045902266
+          },
+          {
+            "tau": 0.3,
+            "coverage": 0.9990916913662874,
+            "risk_selected": 0.2351308675056223
+          },
+          {
+            "tau": 0.35,
+            "coverage": 0.9946218567740702,
+            "risk_selected": 0.23284708370382834
+          },
+          {
+            "tau": 0.4,
+            "coverage": 0.9734200210345157,
+            "risk_selected": 0.2248551222866123
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.8792905631513529,
+            "risk_selected": 0.1801772413418148
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.7880055454632374,
+            "risk_selected": 0.1291291291291291
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.7480399655798834,
+            "risk_selected": 0.10583160249241097
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.7238024667750262,
+            "risk_selected": 0.0925993197054259
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.7001147337221532,
+            "risk_selected": 0.07941276886309323
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.6779806864901042,
+            "risk_selected": 0.06624594556480046
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.6521177932880773,
+            "risk_selected": 0.05223224103804702
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.6277368773305287,
+            "risk_selected": 0.04036250095194582
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.6005593268954967,
+            "risk_selected": 0.030646766169154183
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.5662826274022373,
+            "risk_selected": 0.021358321725549745
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.5046849603212544,
+            "risk_selected": 0.008335701430330578
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.45085572234439236,
+            "risk_selected": 0.0006892164139540302
+          }
+        ],
+        "aurc": 0.055728385646972356
+      },
+      "known_risk_at_0.5": 0.1291291291291291
+    },
+    "unsw_small_oficial_loao_shellcode": {
+      "fold": "unsw_small_oficial_loao_shellcode",
+      "exclude": "shellcode",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.1167872646800352,
+        "score": 0.9442013369717253,
+        "choice": 1.0733365074282766
+      },
+      "candidates": [
+        "normal",
+        "dos",
+        "recon",
+        "exploitation",
+        "backdoor",
+        "analysis",
+        "fuzzing",
+        "generic",
+        "worms"
+      ],
+      "n_test": 82332,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 378,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.955026455026455,
+          "normal_absorption": 0.04497354497354497
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 378,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.955026455026455,
+          "normal_absorption": 0.04497354497354497
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 378,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.955026455026455,
+          "normal_absorption": 0.04497354497354497
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 378,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 0.955026455026455,
+          "normal_absorption": 0.04497354497354497
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 378,
+          "abstain_rate": 0.0026455026455026454,
+          "false_attack_rate": 0.9523809523809523,
+          "normal_absorption": 0.04497354497354497
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 378,
+          "abstain_rate": 0.031746031746031744,
+          "false_attack_rate": 0.9285714285714286,
+          "normal_absorption": 0.03968253968253968
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 378,
+          "abstain_rate": 0.09259259259259259,
+          "false_attack_rate": 0.8783068783068783,
+          "normal_absorption": 0.0291005291005291
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 378,
+          "abstain_rate": 0.21957671957671956,
+          "false_attack_rate": 0.753968253968254,
+          "normal_absorption": 0.026455026455026454
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 378,
+          "abstain_rate": 0.3201058201058201,
+          "false_attack_rate": 0.6613756613756614,
+          "normal_absorption": 0.018518518518518517
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 378,
+          "abstain_rate": 0.41798941798941797,
+          "false_attack_rate": 0.5661375661375662,
+          "normal_absorption": 0.015873015873015872
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 378,
+          "abstain_rate": 0.5105820105820106,
+          "false_attack_rate": 0.47619047619047616,
+          "normal_absorption": 0.013227513227513227
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 378,
+          "abstain_rate": 0.5661375661375662,
+          "false_attack_rate": 0.42592592592592593,
+          "normal_absorption": 0.007936507936507936
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 378,
+          "abstain_rate": 0.6428571428571429,
+          "false_attack_rate": 0.3544973544973545,
+          "normal_absorption": 0.0026455026455026454
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 378,
+          "abstain_rate": 0.7142857142857143,
+          "false_attack_rate": 0.2830687830687831,
+          "normal_absorption": 0.0026455026455026454
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 378,
+          "abstain_rate": 0.7671957671957672,
+          "false_attack_rate": 0.23015873015873015,
+          "normal_absorption": 0.0026455026455026454
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 378,
+          "abstain_rate": 0.8359788359788359,
+          "false_attack_rate": 0.164021164021164,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 378,
+          "abstain_rate": 0.8888888888888888,
+          "false_attack_rate": 0.1111111111111111,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 378,
+          "abstain_rate": 0.9497354497354498,
+          "false_attack_rate": 0.05026455026455026,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 378,
+          "abstain_rate": 0.9576719576719577,
+          "false_attack_rate": 0.042328042328042326,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 378,
+          "abstain_rate": 0.9788359788359788,
+          "false_attack_rate": 0.021164021164021163,
+          "normal_absorption": 0.0
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.3533126934340656,
+        "conf_p50": 0.539397118538383,
+        "conf_p90": 0.8601248823047767
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.049697092309840214,
+        "margin_p50": 0.28866239274438305,
+        "margin_p90": 0.7703273170040079
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.22765493615696042
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.22765493615696042
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.22765493615696042
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.22765493615696042
+          },
+          {
+            "tau": 0.25,
+            "coverage": 0.9999555100769676,
+            "risk_selected": 0.22762057305570382
+          },
+          {
+            "tau": 0.3,
+            "coverage": 0.9989322418472216,
+            "risk_selected": 0.22716340800783863
+          },
+          {
+            "tau": 0.35,
+            "coverage": 0.9958846821195,
+            "risk_selected": 0.22558020058522643
+          },
+          {
+            "tau": 0.4,
+            "coverage": 0.9676335809939048,
+            "risk_selected": 0.21423480999563205
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.8596120478711572,
+            "risk_selected": 0.15982195999275417
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.7815544779107532,
+            "risk_selected": 0.11214208459042518
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.75041153178805,
+            "risk_selected": 0.09604553269698224
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.7245628865062064,
+            "risk_selected": 0.08215645339555444
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.7001601637229168,
+            "risk_selected": 0.06989674344718033
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.6729990657116163,
+            "risk_selected": 0.056686719111522454
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.6471281754682564,
+            "risk_selected": 0.045134233955518854
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.6226809627619344,
+            "risk_selected": 0.03493855387253497
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.5940961872135961,
+            "risk_selected": 0.023776537986295754
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.5604395604395604,
+            "risk_selected": 0.012939588790982004
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.5112781954887218,
+            "risk_selected": 0.004524886877828038
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.4556880366596966,
+            "risk_selected": 0.0004393458628264568
+          }
+        ],
+        "aurc": 0.05160810442865371
+      },
+      "known_risk_at_0.5": 0.11214208459042518
+    },
+    "unsw_small_oficial_loao_worms": {
+      "fold": "unsw_small_oficial_loao_worms",
+      "exclude": "worms",
+      "tau_abs_paper": 0.5,
+      "temperatures": {
+        "noul": 1.0062109132235268,
+        "score": 0.8795496829864167,
+        "choice": 1.0483291225150841
+      },
+      "candidates": [
+        "normal",
+        "dos",
+        "recon",
+        "exploitation",
+        "shellcode",
+        "backdoor",
+        "analysis",
+        "fuzzing",
+        "generic"
+      ],
+      "n_test": 82332,
+      "excluded_curve": [
+        {
+          "tau": 0.05,
+          "n_excl": 44,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.1,
+          "n_excl": 44,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.15,
+          "n_excl": 44,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.2,
+          "n_excl": 44,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.25,
+          "n_excl": 44,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.3,
+          "n_excl": 44,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.35,
+          "n_excl": 44,
+          "abstain_rate": 0.0,
+          "false_attack_rate": 1.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.4,
+          "n_excl": 44,
+          "abstain_rate": 0.022727272727272728,
+          "false_attack_rate": 0.9772727272727273,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.45,
+          "n_excl": 44,
+          "abstain_rate": 0.18181818181818182,
+          "false_attack_rate": 0.8181818181818182,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.5,
+          "n_excl": 44,
+          "abstain_rate": 0.22727272727272727,
+          "false_attack_rate": 0.7727272727272727,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.55,
+          "n_excl": 44,
+          "abstain_rate": 0.2727272727272727,
+          "false_attack_rate": 0.7272727272727273,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.6,
+          "n_excl": 44,
+          "abstain_rate": 0.3409090909090909,
+          "false_attack_rate": 0.6590909090909091,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.65,
+          "n_excl": 44,
+          "abstain_rate": 0.3409090909090909,
+          "false_attack_rate": 0.6590909090909091,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.7,
+          "n_excl": 44,
+          "abstain_rate": 0.4090909090909091,
+          "false_attack_rate": 0.5909090909090909,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.75,
+          "n_excl": 44,
+          "abstain_rate": 0.4090909090909091,
+          "false_attack_rate": 0.5909090909090909,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.8,
+          "n_excl": 44,
+          "abstain_rate": 0.5909090909090909,
+          "false_attack_rate": 0.4090909090909091,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.85,
+          "n_excl": 44,
+          "abstain_rate": 0.7045454545454546,
+          "false_attack_rate": 0.29545454545454547,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.9,
+          "n_excl": 44,
+          "abstain_rate": 1.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.95,
+          "n_excl": 44,
+          "abstain_rate": 1.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0
+        },
+        {
+          "tau": 0.99,
+          "n_excl": 44,
+          "abstain_rate": 1.0,
+          "false_attack_rate": 0.0,
+          "normal_absorption": 0.0
+        }
+      ],
+      "excluded_conf_stats": {
+        "conf_p10": 0.42183460327120037,
+        "conf_p50": 0.7764697157764404,
+        "conf_p90": 0.8808452647387411
+      },
+      "excluded_margin_stats": {
+        "margin_p10": 0.15997351478944474,
+        "margin_p50": 0.6640266315287793,
+        "margin_p90": 0.8339125873141259
+      },
+      "known_rc": {
+        "per_tau": [
+          {
+            "tau": 0.05,
+            "coverage": 1.0,
+            "risk_selected": 0.22345875287051753
+          },
+          {
+            "tau": 0.1,
+            "coverage": 1.0,
+            "risk_selected": 0.22345875287051753
+          },
+          {
+            "tau": 0.15,
+            "coverage": 1.0,
+            "risk_selected": 0.22345875287051753
+          },
+          {
+            "tau": 0.2,
+            "coverage": 1.0,
+            "risk_selected": 0.22345875287051753
+          },
+          {
+            "tau": 0.25,
+            "coverage": 0.9999779190955661,
+            "risk_selected": 0.223441605758827
+          },
+          {
+            "tau": 0.3,
+            "coverage": 0.9990284402049108,
+            "risk_selected": 0.22310140571125459
+          },
+          {
+            "tau": 0.35,
+            "coverage": 0.9931770005299417,
+            "risk_selected": 0.21990262122323756
+          },
+          {
+            "tau": 0.4,
+            "coverage": 0.8386989931107578,
+            "risk_selected": 0.14216886501856096
+          },
+          {
+            "tau": 0.45,
+            "coverage": 0.7872725666843314,
+            "risk_selected": 0.10885174174005718
+          },
+          {
+            "tau": 0.5,
+            "coverage": 0.770314432079138,
+            "risk_selected": 0.09783294158115008
+          },
+          {
+            "tau": 0.55,
+            "coverage": 0.739555732202791,
+            "risk_selected": 0.08070343056758134
+          },
+          {
+            "tau": 0.6,
+            "coverage": 0.7128819996467055,
+            "risk_selected": 0.0667802385008518
+          },
+          {
+            "tau": 0.65,
+            "coverage": 0.6844197138314785,
+            "risk_selected": 0.05310362627435794
+          },
+          {
+            "tau": 0.7,
+            "coverage": 0.6562223988694577,
+            "risk_selected": 0.0393014569803829
+          },
+          {
+            "tau": 0.75,
+            "coverage": 0.6273405758699876,
+            "risk_selected": 0.029636408433353245
+          },
+          {
+            "tau": 0.8,
+            "coverage": 0.6001810634163576,
+            "risk_selected": 0.021595967771605218
+          },
+          {
+            "tau": 0.85,
+            "coverage": 0.5747659424130013,
+            "risk_selected": 0.014483288513253978
+          },
+          {
+            "tau": 0.9,
+            "coverage": 0.5461049284578696,
+            "risk_selected": 0.008733624454148492
+          },
+          {
+            "tau": 0.95,
+            "coverage": 0.5028263557675322,
+            "risk_selected": 0.0035130862462673385
+          },
+          {
+            "tau": 0.99,
+            "coverage": 0.4506712594947889,
+            "risk_selected": 0.0007349338559529128
+          }
+        ],
+        "aurc": 0.048807557443881655
+      },
+      "known_risk_at_0.5": 0.09783294158115008
+    }
+  },
+  "unsw_mean": {
+    "folds": [
+      "unsw_small_oficial_loao_analysis",
+      "unsw_small_oficial_loao_backdoor",
+      "unsw_small_oficial_loao_dos",
+      "unsw_small_oficial_loao_exploitation",
+      "unsw_small_oficial_loao_fuzzing",
+      "unsw_small_oficial_loao_generic",
+      "unsw_small_oficial_loao_recon",
+      "unsw_small_oficial_loao_shellcode",
+      "unsw_small_oficial_loao_worms"
+    ],
+    "curve": [
+      {
+        "tau": 0.05,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.9116432254528232,
+        "normal_absorption": 0.08835677454717682
+      },
+      {
+        "tau": 0.1,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.9116432254528232,
+        "normal_absorption": 0.08835677454717682
+      },
+      {
+        "tau": 0.15,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.9116432254528232,
+        "normal_absorption": 0.08835677454717682
+      },
+      {
+        "tau": 0.2,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.9116432254528232,
+        "normal_absorption": 0.08835677454717682
+      },
+      {
+        "tau": 0.25,
+        "abstain_rate": 0.00029394473838918284,
+        "false_attack_rate": 0.9113492807144339,
+        "normal_absorption": 0.08835677454717682
+      },
+      {
+        "tau": 0.3,
+        "abstain_rate": 0.004214131474056948,
+        "false_attack_rate": 0.9080729828567742,
+        "normal_absorption": 0.08771288566916893
+      },
+      {
+        "tau": 0.35,
+        "abstain_rate": 0.0285092992332505,
+        "false_attack_rate": 0.8861938455105889,
+        "normal_absorption": 0.08529685525616058
+      },
+      {
+        "tau": 0.4,
+        "abstain_rate": 0.07153971536528592,
+        "false_attack_rate": 0.8452036463139421,
+        "normal_absorption": 0.08325663832077203
+      },
+      {
+        "tau": 0.45,
+        "abstain_rate": 0.2314722000532702,
+        "false_attack_rate": 0.6887850019696654,
+        "normal_absorption": 0.07974279797706436
+      },
+      {
+        "tau": 0.5,
+        "abstain_rate": 0.3754057827144075,
+        "false_attack_rate": 0.5497397191424076,
+        "normal_absorption": 0.07485449814318487
+      },
+      {
+        "tau": 0.55,
+        "abstain_rate": 0.4744622808889349,
+        "false_attack_rate": 0.4546951869780179,
+        "normal_absorption": 0.0708425321330473
+      },
+      {
+        "tau": 0.6,
+        "abstain_rate": 0.5531609269374453,
+        "false_attack_rate": 0.38010911308882267,
+        "normal_absorption": 0.06672995997373199
+      },
+      {
+        "tau": 0.65,
+        "abstain_rate": 0.6310226899503393,
+        "false_attack_rate": 0.30570981247394496,
+        "normal_absorption": 0.06326749757571565
+      },
+      {
+        "tau": 0.7,
+        "abstain_rate": 0.6898043886730858,
+        "false_attack_rate": 0.24965357516638756,
+        "normal_absorption": 0.06054203616052667
+      },
+      {
+        "tau": 0.75,
+        "abstain_rate": 0.7201961013480775,
+        "false_attack_rate": 0.22303899038746364,
+        "normal_absorption": 0.05676490826445889
+      },
+      {
+        "tau": 0.8,
+        "abstain_rate": 0.7672298036945082,
+        "false_attack_rate": 0.17935387419675333,
+        "normal_absorption": 0.053416322108738534
+      },
+      {
+        "tau": 0.85,
+        "abstain_rate": 0.8161834123633551,
+        "false_attack_rate": 0.1336465644710165,
+        "normal_absorption": 0.05017002316562851
+      },
+      {
+        "tau": 0.9,
+        "abstain_rate": 0.8979795023679826,
+        "false_attack_rate": 0.05719929282048654,
+        "normal_absorption": 0.04482120481153076
+      },
+      {
+        "tau": 0.95,
+        "abstain_rate": 0.9374644355072268,
+        "false_attack_rate": 0.02550062567287324,
+        "normal_absorption": 0.03703493881989988
+      },
+      {
+        "tau": 0.99,
+        "abstain_rate": 0.9732843264999129,
+        "false_attack_rate": 0.006579563129286422,
+        "normal_absorption": 0.02013611037080064
+      }
+    ],
+    "aurc_known": 0.05742011582662318
+  },
+  "cic_mean": {
+    "folds": [
+      "cic_small_strat_loao_botnet",
+      "cic_small_strat_loao_bruteforce",
+      "cic_small_strat_loao_dos_ddos",
+      "cic_small_strat_loao_exploitation",
+      "cic_small_strat_loao_infiltration",
+      "cic_small_strat_loao_recon",
+      "cic_small_strat_loao_webattack"
+    ],
+    "curve": [
+      {
+        "tau": 0.05,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.05532232664081343,
+        "normal_absorption": 0.9446776733591865
+      },
+      {
+        "tau": 0.1,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.05532232664081343,
+        "normal_absorption": 0.9446776733591865
+      },
+      {
+        "tau": 0.15,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.05532232664081343,
+        "normal_absorption": 0.9446776733591865
+      },
+      {
+        "tau": 0.2,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.05532232664081343,
+        "normal_absorption": 0.9446776733591865
+      },
+      {
+        "tau": 0.25,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.05532232664081343,
+        "normal_absorption": 0.9446776733591865
+      },
+      {
+        "tau": 0.3,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.05532232664081343,
+        "normal_absorption": 0.9446776733591865
+      },
+      {
+        "tau": 0.35,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.05532232664081343,
+        "normal_absorption": 0.9446776733591865
+      },
+      {
+        "tau": 0.4,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.05532232664081343,
+        "normal_absorption": 0.9446776733591865
+      },
+      {
+        "tau": 0.45,
+        "abstain_rate": 0.0,
+        "false_attack_rate": 0.05532232664081343,
+        "normal_absorption": 0.9446776733591865
+      },
+      {
+        "tau": 0.5,
+        "abstain_rate": 6.881365262868153e-05,
+        "false_attack_rate": 0.05532232664081343,
+        "normal_absorption": 0.944608859706558
+      },
+      {
+        "tau": 0.55,
+        "abstain_rate": 0.0023816294268702875,
+        "false_attack_rate": 0.054445262287756035,
+        "normal_absorption": 0.9431731082853737
+      },
+      {
+        "tau": 0.6,
+        "abstain_rate": 0.00459250137311709,
+        "false_attack_rate": 0.05341957480968921,
+        "normal_absorption": 0.9419879238171937
+      },
+      {
+        "tau": 0.65,
+        "abstain_rate": 0.007939883959514695,
+        "false_attack_rate": 0.051694248687976604,
+        "normal_absorption": 0.9403658673525087
+      },
+      {
+        "tau": 0.7,
+        "abstain_rate": 0.009939402080523494,
+        "false_attack_rate": 0.050920467019821516,
+        "normal_absorption": 0.9391401308996551
+      },
+      {
+        "tau": 0.75,
+        "abstain_rate": 0.012026783109091804,
+        "false_attack_rate": 0.05002478685445093,
+        "normal_absorption": 0.9379484300364572
+      },
+      {
+        "tau": 0.8,
+        "abstain_rate": 0.01760704384890068,
+        "false_attack_rate": 0.049944731015503264,
+        "normal_absorption": 0.9324482251355962
+      },
+      {
+        "tau": 0.85,
+        "abstain_rate": 0.0762939871725947,
+        "false_attack_rate": 0.04994222927053615,
+        "normal_absorption": 0.8737637835568692
+      },
+      {
+        "tau": 0.9,
+        "abstain_rate": 0.1377350345778808,
+        "false_attack_rate": 0.046875631220216034,
+        "normal_absorption": 0.8153893342019032
+      },
+      {
+        "tau": 0.95,
+        "abstain_rate": 0.15061134189469835,
+        "false_attack_rate": 0.04163066551718863,
+        "normal_absorption": 0.807757992588113
+      },
+      {
+        "tau": 0.99,
+        "abstain_rate": 0.17786019825930197,
+        "false_attack_rate": 0.028264817597538128,
+        "normal_absorption": 0.7938749841431598
+      }
+    ],
+    "aurc_known": 0.0011707825710550515
+  },
+  "generated_by": "scripts/e2_tau_sweep.py",
+  "semantics": "de-tilt+T_choice, abstain iff max p_choice < tau (Chow \u03bb_r=1\u2212\u03c4)"
+}

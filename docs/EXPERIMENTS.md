@@ -392,9 +392,16 @@ El paper (`paper/main.tex`) incorpora el advisory `docs/reference/VX_One_F2_Advi
 
 ## 12. Pendientes mínimos derivados del advisory (reusan predicciones ya computadas)
 
-- [ ] **E2 sweep de τ_abs** (grid 0.05–0.95 sobre los logits LOAO ya producidos):
-      curvas risk-coverage + AURC; por familia excluida: %unknown(τ) y falsa
-      atribución 1−%unknown como riesgo. Sin re-entrenar.
+- [x] **E2 sweep de τ_abs** — ✅ EJECUTADO 2026-10-19 (`scripts/e2_tau_sweep.py`,
+      resultados en `results/e2_rc/`, sin re-entrenar, logits LOAO de
+      `~/projects/paper/results/outputs/`). Grid 0.05–0.99. Veredicto medido:
+      **UNSW** tiene frontera operativa (τ=0.5: abst 37.5% / falsa-atrib 55.0%;
+      τ=0.99: abst 97.3% / falsa-atrib 0.66%); **CIC no tiene punto operativo**
+      (τ=0.99 aún abstiene solo 17.8%; falla dominante = absorción→normal 94.5%
+      conf saturada, p50 conf≥0.999 en 5/7 folds, recon e infiltration: 1.000;
+      margen p(1)−p(2) en recon = 1.000 → el selective-by-margin también muere).
+      Integrado al paper como Fig. fig:tau + párrafo "Sweep" en E2; el punto
+      A de la review externa (Gemini, 2026-10-19) queda cubierto con datos.
 - [ ] **E3 reliability por condicional CORN** (q_1 en todas las filas; q_2 en
       elegibles sev≥1) + ECE directo del gate C_2 — atribuye el ECE del gate a
       sus eslabones (Lema 2). Sin re-entrenar.
