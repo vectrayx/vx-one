@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2026.10.19)  19 OCT 2026 17:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2026.10.19)  19 OCT 2026 22:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -41,6 +41,7 @@ Package acmart Info: Explicitly selecting natbib mode on input line 137.
 Package acmart Info: Not using anonymous mode on input line 145.
 Package acmart Info: Not using timestamp mode on input line 153.
 Package acmart Info: Not using authordraft mode on input line 163.
+Package acmart Info: Using review mode on input line 178.
 Package acmart Info: Not using anonymous mode on input line 178.
 Class acmart Info: Using format sigconf, number 4 on input line 178.
 Class acmart Info: Using fontsize 9pt on input line 280.
@@ -701,6 +702,10 @@ Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 \f@nch@widthR=\skip81
 \@temptokenb=\toks40
 )
+\ACM@linecount@bx=\box62
+\ACM@linecount@bxht=\skip82
+\ACM@linecount=\count319
+
 Special comment 'acks'
 LaTeX Font Info:    Trying to load font information for T1+LinuxLibertineT-TLF 
 on input line 3588.
@@ -715,7 +720,7 @@ LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
 Class acmart Info: Suppressing bibformat on input line 9.
 Package hyperref Info: Option `pdfdisplaydoctitle' set `true' on input line 12.
 
-\c@theorem=\count319
+\c@theorem=\count320
 
 (/home/jsantillana/texmf/tex/latex/preprint/balance.sty
 Package: balance 1999/02/23 4.3 (PWD)
@@ -725,8 +730,8 @@ Excluding comment 'screenonly' Include comment 'printonly'
 Include comment 'anonsuppress'
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count320
-\l__pdf_internal_box=\box62
+\l__color_backend_stack_int=\count321
+\l__pdf_internal_box=\box63
 )
 
 LaTeX Warning: Unused global option(s):
@@ -923,8 +928,8 @@ e
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\c@mv@tabular=\count321
-\c@mv@boldtabular=\count322
+\c@mv@tabular=\count322
+\c@mv@boldtabular=\count323
 (/home/jsantillana/texmf/tex/latex/upquote/upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
@@ -1038,7 +1043,7 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `\\' on input line 28.
 
 
-Overfull \hbox (13.17987pt too wide) in paragraph at lines 37--38
+Overfull \hbox (17.41385pt too wide) in paragraph at lines 37--38
 []\T1/LinuxLibertineT-TLF/b/n/9 (-20) Deterministic en-gines \T1/LinuxLibertine
 T-TLF/m/n/9 (-20) (Snort [[]], Suri-cata [[]], Zeek/Bro [[]],
  []
@@ -1046,15 +1051,16 @@ T-TLF/m/n/9 (-20) (Snort [[]], Suri-cata [[]], Zeek/Bro [[]],
 
 
 
-Overfull \hbox (12.19312pt too wide) in paragraph at lines 39--40
-\T1/LinuxLibertineT-TLF/m/n/9 (-20) u-lar attribution---XGBoost [[]] wins our a
-t-tri-bu-tion benchmarks---
+Overfull \hbox (27.59319pt too wide) in paragraph at lines 39--40
+\T1/LinuxLibertineT-TLF/m/n/9 (-20) tab-u-lar attribution---XGBoost [[]] wins o
+ur at-tri-bu-tion benchmarks---
  []
 
 
-Overfull \hbox (8.14737pt too wide) in paragraph at lines 48--49
-\T1/LinuxLibertineT-TLF/m/n/9 (-20) one-attack-family-out across 9 UNSW-NB15 an
-d 7 CIC-IDS2017
+Overfull \hbox (2.49458pt too wide) in paragraph at lines 47--48
+\T1/LinuxLibertineT-TLF/m/n/9 (-20) max over a de-clared closed set that \T1/Li
+nuxLibertineT-TLF/m/it/9 (-20) al-ways con-tains \T1/zi4/m/n/9 unknown\T1/Linux
+LibertineT-TLF/m/n/9 (-20) ),
  []
 
 
@@ -1062,9 +1068,11 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 6.0pt on input line 50.
 [1.1{/home/jsantillana/.texlive2024/texmf-var/fonts/map/pdftex/updmap/pdftex.ma
-p}{/home/jsantillana/texmf/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}{/home/jsa
-ntillana/texmf/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}
+p}{/home/jsantillana/texmf/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}{/home/jsa
+ntillana/texmf/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}
 
 {/home/jsantillana/texmf/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}{/home/jsant
 illana/texmf/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{/home/jsantillana/texmf
@@ -1154,9 +1162,6 @@ LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
 (Font)              scaled to size 8.0pt on input line 135.
 
-Underfull \vbox (badness 1742) has occurred while \output is active []
-
-
 
 
 Package fancyhdr Warning: \headheight is too small (13.0pt): 
@@ -1167,21 +1172,25 @@ Package fancyhdr Warning: \headheight is too small (13.0pt):
 
 [3.3]
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/it' will be
-(Font)              scaled to size 9.0pt on input line 172.
+(Font)              scaled to size 9.0pt on input line 174.
 
 
-<fig_tau.pdf, id=248, 614.77495pt x 272.20613pt>
+
+
+[4.4{/home/jsantillana/texmf/fonts/enc/dvips/libertine/lbtn_ki75ao.enc}]
+<fig_tau.pdf, id=258, 614.77495pt x 272.20613pt>
 File: fig_tau.pdf Graphic file (type pdf)
 <use fig_tau.pdf>
-Package pdftex.def Info: fig_tau.pdf  used on input line 205.
+Package pdftex.def Info: fig_tau.pdf  used on input line 207.
 (pdftex.def)             Requested size: 455.6624pt x 201.76166pt.
 LaTeX Font Info:    Font shape `T1/zi4/b/n' will be
-(Font)              scaled to size 9.0pt on input line 206.
-
-Class acmart Warning: A possible image without description on input line 208.
+(Font)              scaled to size 9.0pt on input line 208.
 
 
-Overfull \hbox (11.54782pt too wide) in paragraph at lines 229--230
+Class acmart Warning: A possible image without description on input line 210.
+
+
+Overfull \hbox (11.54782pt too wide) in paragraph at lines 231--232
 \T1/LinuxLibertineT-TLF/m/n/9 (-20) conditional ta-ble is the in-ter-est-ing on
 e: \T1/LinuxLibertineT-TLF/m/it/9 (-20) berbew\T1/LinuxLibertineT-TLF/m/n/9 (-2
 0) , which grew 34.5K$\LMS/ntxsy/m/n/9 !$\T1/LinuxLibertineT-TLF/m/n/9 (-20) 92
@@ -1189,16 +1198,15 @@ K
  []
 
 
-
-[4.4{/home/jsantillana/texmf/fonts/enc/dvips/libertine/lbtn_ki75ao.enc}]
-
 LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
-(Font)              using `T1/zi4/m/n' instead on input line 231.
+(Font)              using `T1/zi4/m/n' instead on input line 233.
 
 
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Overfull \hbox (6.94057pt too wide) in paragraph at lines 269--280
+ [][] 
+ []
 
 
 
@@ -1209,45 +1217,25 @@ Package fancyhdr Warning: \headheight is too small (13.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.02701pt}.
 
-[5.5 <./fig_tau.pdf>]
-Overfull \hbox (6.94057pt too wide) in paragraph at lines 267--278
- [][] 
- []
-
-
+[5.5]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
 
-Underfull \vbox (badness 1831) has occurred while \output is active []
 
-
-
-[6.6]
-
-
-Overfull \hbox (10.4692pt too wide) in paragraph at lines 357--358
-\T1/LinuxLibertineT-TLF/m/n/9 (-20) ity: on the of-fi-cial UNSW split and strat
--i-fied CIC, split-conformal
+[6.6 <./fig_tau.pdf>]
+Overfull \hbox (1.20978pt too wide) in paragraph at lines 349--350
+\T1/LinuxLibertineT-TLF/m/n/9 (-20) the Score head's ground truth is a doc-u-me
+nted family$\LMS/ntxsy/m/n/9 !$\T1/LinuxLibertineT-TLF/m/n/9 (-20) level
  []
 
 
-Overfull \hbox (3.71245pt too wide) in paragraph at lines 357--358
-\T1/LinuxLibertineT-TLF/m/n/9 (-20) grades at a rate bounded by the calibration
---test total-variation
- []
 
 
-Overfull \hbox (2.03793pt too wide) in paragraph at lines 361--362
+Overfull \hbox (6.27191pt too wide) in paragraph at lines 363--364
 []\T1/LinuxLibertineT-TLF/b/n/9 (-20) Text-field at-tack sur-face \T1/LinuxLibe
 rtineT-TLF/m/n/9 (-20) (in-di-rect prompt in-jec-tion through
- []
-
-
-Overfull \hbox (6.34506pt too wide) in paragraph at lines 377--378
-\T1/LinuxLibertineT-TLF/m/n/9 (-20) and frame mul-ti-class no-tions through the
- vec-tor/classwise/confidence
  []
 
 
@@ -1263,7 +1251,15 @@ Package fancyhdr Warning: \headheight is too small (13.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.02701pt}.
 
 [7.7]
-Overfull \hbox (23.65907pt too wide) in paragraph at lines 393--394
+Overfull \hbox (6.34506pt too wide) in paragraph at lines 379--380
+\T1/LinuxLibertineT-TLF/m/n/9 (-20) and frame mul-ti-class no-tions through the
+ vec-tor/classwise/confidence
+ []
+
+
+
+
+Overfull \hbox (23.65907pt too wide) in paragraph at lines 395--396
 \T1/LinuxLibertineT-TLF/m/n/9 (-20) dis-tri-bu-tions $\OML/nxlmi/m/it/9 P; Q$\T
 1/LinuxLibertineT-TLF/m/n/9 (-20) , $\OML/nxlmi/m/it/9 d[]\LMS/ntxsy/m/n/9 ¹\OM
 L/nxlmi/m/it/9 P; Q\LMS/ntxsy/m/n/9 º \U/ntxmia/m/it/9 = \OT1/LinuxLibertineT-T
@@ -1273,18 +1269,22 @@ LF/m/n/9 (-20) 1 \LMS/ntxsy/m/n/9 ^^@ \OT1/LinuxLibertineT-TLF/m/n/9 (-20) 2 []
 T-TLF/m/n/9 (-20) 1\LMS/ntxsy/m/n/9 º Ï
  []
 
-
-
 (./main.bbl
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
 (Font)              scaled to size 7.0pt on input line 45.
+
+
+[8.8]
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/sb/n' will be
 (Font)              scaled to size 7.3pt on input line 277.
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
 (Font)              scaled to size 7.3pt on input line 277.
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[8.8])
+
+
+)
 
 Class acmart Warning: Some images may lack descriptions.
 
@@ -1300,6 +1300,8 @@ Class acmart Warning: CCS concepts are mandatory for papers over two pages.
 
 
 
+Package balance Warning: You have called \balance in second column
+(balance)                Columns might not be balanced.
 
 
 Package fancyhdr Warning: \headheight is too small (13.0pt): 
@@ -1327,13 +1329,13 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 7813BFF2D721BF0F6963D06C6EC97E48;3769.
  ) 
 Here is how much of TeX's memory you used:
- 21459 strings out of 475722
- 348520 string characters out of 5783517
- 820428 words of memory out of 6000000
- 42609 multiletter control sequences out of 15000+600000
- 784169 words of font info for 578 fonts, out of 8000000 for 9000
+ 21484 strings out of 475722
+ 349146 string characters out of 5783517
+ 827100 words of memory out of 6000000
+ 42615 multiletter control sequences out of 15000+600000
+ 790903 words of font info for 590 fonts, out of 8000000 for 9000
  175 hyphenation exceptions out of 8191
- 90i,12n,131p,2213b,741s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,17n,131p,2213b,815s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/jsantillana/texmf/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb>
 </home/jsantillana/texmf/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></
 home/jsantillana/texmf/fonts/type1/public/newtx/LibertineMathMI.pfb></home/jsan
@@ -1349,10 +1351,10 @@ TZ.pfb></home/jsantillana/texmf/fonts/type1/public/newtx/NewTXMI.pfb></home/jsa
 ntillana/texmf/fonts/type1/public/newtx/txexs.pfb></home/jsantillana/texmf/font
 s/type1/public/newtx/txmiaX.pfb></home/jsantillana/texmf/fonts/type1/public/new
 tx/txsym.pfb></home/jsantillana/texmf/fonts/type1/public/newtx/txsys.pfb>
-Output written on main.pdf (9 pages, 686854 bytes).
+Output written on main.pdf (9 pages, 693740 bytes).
 PDF statistics:
- 510 PDF objects out of 1000 (max. 8388607)
- 406 compressed objects within 5 object streams
+ 512 PDF objects out of 1000 (max. 8388607)
+ 408 compressed objects within 5 object streams
  106 named destinations out of 1000 (max. 500000)
- 110266 words of extra memory for PDF output out of 128383 (max. 10000000)
+ 114362 words of extra memory for PDF output out of 128383 (max. 10000000)
 

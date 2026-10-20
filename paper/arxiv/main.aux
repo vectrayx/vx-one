@@ -81,41 +81,39 @@
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Test-set comparison (calibrated). VX: VX-One at three sizes. FPR@95 is FPR@95\%TPR. $^{\dagger }$ = under temporal drift. $^{a}$ = attribution benefiting from drift; $^{b}$ = detection plateau of saturation (all models $\approx $ 1.0). Full per-dataset table in the released results.}}{4}{table.caption.21}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{tab:e1}{{1}{4}{Test-set comparison (calibrated). VX: VX-One at three sizes. FPR@95 is FPR@95\%TPR. $^{\dagger }$ = under temporal drift. $^{a}$ = attribution benefiting from drift; $^{b}$ = detection plateau of saturation (all models $\approx $ 1.0). Full per-dataset table in the released results}{table.caption.21}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces LOAO---unseen-family detection (gate) and attribution honesty (choice abstention). The control---macro-F1 on \emph  {known} families---stays at 0.38--0.56 across folds, i.e., the family that is excluded does not degrade attribution of the others. UNSW Small.}}{4}{table.caption.22}\protected@file@percent }
-\newlabel{tab:e2}{{2}{4}{LOAO---unseen-family detection (gate) and attribution honesty (choice abstention). The control---macro-F1 on \emph {known} families---stays at 0.38--0.56 across folds, i.e., the family that is excluded does not degrade attribution of the others. UNSW Small}{table.caption.22}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}E2 --- Unknown-attack honesty}{4}{subsection.5.2}\protected@file@percent }
 \newlabel{sec:e2}{{5.2}{4}{E2 --- Unknown-attack honesty}{subsection.5.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces LOAO---unseen-family detection (gate) and attribution honesty (choice abstention). The control---macro-F1 on \emph  {known} families---stays at 0.38--0.56 across folds, i.e., the family that is excluded does not degrade attribution of the others. UNSW Small.}}{4}{table.caption.22}\protected@file@percent }
+\newlabel{tab:e2}{{2}{4}{LOAO---unseen-family detection (gate) and attribution honesty (choice abstention). The control---macro-F1 on \emph {known} families---stays at 0.38--0.56 across folds, i.e., the family that is excluded does not degrade attribution of the others. UNSW Small}{table.caption.22}{}}
 \citation{hendrycks2017}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Abstention sweep over $\tau _{\mathrm  {abs}}\in \{0.05,0.99\}$, mean over LOAO folds, on excluded-family test rows. \textbf  {UNSW:} an operating frontier exists---abstention and false attack attribution cross near $\tau {=}0.5$, and large $\tau $ recovers honesty (97\% abstain, $<$1\% false attribution). \textbf  {CIC:} no operating point---unseen-family events are absorbed into \texttt  {normal} ($\sim $94\%) at saturated confidence (median max-prob $1.000$; median margin $1.000$), so no post-hoc threshold or margin policy can recover them.}}{5}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:tau}{{1}{5}{Abstention sweep over $\tau _{\mathrm {abs}}\in \{0.05,0.99\}$, mean over LOAO folds, on excluded-family test rows. \textbf {UNSW:} an operating frontier exists---abstention and false attack attribution cross near $\tau {=}0.5$, and large $\tau $ recovers honesty (97\% abstain, $<$1\% false attribution). \textbf {CIC:} no operating point---unseen-family events are absorbed into \texttt {normal} ($\sim $94\%) at saturated confidence (median max-prob $1.000$; median margin $1.000$), so no post-hoc threshold or margin policy can recover them}{figure.caption.23}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces LOAO on stratified CIC (Small). Softmax confidence saturates: the fixed threshold abstains on nothing, and unseen families get attributed to \texttt  {normal} with high confidence.}}{5}{table.caption.24}\protected@file@percent }
 \newlabel{tab:e2cic}{{3}{5}{LOAO on stratified CIC (Small). Softmax confidence saturates: the fixed threshold abstains on nothing, and unseen families get attributed to \texttt {normal} with high confidence}{table.caption.24}{}}
 \@writefile{toc}{\contentsline {paragraph}{What \texttt  {unknown} means under LOAO.}{5}{section*.25}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces E4 latency (single-event, batch=1, 1 thread, CPU). Well within a $<$10\,ms design budget with margin $\ge 5\times $.}}{5}{table.caption.26}\protected@file@percent }
 \newlabel{tab:e4}{{4}{5}{E4 latency (single-event, batch=1, 1 thread, CPU). Well within a $<$10\,ms design budget with margin $\ge 5\times $}{table.caption.26}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces E5 cascade over five days of CIC-IDS2017. ``F1 acc'' is Phase 1 (Suricata) alone; ``comb'' is the estimated combined cascade; P/R = precision/recall of the combined cascade on that day's test rows. \emph  {Stats are estimates} with a documented independence assumption (Section\nonbreakingspace \ref {sec:limits}).}}{5}{table.caption.27}\protected@file@percent }
+\newlabel{tab:e5}{{5}{5}{E5 cascade over five days of CIC-IDS2017. ``F1 acc'' is Phase 1 (Suricata) alone; ``comb'' is the estimated combined cascade; P/R = precision/recall of the combined cascade on that day's test rows. \emph {Stats are estimates} with a documented independence assumption (Section~\ref {sec:limits})}{table.caption.27}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.3}E4 --- Latency}{5}{subsection.5.3}\protected@file@percent }
 \newlabel{sec:e4}{{5.3}{5}{E4 --- Latency}{subsection.5.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces E5 cascade over five days of CIC-IDS2017. ``F1 acc'' is Phase 1 (Suricata) alone; ``comb'' is the estimated combined cascade; P/R = precision/recall of the combined cascade on that day's test rows. \emph  {Stats are estimates} with a documented independence assumption (Section\nonbreakingspace \ref {sec:limits}).}}{6}{table.caption.27}\protected@file@percent }
-\newlabel{tab:e5}{{5}{6}{E5 cascade over five days of CIC-IDS2017. ``F1 acc'' is Phase 1 (Suricata) alone; ``comb'' is the estimated combined cascade; P/R = precision/recall of the combined cascade on that day's test rows. \emph {Stats are estimates} with a documented independence assumption (Section~\ref {sec:limits})}{table.caption.27}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}E5 --- Two-phase cascade: how much of the line of fire is actually a gray zone}{6}{subsection.5.4}\protected@file@percent }
-\newlabel{sec:e5}{{5.4}{6}{E5 --- Two-phase cascade: how much of the line of fire is actually a gray zone}{subsection.5.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Ablations (ref = corresponding Small reference run).}}{6}{table.caption.28}\protected@file@percent }
-\newlabel{tab:e6}{{6}{6}{Ablations (ref = corresponding Small reference run)}{table.caption.28}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}E5 --- Two-phase cascade: how much of the line of fire is actually a gray zone}{5}{subsection.5.4}\protected@file@percent }
+\newlabel{sec:e5}{{5.4}{5}{E5 --- Two-phase cascade: how much of the line of fire is actually a gray zone}{subsection.5.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Abstention sweep over $\tau _{\mathrm  {abs}}\in \{0.05,0.99\}$, mean over LOAO folds, on excluded-family test rows. \textbf  {UNSW:} an operating frontier exists---abstention and false attack attribution cross near $\tau {=}0.5$, and large $\tau $ recovers honesty (97\% abstain, $<$1\% false attribution). \textbf  {CIC:} no operating point---unseen-family events are absorbed into \texttt  {normal} ($\sim $94\%) at saturated confidence (median max-prob $1.000$; median margin $1.000$), so no post-hoc threshold or margin policy can recover them.}}{6}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:tau}{{1}{6}{Abstention sweep over $\tau _{\mathrm {abs}}\in \{0.05,0.99\}$, mean over LOAO folds, on excluded-family test rows. \textbf {UNSW:} an operating frontier exists---abstention and false attack attribution cross near $\tau {=}0.5$, and large $\tau $ recovers honesty (97\% abstain, $<$1\% false attribution). \textbf {CIC:} no operating point---unseen-family events are absorbed into \texttt {normal} ($\sim $94\%) at saturated confidence (median max-prob $1.000$; median margin $1.000$), so no post-hoc threshold or margin policy can recover them}{figure.caption.23}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.5}E6 --- Ablations}{6}{subsection.5.5}\protected@file@percent }
 \newlabel{sec:e6}{{5.5}{6}{E6 --- Ablations}{subsection.5.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Ablations (ref = corresponding Small reference run).}}{6}{table.caption.28}\protected@file@percent }
+\newlabel{tab:e6}{{6}{6}{Ablations (ref = corresponding Small reference run)}{table.caption.28}{}}
 \citation{papadopoulos2002,tibshirani2019}
 \citation{barber2023}
 \citation{tibshirani2019}
 \citation{greshake2023injection}
-\citation{kumar2019}
-\citation{vaicenavicius2019}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.6}E7 --- The commercial System One baseline we did not run}{7}{subsection.5.6}\protected@file@percent }
 \newlabel{sec:e7}{{5.6}{7}{E7 --- The commercial System One baseline we did not run}{subsection.5.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Discussion}{7}{subsection.5.7}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {6}Limitations}{7}{section.6}\protected@file@percent }
 \newlabel{sec:limits}{{6}{7}{Limitations}{section.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{7}{section.7}\protected@file@percent }
-\newlabel{sec:conclusion}{{7}{7}{Conclusion}{section.7}{}}
+\citation{kumar2019}
+\citation{vaicenavicius2019}
 \citation{kleinberg2017}
 \citation{barber2023}
 \citation{chow1970,cortes2016rejection}
@@ -135,6 +133,16 @@
 \bibcite{engels2021}{{11}{2021}{{Engels et~al\mbox  {.}}}{{}}}
 \bibcite{geifman2017}{{12}{2017}{{Geifman and El-Yaniv}}{{}}}
 \bibcite{greshake2023injection}{{13}{2023}{{Greshake et~al\mbox  {.}}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{8}{section.7}\protected@file@percent }
+\newlabel{sec:conclusion}{{7}{8}{Conclusion}{section.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Formal statements}{8}{appendix.A}\protected@file@percent }
+\newlabel{app:formal}{{A}{8}{Formal statements}{appendix.A}{}}
+\@writefile{toc}{\contentsline {paragraph}{Lemma 1 (closure under single-head post-processing).}{8}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Lemma 2 (CORN chain rule: exactness and degradation).}{8}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Proposition 3 (no-go: marginal ECEs do not compose).}{8}{section*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Lemma 4 (BER--TV; drift certification is one-sided).}{8}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Bayes rule with rejection (abstention thresholds).}{8}{section*.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{8}{section*.35}\protected@file@percent }
 \bibcite{gu2018nat}{{14}{2018}{{Gu et~al\mbox  {.}}}{{}}}
 \bibcite{guo2017calibration}{{15}{2017}{{Guo et~al\mbox  {.}}}{{}}}
 \bibcite{hendrycks2017}{{16}{2017}{{Hendrycks and Gimpel}}{{}}}
@@ -145,14 +153,6 @@
 \bibcite{mchugh2000}{{21}{2000}{{McHugh}}{{}}}
 \bibcite{msdecision1}{{22}{2026}{{Microsoft}}{{}}}
 \bibcite{mslearn-decision1}{{23}{2026}{{Microsoft Learn}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Formal statements}{8}{appendix.A}\protected@file@percent }
-\newlabel{app:formal}{{A}{8}{Formal statements}{appendix.A}{}}
-\@writefile{toc}{\contentsline {paragraph}{Lemma 1 (closure under single-head post-processing).}{8}{section*.29}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Lemma 2 (CORN chain rule: exactness and degradation).}{8}{section*.30}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Proposition 3 (no-go: marginal ECEs do not compose).}{8}{section*.31}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Lemma 4 (BER--TV; drift certification is one-sided).}{8}{section*.32}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Bayes rule with rejection (abstention thresholds).}{8}{section*.33}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{References}{8}{section*.35}\protected@file@percent }
 \bibcite{mirsky2018kitsune}{{24}{2018}{{Mirsky et~al\mbox  {.}}}{{}}}
 \bibcite{moustafa2015unsw}{{25}{2015}{{Moustafa and Slay}}{{}}}
 \bibcite{niculescu2005}{{26}{2005}{{Niculescu-Mizil and Caruana}}{{}}}

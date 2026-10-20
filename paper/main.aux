@@ -1,0 +1,183 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{roesch1999snort}
+\citation{suricata}
+\citation{paxson1999bro}
+\citation{yara}
+\citation{aghaei2022securebert}
+\citation{chen2016xgboost}
+\citation{jevdocs,typesafejev}
+\citation{msdecision1,mslearn-decision1}
+\citation{shi2023corn}
+\citation{kendall2018multitask}
+\@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\citation{engels2021,rosay2022errors}
+\citation{msdecision1}
+\citation{mslearn-decision1}
+\citation{jevdocs,typesafejev}
+\citation{gu2018nat}
+\citation{violajones2001}
+\citation{platt1999}
+\citation{zadrozny2002}
+\citation{niculescu2005}
+\citation{guo2017calibration}
+\citation{vovk2005,angelopoulos2021}
+\citation{barber2023}
+\citation{chow1970}
+\citation{geifman2017}
+\citation{roesch1999snort}
+\citation{paxson1999bro}
+\citation{yara}
+\citation{suricata}
+\citation{mchugh2000,mahoney2003}
+\citation{engels2021,rosay2022errors}
+\citation{mirsky2018kitsune}
+\citation{chen2016xgboost}
+\citation{anderson2018ember}
+\citation{botacin2024ember}
+\citation{moustafa2015unsw}
+\citation{sharafaldin2018cicids}
+\citation{violajones2001}
+\citation{shi2023corn}
+\citation{kendall2018multitask}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{2}{Related Work}{section.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{System One decision models.}{2}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Single-pass inference.}{2}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Calibration and abstention.}{2}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Signature engines and their limits.}{2}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{ML on network traffic and malware.}{2}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}VX-One Design}{2}{section.3}\protected@file@percent }
+\newlabel{sec:design}{{3}{2}{VX-One Design}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}State object}{2}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Trunk and typed heads}{2}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Training formulation}{2}{subsection.3.3}\protected@file@percent }
+\citation{chow1970,cortes2016rejection}
+\citation{elkan2001}
+\citation{moustafa2015unsw}
+\citation{sharafaldin2018cicids}
+\citation{botacin2024ember}
+\citation{engels2021,rosay2022errors}
+\citation{niculescu2005}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Decision controller semantics}{3}{subsection.3.4}\protected@file@percent }
+\newlabel{sec:gates}{{3.4}{3}{Decision controller semantics}{subsection.3.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Gates are single-head functionals, by design.}{3}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Thresholds are cost statements, not constants.}{3}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experimental Setup}{3}{section.4}\protected@file@percent }
+\newlabel{sec:setup}{{4}{3}{Experimental Setup}{section.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Data.}{3}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Baselines.}{3}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Metrics.}{3}{section*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Infrastructure.}{3}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{3}{section.5}\protected@file@percent }
+\newlabel{sec:results}{{5}{3}{Results}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}E1/E3 --- Detection, attribution, calibration}{3}{subsection.5.1}\protected@file@percent }
+\newlabel{sec:e1}{{5.1}{3}{E1/E3 --- Detection, attribution, calibration}{subsection.5.1}{}}
+\citation{geifman2017}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Test-set comparison (calibrated). VX: VX-One at three sizes. FPR@95 is FPR@95\%TPR. $^{\dagger }$ = under temporal drift. $^{a}$ = attribution benefiting from drift; $^{b}$ = detection plateau of saturation (all models $\approx $ 1.0). Full per-dataset table in the released results.}}{4}{table.caption.21}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:e1}{{1}{4}{Test-set comparison (calibrated). VX: VX-One at three sizes. FPR@95 is FPR@95\%TPR. $^{\dagger }$ = under temporal drift. $^{a}$ = attribution benefiting from drift; $^{b}$ = detection plateau of saturation (all models $\approx $ 1.0). Full per-dataset table in the released results}{table.caption.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}E2 --- Unknown-attack honesty}{4}{subsection.5.2}\protected@file@percent }
+\newlabel{sec:e2}{{5.2}{4}{E2 --- Unknown-attack honesty}{subsection.5.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces LOAO---unseen-family detection (gate) and attribution honesty (choice abstention). The control---macro-F1 on \emph  {known} families---stays at 0.38--0.56 across folds, i.e., the family that is excluded does not degrade attribution of the others. UNSW Small.}}{4}{table.caption.22}\protected@file@percent }
+\newlabel{tab:e2}{{2}{4}{LOAO---unseen-family detection (gate) and attribution honesty (choice abstention). The control---macro-F1 on \emph {known} families---stays at 0.38--0.56 across folds, i.e., the family that is excluded does not degrade attribution of the others. UNSW Small}{table.caption.22}{}}
+\citation{hendrycks2017}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces LOAO on stratified CIC (Small). Softmax confidence saturates: the fixed threshold abstains on nothing, and unseen families get attributed to \texttt  {normal} with high confidence.}}{5}{table.caption.24}\protected@file@percent }
+\newlabel{tab:e2cic}{{3}{5}{LOAO on stratified CIC (Small). Softmax confidence saturates: the fixed threshold abstains on nothing, and unseen families get attributed to \texttt {normal} with high confidence}{table.caption.24}{}}
+\@writefile{toc}{\contentsline {paragraph}{What \texttt  {unknown} means under LOAO.}{5}{section*.25}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces E4 latency (single-event, batch=1, 1 thread, CPU). Well within a $<$10\,ms design budget with margin $\ge 5\times $.}}{5}{table.caption.26}\protected@file@percent }
+\newlabel{tab:e4}{{4}{5}{E4 latency (single-event, batch=1, 1 thread, CPU). Well within a $<$10\,ms design budget with margin $\ge 5\times $}{table.caption.26}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces E5 cascade over five days of CIC-IDS2017. ``F1 acc'' is Phase 1 (Suricata) alone; ``comb'' is the estimated combined cascade; P/R = precision/recall of the combined cascade on that day's test rows. \emph  {Stats are estimates} with a documented independence assumption (Section\nonbreakingspace \ref {sec:limits}).}}{5}{table.caption.27}\protected@file@percent }
+\newlabel{tab:e5}{{5}{5}{E5 cascade over five days of CIC-IDS2017. ``F1 acc'' is Phase 1 (Suricata) alone; ``comb'' is the estimated combined cascade; P/R = precision/recall of the combined cascade on that day's test rows. \emph {Stats are estimates} with a documented independence assumption (Section~\ref {sec:limits})}{table.caption.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}E4 --- Latency}{5}{subsection.5.3}\protected@file@percent }
+\newlabel{sec:e4}{{5.3}{5}{E4 --- Latency}{subsection.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}E5 --- Two-phase cascade: how much of the line of fire is actually a gray zone}{5}{subsection.5.4}\protected@file@percent }
+\newlabel{sec:e5}{{5.4}{5}{E5 --- Two-phase cascade: how much of the line of fire is actually a gray zone}{subsection.5.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Abstention sweep over $\tau _{\mathrm  {abs}}\in \{0.05,0.99\}$, mean over LOAO folds, on excluded-family test rows. \textbf  {UNSW:} an operating frontier exists---abstention and false attack attribution cross near $\tau {=}0.5$, and large $\tau $ recovers honesty (97\% abstain, $<$1\% false attribution). \textbf  {CIC:} no operating point---unseen-family events are absorbed into \texttt  {normal} ($\sim $94\%) at saturated confidence (median max-prob $1.000$; median margin $1.000$), so no post-hoc threshold or margin policy can recover them.}}{6}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:tau}{{1}{6}{Abstention sweep over $\tau _{\mathrm {abs}}\in \{0.05,0.99\}$, mean over LOAO folds, on excluded-family test rows. \textbf {UNSW:} an operating frontier exists---abstention and false attack attribution cross near $\tau {=}0.5$, and large $\tau $ recovers honesty (97\% abstain, $<$1\% false attribution). \textbf {CIC:} no operating point---unseen-family events are absorbed into \texttt {normal} ($\sim $94\%) at saturated confidence (median max-prob $1.000$; median margin $1.000$), so no post-hoc threshold or margin policy can recover them}{figure.caption.23}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}E6 --- Ablations}{6}{subsection.5.5}\protected@file@percent }
+\newlabel{sec:e6}{{5.5}{6}{E6 --- Ablations}{subsection.5.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Ablations (ref = corresponding Small reference run).}}{6}{table.caption.28}\protected@file@percent }
+\newlabel{tab:e6}{{6}{6}{Ablations (ref = corresponding Small reference run)}{table.caption.28}{}}
+\citation{papadopoulos2002,tibshirani2019}
+\citation{barber2023}
+\citation{tibshirani2019}
+\citation{greshake2023injection}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}E7 --- The commercial System One baseline we did not run}{7}{subsection.5.6}\protected@file@percent }
+\newlabel{sec:e7}{{5.6}{7}{E7 --- The commercial System One baseline we did not run}{subsection.5.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Discussion}{7}{subsection.5.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Limitations}{7}{section.6}\protected@file@percent }
+\newlabel{sec:limits}{{6}{7}{Limitations}{section.6}{}}
+\citation{kumar2019}
+\citation{vaicenavicius2019}
+\citation{kleinberg2017}
+\citation{barber2023}
+\citation{chow1970,cortes2016rejection}
+\citation{elyaniv2010,geifman2017}
+\bibstyle{ACM-Reference-Format}
+\bibdata{refs}
+\bibcite{aghaei2022securebert}{{1}{2022}{{Aghaei et~al\mbox  {.}}}{{}}}
+\bibcite{anderson2018ember}{{2}{2018}{{Anderson and Roth}}{{}}}
+\bibcite{angelopoulos2021}{{3}{2021}{{Angelopoulos and Bates}}{{}}}
+\bibcite{barber2023}{{4}{2023}{{Barber et~al\mbox  {.}}}{{}}}
+\bibcite{botacin2024ember}{{5}{2025}{{Botacin et~al\mbox  {.}}}{{}}}
+\bibcite{chen2016xgboost}{{6}{2016}{{Chen and Guestrin}}{{}}}
+\bibcite{chow1970}{{7}{1970}{{Chow}}{{}}}
+\bibcite{cortes2016rejection}{{8}{2016}{{Cortes et~al\mbox  {.}}}{{}}}
+\bibcite{elyaniv2010}{{9}{2010}{{El-Yaniv and Wiener}}{{}}}
+\bibcite{elkan2001}{{10}{2001}{{Elkan}}{{}}}
+\bibcite{engels2021}{{11}{2021}{{Engels et~al\mbox  {.}}}{{}}}
+\bibcite{geifman2017}{{12}{2017}{{Geifman and El-Yaniv}}{{}}}
+\bibcite{greshake2023injection}{{13}{2023}{{Greshake et~al\mbox  {.}}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{8}{section.7}\protected@file@percent }
+\newlabel{sec:conclusion}{{7}{8}{Conclusion}{section.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Formal statements}{8}{appendix.A}\protected@file@percent }
+\newlabel{app:formal}{{A}{8}{Formal statements}{appendix.A}{}}
+\@writefile{toc}{\contentsline {paragraph}{Lemma 1 (closure under single-head post-processing).}{8}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Lemma 2 (CORN chain rule: exactness and degradation).}{8}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Proposition 3 (no-go: marginal ECEs do not compose).}{8}{section*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Lemma 4 (BER--TV; drift certification is one-sided).}{8}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Bayes rule with rejection (abstention thresholds).}{8}{section*.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{8}{section*.35}\protected@file@percent }
+\bibcite{gu2018nat}{{14}{2018}{{Gu et~al\mbox  {.}}}{{}}}
+\bibcite{guo2017calibration}{{15}{2017}{{Guo et~al\mbox  {.}}}{{}}}
+\bibcite{hendrycks2017}{{16}{2017}{{Hendrycks and Gimpel}}{{}}}
+\bibcite{kendall2018multitask}{{17}{2018}{{Kendall et~al\mbox  {.}}}{{}}}
+\bibcite{kleinberg2017}{{18}{2017}{{Kleinberg et~al\mbox  {.}}}{{}}}
+\bibcite{kumar2019}{{19}{2019}{{Kumar et~al\mbox  {.}}}{{}}}
+\bibcite{mahoney2003}{{20}{2003}{{Mahoney and Chan}}{{}}}
+\bibcite{mchugh2000}{{21}{2000}{{McHugh}}{{}}}
+\bibcite{msdecision1}{{22}{2026}{{Microsoft}}{{}}}
+\bibcite{mslearn-decision1}{{23}{2026}{{Microsoft Learn}}{{}}}
+\bibcite{mirsky2018kitsune}{{24}{2018}{{Mirsky et~al\mbox  {.}}}{{}}}
+\bibcite{moustafa2015unsw}{{25}{2015}{{Moustafa and Slay}}{{}}}
+\bibcite{niculescu2005}{{26}{2005}{{Niculescu-Mizil and Caruana}}{{}}}
+\bibcite{suricata}{{27}{2026}{{Open Information Security Foundation}}{{}}}
+\bibcite{papadopoulos2002}{{28}{2002}{{Papadopoulos et~al\mbox  {.}}}{{}}}
+\bibcite{paxson1999bro}{{29}{1999}{{Paxson}}{{}}}
+\bibcite{platt1999}{{30}{1999}{{Platt}}{{}}}
+\bibcite{roesch1999snort}{{31}{1999}{{Roesch}}{{}}}
+\bibcite{rosay2022errors}{{32}{2022}{{Rosay et~al\mbox  {.}}}{{}}}
+\bibcite{sharafaldin2018cicids}{{33}{2018}{{Sharafaldin et~al\mbox  {.}}}{{}}}
+\bibcite{shi2023corn}{{34}{2021}{{Shi et~al\mbox  {.}}}{{}}}
+\bibcite{tibshirani2019}{{35}{2019}{{Tibshirani et~al\mbox  {.}}}{{}}}
+\bibcite{typesafejev}{{36}{2026a}{{TypeSafe AI}}{{}}}
+\bibcite{jevdocs}{{37}{2026b}{{TypeSafe AI}}{{}}}
+\bibcite{vaicenavicius2019}{{38}{2019}{{Vaicenavicius et~al\mbox  {.}}}{{}}}
+\bibcite{violajones2001}{{39}{2001}{{Viola and Jones}}{{}}}
+\bibcite{yara}{{40}{2026}{{VirusTotal}}{{}}}
+\bibcite{vovk2005}{{41}{2005}{{Vovk et~al\mbox  {.}}}{{}}}
+\bibcite{zadrozny2002}{{42}{2002}{{Zadrozny and Elkan}}{{}}}
+\newlabel{tocindent-1}{0pt}
+\newlabel{tocindent0}{0pt}
+\newlabel{tocindent1}{6.25499pt}
+\newlabel{tocindent2}{10.34999pt}
+\newlabel{tocindent3}{0pt}
+\newlabel{tocindent4}{0pt}
+\newlabel{tocindent5}{0pt}
+\newlabel{TotPages}{{9}{9}{}{page.9}{}}
+\gdef \@abspage@last{9}
