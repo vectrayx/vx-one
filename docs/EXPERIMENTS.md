@@ -411,6 +411,25 @@ El paper (`paper/main.tex`) incorpora el advisory `docs/reference/VX_One_F2_Advi
 - [ ] **Diagnóstico Bayes-vs-Chow** en val: % de filas donde la regla general
       con matriz de costes difiere de la abstracción max-prob. Si ≈0%, la
       simplificación queda justificada empíricamente en una línea.
+## 13. Varianza multi-seed de las 4 corridas principales (2026-10-20, Modal cuenta 2)
+
+- [x] **3 seeds × 4 corridas** en L4 (`modal/app.py::seeds_main`, seeds 42/43/44,
+      cuenta `jssantillanajuan`, app `ap-1p9KTdr8POEq2utQey4vfA`, 0 fallidos).
+      Logits en `results/outputs_seed/` (24 archivos) y evaluación con el mismo
+      evaluador E1 local (`scripts/e1_seed_variance.py` → `results/e1_seed/`).
+- **Veredicto**: seed-42 reproduce la oficial de UNSW al 4º decimal
+  (determinismo confirmado). AUROC se mueve ≤0.002 salvo CIC by-day
+  (0.7336±0.0176). Macro-F1 de CIC es inestable en CUALQUIER escala:
+  strat 0.8312±0.0737 (s43 cae a 0.727 con AUROC/calibra intactos),
+  by-day 0.3442±0.0852 (spread 0.24–0.45). UNSW 0.4560±0.0009 y
+  EMBER 0.7462±0.0116 estables.
+- Integrado al paper: párrafo "Seed variance" en E1 + Limitations (item
+  "one seed" ahora delimita a LOAO/ablation/E4/E5) + conclusiones.
+- Nota operativa: montaje del contenedor uploader con
+  `--security-opt label=disable` (SELinux negaba la mitad de los archivos con
+  `:Z` aplicado a medias), el volumen `paper-results` lista/lee con paths
+  **internos** (`/outputs/...`, no `/vol/outputs/...`), y el repo montado para
+  lanzar `seeds_main` debe ser `paper-fix-glm` (el viejo no tiene el entrypoint).
 - [ ] (Si se ejecuta) protocolo conformal EMBER del advisory §2(d): coverage
       semanal unweighted vs weighted (clasificador de dominios, odds clipeado
       [0.1,10]), tabla de 12 semanas con cota inferior de d_TV por BER.
