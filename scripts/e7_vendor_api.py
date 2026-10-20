@@ -10,9 +10,9 @@ Compara contra nuestros logits del npz oficial en las mismas filas.
 Vendor:
 - typesafe:  POST https://api.typesafe.ai/v1/systemone  (Bearer TYPESAFE_API_KEY,
              modelo jev-1.13.0 = alias estable en 2026-10; $42/Btok input>$0).
-- azure:     Microsoft-Decision-1 (Foundry) — bloqueado: suscripción Azure
-             ReadOnlyDisabledSubscription (2026-10-20); adapter pendiente de
-             verificar el schema del endpoint una vez reactivada la cuenta.
+- azure:     DESCARTADA por decisión del usuario (2026-10-20): la suscripción
+             Azure está suspendida por compliance y no se usará. E7 corre solo
+             por la ruta TypeSafe Jev.
 
 Coste controlado: ~2,000 eventos × ~600 tok ≈ 1.2 Mtok ≈ $0.05 (Jev).
 

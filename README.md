@@ -54,10 +54,9 @@ no de los números aspiracionales del draft antiguo.
   ```
   Los paquetes ACM que la TeX Live 2024 de Fedora no traía (`acmart`, `libertine`, `newtx`, `ec`, `cm-super`, etc.) están instalados en `~/texmf` (TEXMFHOME), fetched del histórico TL2024 — no hace falta repetir nada.
 - [ ] E7 (baseline comercial): protocolo completo en `scripts/e7_vendor_api.py`
-      (dry-run validado, coste ~$0.05 por Jev). Bloqueado por credenciales:
-      key TypeSafe pendiente de registro en console.typesafe.ai; suscripción
-      Azure suspendida por SuspiciousActivity (compliance — solo titular con
-      verificación de identidad/ticket de soporte) — ver EXPERIMENTS.md §9.
+      (dry-run validado, coste ~$0.05 por Jev). Ruta Azure descartada por
+      decisión del usuario (suscripción suspendida por compliance, no usar).
+      Pendiente: key TypeSafe de console.typesafe.ai — ver EXPERIMENTS.md §9.
 - [x] Pendientes mínimos del advisory que reusan logits ya computados (§12 de `docs/EXPERIMENTS.md`): sweep de τ_abs ✅, reliability por condicional CORN ✅, classwise calibration ✅, diagnóstico Bayes-vs-Chow ✅, protocolo conformal EMBER (12 semanas + weighted + cota d_TV) ✅ (2026-10-20).
 - [x] 3 seeds en las 4 corridas principales de tablas (Modal cuenta 2, 12/12 ok): seed-42
   reproduce la fila oficial UNSW al 4º decimal; AUROC se mueve ≤0.002 salvo CIC by-day
