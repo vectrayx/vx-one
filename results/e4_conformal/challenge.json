@@ -1,0 +1,33 @@
+{
+  "challenge": {
+    "n": 6315,
+    "n_pos": 6315,
+    "q": 0.08549162595406033,
+    "coverage_positives": 0.2671417260490895,
+    "set_empty_frac": 0.4939034045922407,
+    "set_both_frac": 0.0,
+    "median_p": 0.6546526019463093,
+    "frac_p_ge_0.5": 0.5821060965954078,
+    "unknown_share": 0.9874901029295329,
+    "per_family": [
+      {
+        "family": "unknown",
+        "n": 6236,
+        "coverage": 0.2682809493264913,
+        "median_p": 0.6564864957245348
+      },
+      {
+        "family": "wacatac",
+        "n": 78,
+        "coverage": 0.16666666666666666,
+        "median_p": 0.1589605634632739
+      },
+      {
+        "family": "expiro",
+        "n": 1,
+        "coverage": 1.0,
+        "median_p": 0.9574899650132102
+      }
+    ]
+  }
+}

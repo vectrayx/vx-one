@@ -104,6 +104,22 @@ def dump(artifact: str) -> str:
     return out
 
 
+@app.function(gpu="L4", cpu=8, timeout=7200, volumes=VOLS)
+def dump_challenge(artifact: str) -> dict:
+    """Dump de logits sobre el challenge set EMBER con el checkpoint dado
+    (p.ej. /vol/artifacts/ember_small_temporal.pt). Estrés, fuera de toda
+    promesa de coverage (advisory Q2)."""
+    _boot()
+    import torch
+    from src.eval.dump_outputs import dump_ember_challenge
+
+    dev = "cuda" if torch.cuda.is_available() else "cpu"
+    name = artifact.rsplit("/", 1)[-1].removesuffix(".pt")
+    out = f"{RESULTS}/outputs/{name}_challenge.npz"
+    res = dump_ember_challenge(artifact, out, device=dev)
+    return res
+
+
 @app.function(cpu=32, memory=131072, timeout=43200, volumes=VOLS)
 def baseline(source: str, scheme: str, models: str = "xgboost,rf,mlp",
              exclude_family: str | None = None) -> dict:

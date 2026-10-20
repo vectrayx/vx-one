@@ -448,9 +448,12 @@ El paper (`paper/main.tex`) incorpora el advisory `docs/reference/VX_One_F2_Advi
       con IC Clopper–Pearson, variante weighted con clasificador de
       dominios logístico SGD streaming (odds clipeadas [0.1,10]) y BER
       held-out → cota inferior d_TV.
-- [x] **Challenge set**: reportado como estrés separado (el checkpoint
-      Small requeriría inferencia local vía Modal — pendiente si se quiere
-      la fila challenge; fuera de toda promesa según el advisory).
+- [x] **Challenge set** (estrés, fuera de toda promesa): coverage de
+      positivos **0.267** (test weeks ~0.92) — colapso esperado, advisory
+      Q2: "ningún wrapper conformal promete algo ahí". Semántica útil:
+      el detector sigue votando ataque (58% con p≥0.5, mediana p 0.65)
+      pero sin la confianza del conjunto. 98.7% unknown-familia,
+      confirmado. Añadido al Apéndice del paper.
 - **Resultados**: coverage de calibración **0.9000 exacto**; por semana
   unpweighted 0.8947–0.9353 (cae ~1 pt hacia w63; el lado malicioso
   concentra la pérdida: 0.8835 en w60; benignos ≥0.905 toda semana);

@@ -18,3 +18,16 @@
 | 63 | 0.8947 [0.8923,0.8972] | 0.8841 | 0.9053 | 0.1770 | 0.4115 | 0.8978 | 0.8865 | 0.9091 |
 
 Lectura (scoped del advisory): coverage EMPÍRICO con IC Clopper–Pearson por semana — NO una garantía distribution-free. La cota de drift certifica magnitud (d_TV ≥ 1−2·BER, BER medido held-out); el anclaje citable es Barber et al. 2023 (gap ≈ 2·d_TV con pesos conocidos) y la variante weighted es mitigación empírica, nunca garantía exacta. Challenge set: fuera de esta tabla (estrés sin benignos, se reporta separado).
+
+## 4) Challenge set (estrés; fuera de toda promesa)
+
+| fila | n | % unknown | coverage positivos | set vacío | mediana p | % p ≥ 0.5 |
+|---|---|---|---|---|---|---|
+| challenge checkpoints | 6315 | 98.7% | **0.267** | 49.4% | 0.655 | 58.2% |
+
+El coverage de positivos colapsa de ~0.92 (semanas test) a 0.267 — como
+declara el advisory Q2: sin intercambiabilidad (evasivo, 98.8% unknown)
+NINGÚN wrapper conformal promete algo; se reporta como estrés. Semántica:
+el detector sigue votando "ataque" (58% de las filas con p ≥ 0.5, mediana
+0.65) pero sin la confianza del conjunto conformal — honestidad a dos
+niveles, no una cobertura que no tiene.

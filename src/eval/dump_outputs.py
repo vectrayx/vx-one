@@ -18,6 +18,7 @@ import json
 from pathlib import Path
 
 import numpy as np
+import pyarrow.parquet as pq
 import torch
 
 from ..models.data import build_run
@@ -57,6 +58,64 @@ def _forward(net: VXOneNet, u: torch.Tensor, txt: dict | None,
         for k, v in o.items():
             outs.setdefault(k, []).append(v.float().cpu().numpy())
     return {k: np.concatenate(v) for k, v in outs.items()}
+
+
+def dump_ember_challenge(artifact: str | Path, out_npz: str | Path,
+                         device: str = "cpu") -> dict:
+    """Streaming de logits sobre el challenge set EMBER (estrés E2/E4:
+    0 benign, ~99% unknown, evasivo). Mismo pipeline/feature-stage que
+    dump_run (FeatureStage refit determinista en build_run), solo cambia
+    el fuente: challenge.parquet como único 'shard'.
+    Guarda noul + choice logits crudos + labels (y_bin/y_fam)."""
+    net, ckpt, _ = _load_net(artifact, device)
+    source = SOURCE_ALIAS[ckpt["source"]]
+    assert source == "ember", f"challenge solo para EMBER (source={source})"
+    exc = ckpt.get("manifest", {}).get("exclusion", {}).get("exclude")
+    run = build_run(source, ckpt["config"]["scale"],
+                    ckpt["config"]["split_scheme"], exclude_family=exc)
+
+    from ..models.data import DATA, EmberBatcher
+    challenge_path = DATA / "ember2024/challenge.parquet"
+    assert challenge_path.exists(), challenge_path
+
+    b = EmberBatcher(run)
+    outs: dict[str, list[np.ndarray]] = {}
+    yb_l, yf_l = [], []
+    with torch.no_grad():
+        for u, yf, yb in b._stream([challenge_path], EVAL_BS, None):
+            o = net(u.to(device), None)
+            for k, v in o.items():
+                outs.setdefault(k, []).append(v.float().cpu().numpy())
+            yb_l.append(yb.numpy())
+            yf_l.append(yf.numpy())
+    parts = {
+        "challenge_noul_logits": np.concatenate(outs["noul"]),
+        "challenge_choice_logits": np.concatenate(outs["choice"]),
+        "challenge_y_bin": np.concatenate(yb_l),
+        "challenge_y_fam": np.concatenate(yf_l),
+        "challenge_label_family": np.asarray(
+            pq.read_table(challenge_path, columns=["label_family"])
+            .column(0).to_pylist(), dtype=object),
+    }
+    out_npz = Path(out_npz)
+    out_npz.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(out_npz, **parts)
+    hm = ckpt["head_meta"]
+    meta = {
+        "artifact": str(artifact), "challenge": True,
+        "scale": ckpt["config"]["scale"],
+        "split_scheme": ckpt["config"]["split_scheme"],
+        "exclude": exc, "temperatures": ckpt["manifest"]["temperatures"],
+        "m_val": ckpt["manifest"]["m_val"],
+        "candidates": hm["choice"]["candidates"],
+        "omega": hm["choice"]["class_weights"].tolist(),
+        "mode": hm["choice"]["mode"], "tau_abs": hm["choice"]["tau_abs"],
+        "n": int(len(parts["challenge_y_bin"])),
+        "n_pos": int((parts["challenge_y_bin"] == 1).sum()),
+    }
+    out_npz.with_suffix(".json").write_text(json.dumps(meta, indent=2))
+    return {"out": str(out_npz), **{k: v for k, v in meta.items()
+                                    if k in ("n", "n_pos")}}
 
 
 def dump_run(artifact: str | Path, out_npz: str | Path,
