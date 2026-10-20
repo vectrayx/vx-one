@@ -402,15 +402,25 @@ El paper (`paper/main.tex`) incorpora el advisory `docs/reference/VX_One_F2_Advi
       margen p(1)−p(2) en recon = 1.000 → el selective-by-margin también muere).
       Integrado al paper como Fig. fig:tau + párrafo "Sweep" en E2; el punto
       A de la review externa (Gemini, 2026-10-19) queda cubierto con datos.
-- [ ] **E3 reliability por condicional CORN** (q_1 en todas las filas; q_2 en
-      elegibles sev≥1) + ECE directo del gate C_2 — atribuye el ECE del gate a
-      sus eslabones (Lema 2). Sin re-entrenar.
-- [ ] **E3 classwise calibration de Choice** (E[1[y=k] | p_k] por clase) para
-      respaldar el gate g_recon (necesita calibration classwise, más fuerte
-      que la confidence que optimiza TS).
-- [ ] **Diagnóstico Bayes-vs-Chow** en val: % de filas donde la regla general
-      con matriz de costes difiere de la abstracción max-prob. Si ≈0%, la
-      simplificación queda justificada empíricamente en una línea.
+- [x] **E3 reliability por condicional CORN** — ✅ EJECUTADO 2026-10-20
+      (`scripts/e3_gates_diag.py` → `results/e3_diag/`, sin re-entrenar).
+      Los ECE condicionales NO determinan el ECE del producto: UNSW test
+      q1 0.0925 / q2 0.0508 con C2 directo 0.0438; CIC by-day test
+      q1 0.4203 / q2 0.1407 con C2 directo 0.1125. Integrado al Apéndice
+      tras la prueba de Lemma 2 ("Measured (drop gate, this deployment)").
+- [x] **E3 classwise calibration de Choice** — ✅ EJECUTADO (mismo script).
+      ECE classwise val ≤0.007 en los 4 runs; coordenada recon ≤0.003
+      (UNSW 0.0027 n=1,574; CIC strat 0.0001). Justifica g_recon como
+      medición, no supuesto. Integrado en el párrafo de calibración E3.
+- [x] **Diagnóstico Bayes-vs-Chow** — ✅ EJECUTADO (val, choice head).
+      Con costes uniformes la abstracción max-prob es regla de Bayes
+      exacta (0 desviaciones en los 3 runs con clase normal). Con
+      penalización m-fold en misses las desviaciones aparecen SOLO en una
+      dirección (Bayes escala, Chow atribuye) y a partir de m≥3: UNSW val
+      13.4% (m=3, λ_r=0.5); by-day 29% entre attacks (m=10, λ_r=0.1).
+      CIC strat ≤0.2% en todo el grid. EMBER n/a (choice head sin clase
+      normal). Integrado al párrafo "Bayes rule with rejection" del
+      Apéndice.
 ## 13. Varianza multi-seed de las 4 corridas principales (2026-10-20, Modal cuenta 2)
 
 - [x] **3 seeds × 4 corridas** en L4 (`modal/app.py::seeds_main`, seeds 42/43/44,

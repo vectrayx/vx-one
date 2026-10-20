@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2026.10.19)  19 OCT 2026 22:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2026.10.19)  19 OCT 2026 23:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1218,9 +1218,6 @@ Package fancyhdr Warning: \headheight is too small (13.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.02701pt}.
 
 [5.5]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 
 
 
@@ -1259,7 +1256,7 @@ Overfull \hbox (6.34506pt too wide) in paragraph at lines 379--380
 
 
 
-Overfull \hbox (23.65907pt too wide) in paragraph at lines 395--396
+Overfull \hbox (23.65907pt too wide) in paragraph at lines 397--398
 \T1/LinuxLibertineT-TLF/m/n/9 (-20) dis-tri-bu-tions $\OML/nxlmi/m/it/9 P; Q$\T
 1/LinuxLibertineT-TLF/m/n/9 (-20) , $\OML/nxlmi/m/it/9 d[]\LMS/ntxsy/m/n/9 ¹\OM
 L/nxlmi/m/it/9 P; Q\LMS/ntxsy/m/n/9 º \U/ntxmia/m/it/9 = \OT1/LinuxLibertineT-T
@@ -1279,9 +1276,6 @@ LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/sb/n' will be
 (Font)              scaled to size 7.3pt on input line 277.
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
 (Font)              scaled to size 7.3pt on input line 277.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
 
 
 )
@@ -1326,16 +1320,16 @@ L3 programming layer <2024-08-30>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 7813BFF2D721BF0F6963D06C6EC97E48;3769.
+(rerunfilecheck)             Checksum: 9591EAA5941C3549919EBCE68DC52FDF;3769.
  ) 
 Here is how much of TeX's memory you used:
- 21484 strings out of 475722
- 349146 string characters out of 5783517
- 827100 words of memory out of 6000000
+ 21491 strings out of 475722
+ 349307 string characters out of 5783517
+ 828534 words of memory out of 6000000
  42615 multiletter control sequences out of 15000+600000
- 790903 words of font info for 590 fonts, out of 8000000 for 9000
+ 791449 words of font info for 594 fonts, out of 8000000 for 9000
  175 hyphenation exceptions out of 8191
- 90i,17n,131p,2213b,815s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,16n,131p,2213b,796s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/jsantillana/texmf/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb>
 </home/jsantillana/texmf/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></
 home/jsantillana/texmf/fonts/type1/public/newtx/LibertineMathMI.pfb></home/jsan
@@ -1351,10 +1345,10 @@ TZ.pfb></home/jsantillana/texmf/fonts/type1/public/newtx/NewTXMI.pfb></home/jsa
 ntillana/texmf/fonts/type1/public/newtx/txexs.pfb></home/jsantillana/texmf/font
 s/type1/public/newtx/txmiaX.pfb></home/jsantillana/texmf/fonts/type1/public/new
 tx/txsym.pfb></home/jsantillana/texmf/fonts/type1/public/newtx/txsys.pfb>
-Output written on main.pdf (9 pages, 693740 bytes).
+Output written on main.pdf (9 pages, 695162 bytes).
 PDF statistics:
- 512 PDF objects out of 1000 (max. 8388607)
- 408 compressed objects within 5 object streams
- 106 named destinations out of 1000 (max. 500000)
+ 513 PDF objects out of 1000 (max. 8388607)
+ 409 compressed objects within 5 object streams
+ 107 named destinations out of 1000 (max. 500000)
  114362 words of extra memory for PDF output out of 128383 (max. 10000000)
 
