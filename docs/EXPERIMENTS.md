@@ -453,6 +453,48 @@ futuro" → ahora medido: mejora acotada (Brier −6.5% worst-day con walk-platt
 calibración. Runbook/protocolo: `e8_window_recal.py`; outputs en
 `results/e8_recal/`.
 
+## 7b. E5b — Risk–coverage del gating compuesto de la cascada ✅ (2026-10-20)
+
+**Estado: EJECUTADA (local, ~4 min; eve.json.gz relocalizados del volumen).**
+Cierra el next-step (ii) de la conclusión. Protocolo congelado en
+`scripts/e5_risk_coverage.py` (reusando exactamente los helpers de
+`src/e5/cascade.py` con rutas absolutas; eve_*.json.gz desde el volumen Modal
+cuenta-1). Semántica de adjudicación selectiva: A(τ) = {F1 alertó} ∪
+{p_noul ≥ τ}, veredicto "ataque", abstain lo no adjudicado; cov(τ)=|A|/N,
+risk(τ)=1−precision(A). 201 puntos de τ por día.
+
+Exactitud por bloque: F1 leg EXACTO por flujo (eve casada por 5-tupla + ventana
+`F1_T0_SLACK/F1_END_SLACK`); F2 leg EXACTO por fila-test strat (npz +
+temperatura como-run); compuesto = estimador del supuesto documentado de E5
+(gray ≈ muestra aleatoria por clase).
+
+| día | F1 cov / prec (exacto) | F2 cov@risk≤10% | comp cov@risk≤10% | comp cov@risk≤20% |
+|---|---|---|---|---|
+| Mon 03 (benigno puro) | 0.0011 / 0.000 | 0.0 | 0.0 | 0.0 |
+| Tue 04 | 0.0009 / 0.030 | 0.0326 | 0.0335 | 0.0335 |
+| Wed 05 | 0.0013 / 0.490 | 0.3657 | 0.3666 | 0.3666 |
+| Thu 06 | 0.0011 / 0.059 | 0.0044 | **0.0** | 0.0055 |
+| Fri 07 | 0.0005 / 0.067 | 0.4163 | 0.4155 | 0.4155 |
+
+**Lectura honesta (3 hallazgos):**
+1. **Lunes benigno-puro = punto nulo del gating selectivo**: TODA adjudicación
+   es error por construcción (risk→1.0 a cualquier τ; cov=0 en risk≤30%). El
+   "risk" de selectiva con abstención NO existe sin ataques: sin budget de
+   composición previa, el gate abstiene todo — coherente con la semántica
+   `unknown`/coverage como mecanismo para día real.
+2. **Viernes (41% ataque): cov 0.416 de la jornada a risk≤5%**, plateau enteramente
+   suministrado por Fase 2 (Δ cov F1→comp ≤ 1pt): bajo opacidad de payload el
+   motor de firma aporta latencia/provenance, NO coverage de adjudicación.
+3. **Jueves pequeño-pack: el gating compuesto NO admite nada a risk≤10%** — los
+   flags de F1 (0.11% a precision 0.059) corrompen todos los puntos; el core
+   limpio de F2 solo cubre 0.44% (risk mín 0.33%). La multiplicación-FP que
+   dominate la precision combinada del §E5 castiga también la curva del gate.
+
+Espera vs tabla tab:e5: cov@risk fixed ≤ cov del combined-estimate full-day
+(aquí la admisión es selectiva con abstención, no clasificación total). Outputs:
+`results/e5_rc/` (5×json por día + e5b.md + e5b_curves.npz con curvas 201 pts).
+
+
 ## 9c. E9 — Per-window retraining (continue-train) bajo drift CIC ✅ (2026-10-20)
 
 **Estado: EJECUTADA (local CPU, ~1.5 min/época).** Cierra el único next-step de
