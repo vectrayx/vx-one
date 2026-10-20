@@ -188,12 +188,17 @@ def metrics(no_op_codekey: bool = True) -> dict:
     fam_p = np.zeros((n, len(cand)))
     sev_p = np.zeros((n, 4))
     lats, toks = [], []
+    pos_of = {int(k_): j for j, k_ in enumerate(npz_idx)}
     if JSONL.exists():
         for line in JSONL.read_text().splitlines():
             if not line.strip():
                 continue
             r = json.loads(line)
-            k = r["k"]
+            if r["k"] < 0:
+                continue  # fila meta (questions) pedida por error
+            k = pos_of.get(r["k"])
+            if k is None:
+                continue
             n_gate[k] = r["gate"]
             for name_, p in (r["family"] or {}).items():
                 if name_ in fam_idx:

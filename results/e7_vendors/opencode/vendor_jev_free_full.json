@@ -1,0 +1,35 @@
+{
+  "vendor": "opencode",
+  "model": "jev-1.13-free",
+  "rows_done": 2021,
+  "rows_total": 2021,
+  "complete": true,
+  "gate": {
+    "vendor": {
+      "auroc": 0.567662095984329,
+      "fpr@95": 0.932,
+      "ece15": 0.2650272142503711
+    },
+    "ours": {
+      "auroc": 0.9809833496571988,
+      "fpr@95": 0.157,
+      "ece15": 0.09728259603884373
+    }
+  },
+  "choice": {
+    "vendor_macro_f1": 0.0692582457868394,
+    "our_macro_f1": 0.5339964459637085
+  },
+  "severity": {
+    "vendor_mae": 0.809455714992578,
+    "our_mae": 0.33293182685655553
+  },
+  "latency_ms": {
+    "p50": 207.5,
+    "p95": 591.0
+  },
+  "tokens": {
+    "total": 2202313,
+    "usd_if_paid": 0.092497146
+  }
+}

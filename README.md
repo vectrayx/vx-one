@@ -53,11 +53,13 @@ no de los números aspiracionales del draft antiguo.
   pdflatex -interaction=nonstopmode paper/main.tex   # los artefactos quedan en la raíz
   ```
   Los paquetes ACM que la TeX Live 2024 de Fedora no traía (`acmart`, `libertine`, `newtx`, `ec`, `cm-super`, etc.) están instalados en `~/texmf` (TEXMFHOME), fetched del histórico TL2024 — no hace falta repetir nada.
-- [ ] E7 (baseline comercial): protocolo completo en `scripts/e7_vendor_api.py`
-      (dry-run validado, coste ~$0.05 por Jev). Azure: recursos creados
-      (AIServices + hub + project, cuenta nueva Enabled) pero el deploy de
-      Microsoft-Decision-1 exige quota/feature que solo el portal ai.azure.com
-      dispara — ver EXPERIMENTS.md §9. Pendiente: key TypeSafe o deploy portal.
+- [x] E7 (baseline comercial): corrida completa 2,021/2,021 filas por el passthrough
+      System One del Zen de OpenCode (`jev-1.13-free`, mismo modelo que el SKU
+      comercial, coste $0). Veredicto: vendor gate AUROC 0.568 / FPR@95 0.932 /
+      macro-F1 0.069 / MAE sev 0.809 vs nuestro 0.981 / 0.157 / 0.534 / 0.333 —
+      baseline comercial zero-shot a nivel de azar en gate. Resultados en
+      `results/e7_vendors/opencode/vendor_jev_free_full.json`; detalle
+      técnico/experimental en EXPERIMENTS.md §9 (2026-10-20).
 - [x] Pendientes mínimos del advisory que reusan logits ya computados (§12 de `docs/EXPERIMENTS.md`): sweep de τ_abs ✅, reliability por condicional CORN ✅, classwise calibration ✅, diagnóstico Bayes-vs-Chow ✅, protocolo conformal EMBER (12 semanas + weighted + cota d_TV) ✅ (2026-10-20).
 - [x] 3 seeds en las 4 corridas principales de tablas (Modal cuenta 2, 12/12 ok): seed-42
   reproduce la fila oficial UNSW al 4º decimal; AUROC se mueve ≤0.002 salvo CIC by-day

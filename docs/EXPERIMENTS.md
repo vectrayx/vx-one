@@ -19,7 +19,7 @@ aspiracionales no se usan.
 | E4 | Latencia | ✅ batch=1, 1 hilo, CPU local, n=3000 | p50 675 (Nano) / 955 (Small) / 1652 µs (Base), p99 ≤2.1 ms |
 | E5 | Cascada dos fases (Suricata + ET) | ✅ 5 días CIC-IDS2017 (~2.8M flujos) | F1 resuelve ~0.1% del tráfico sin payload; zona gris ≈99.9%; F2 la recupera (comb R ≥0.978) |
 | E6 | Ablaciones | ✅ 14/14 | rama textual +5 pts (UNSW), tilt ω perjudica CIC (+4.9 sin), dropout crítico en CIC (−14.7) e innecesario en EMBER (+2.7) |
-| E7 | Baseline comercial (Decision-1) | ❌ no ejecutado (opcional, ~$2) | Pendiente |
+| E7 | Baseline comercial (Jev 1.13 vía Zen) | ✅ 2,021 filas, coste 0 | §9 |
 
 ---
 
@@ -339,27 +339,46 @@ Conclusiones honestas para la discusión del paper:
 - **a2:** la ganancia del multi-tarea está en la detección (Gate AUROC
   0.9834→0.9784 sin; FPR@95 0.1211→0.1446), Choice no la necesita.
 
-## 9. E7 — Baseline comercial (protocolo listo; bloqueado por credenciales)
+## 9. E7 — Baseline comercial ✅ (OpenCode Zen / System One passthrough, 2,021 filas)
 
-**Estado 2026-10-20**: script completo y validado en `scripts/e7_vendor_api.py`
-(`--dry-run` = pipeline/muestras/métricas sin red). Solo falta la credencial:
+**Estado 2026-10-20: EJECUTADA COMPLETA (2,021/2,021 filas, $0).** Vía real inesperada:
+el endpoint `systemone` del Zen de OpenCode hace passthrough al mismo proveedor
+(`jev-1.13-free` = mismo modelo Jev 1.13 que el SKU comercial de TypeSafe) y queda
+exento del bloqueo del free tier. Coste publicado idéntico al comercial
+($0.042/Mtok, solo input) — la corrida consumió **2,202,313 tokens ≈ $0.09 pagada**;
+vía free = **$0.00**.
 
-- **TypeSafe Jev** (ruta activa): API `POST https://api.typesafe.ai/v1/systemone`,
-  modelo `jev-1.13.0`, $42/Btok input (~**$0.05** la corrida 2k eventos).
-  Credencial: API key del console `console.typesafe.ai/keys` (registro browser;
-  no hay key guardada en ninguna parte del repo/servers). Cuando exista:
-  `TYPESAFE_API_KEY=sk-... python scripts/e7_vendor_api.py`.
-- **Microsoft-Decision-1** (Project, cuenta `juan.s.santillana@outlook.com`,
-  sub `bb62f1e2-…-93c84579e9bf` Enabled): recursos creados 2026-10-20 —
-  AIServices `vxone-e7` (eastus) + Foundry hub `vxone-hub` y project
-  `vxone-proj` (`rg hola`). Deploy blockeado por Microsoft:
-  `DataZoneStandard` → InsufficientQuota (cuota RPM=0 para la sub, y
-  `Microsoft.Quota` no acepta self-serve PUT para este tipo: BadRequest);
-  `GlobalStandard` → `SpecialFeatureOrQuotaIdRequired` (feature oculta, no
-  registrable por CLI). Faltan: desde **ai.azure.com** → Model catalog →
-  Microsoft-Decision-1 → Deploy (disparar el registro de feature/quota que
-  el portal hace), o ticket de soporte Cognitive Services. Coste de los
-  recursos creados: 0 mientras no haya uso (AIServices S0 cobra por uso).
+**Resultados medidos** (`results/e7_vendors/opencode/vendor_jev_free_full.json`,
+mismo protocolo congelado, sample seed-42: 1,000 normal + 1,021 ataque):
+
+| Primitiva | Vendor (zero-shot) | Nuestro (fincado UNSW) |
+|---|---|---|
+| Gate AUROC | **0.568** | **0.981** |
+| Gate FPR@95 | **0.932** | **0.157** |
+| Gate ECE15 | 0.265 | 0.097 |
+| Choice macro-F1 | 0.069 | 0.534 |
+| Severidad MAE | 0.809 | 0.333 |
+
+Latencia vendor p50 208 ms / p95 591 ms (single-request, state+3 preguntas).
+Veredicto: **el baseline comercial zero-shot queda a nivel de azar en el gate
+(AUROC 0.568 ≈ 0.5) con FPR@95 de 93%**, y en choice/score también cede 3–8× —
+la promesa de las primitivas genéricas no traslada al dominio de red sin fino
+del dataset
+Con E7 medido, la comparativa "primitivas congeladas vs pipeline fincado" queda
+cerrada con números de un tercero comercial.
+
+Infra y hallazgos técnicos (anotación, fuera del paper):
+- El free tier de OpenCode aplica una ventana diaria **por IP** (~250 requests;
+  verificado cruzando 2 keys en 3 IPs). La corrida full se distribuyó entonces
+  entre VM1 OCI + 13 nodos del fleet potfics (14 slices, worker resumible
+  `e7_remote_worker.py` + `e7_launch_fleet.sh`), cada nodo solo tardó ~2.5 min en
+  completar su slice de ~137 filas sin un solo 429.
+- Runner resumible local: `scripts/e7_resumable.py` (append .jsonl flush,
+  métricas offline `--metrics`); mapping k (test-idx) → posición de la muestra
+  vía `session_idx.npz`.
+- Azure Microsoft-Decision-1 sigue disponible como segunda vía (deploy solo
+  por portal `ai.azure.com`: feature/quota oculta no auto-registrable por CLI),
+  pero E7 ya no depende de ella.
 
 Protocolo (fijo): muestra estratificada seed-42 del test UNSW (1,000 normal +
 1,000 ataque ∝ familias, min 15/familia → 2,021 filas); 1 request por fila con
