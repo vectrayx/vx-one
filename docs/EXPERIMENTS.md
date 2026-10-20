@@ -440,6 +440,29 @@ El paper (`paper/main.tex`) incorpora el advisory `docs/reference/VX_One_F2_Advi
   `:Z` aplicado a medias), el volumen `paper-results` lista/lee con paths
   **internos** (`/outputs/...`, no `/vol/outputs/...`), y el repo montado para
   lanzar `seeds_main` debe ser `paper-fix-glm` (el viejo no tiene el entrypoint).
-- [ ] (Si se ejecuta) protocolo conformal EMBER del advisory §2(d): coverage
-      semanal unweighted vs weighted (clasificador de dominios, odds clipeado
-      [0.1,10]), tabla de 12 semanas con cota inferior de d_TV por BER.
+- [x] **(Si se ejecuta) protocolo conformal EMBER del advisory §2(d)** — ✅
+      EJECUTADO 2026-10-20 (`scripts/e4_conformal_ember.py` →
+      `results/e4_conformal/`, todo local sobre logits npz + features
+      parquet; 0 entrenamientos de modelos). Protocolo: split-conformal
+      sobre Noul (α=0.1, calibración n=120k de w46–51), coverage semanal
+      con IC Clopper–Pearson, variante weighted con clasificador de
+      dominios logístico SGD streaming (odds clipeadas [0.1,10]) y BER
+      held-out → cota inferior d_TV.
+- [x] **Challenge set**: reportado como estrés separado (el checkpoint
+      Small requeriría inferencia local vía Modal — pendiente si se quiere
+      la fila challenge; fuera de toda promesa según el advisory).
+- **Resultados**: coverage de calibración **0.9000 exacto**; por semana
+  unpweighted 0.8947–0.9353 (cae ~1 pt hacia w63; el lado malicioso
+  concentra la pérdida: 0.8835 en w60; benignos ≥0.905 toda semana);
+  drift certificado **d_TV ≥ 0.15–0.24** (BER held-out, AUC 0.61–0.64 →
+  el drift de features es real pero modesto); weighted sin ganancia
+  medible (Δ≤0.022, dirección inconsistente). Lectura: el drift de
+  EMBER que castiga es el label-shift de familias (lo absorbe
+  `unknown`), no el covariate-shift del binario. Integrado al paper
+  (Limitations item + párrafo "Conformal audit" del Apéndice).
+- **Nota operativa anti-colgado** (la máquina se colgó el 2026-10-20):
+  sklearn lbfgs sobre 120k×2568 convierte/copias en float64 (~5 GB por
+  copia) y el pool jemalloc de pyarrow retiene VA tras liberar. Regla:
+  dominio-clf en SGD streaming float32 con preallocazione, pool de
+  pyarrow en modo `system_memory_pool()` y `ulimit -v 12GB` siempre que
+  un script toque features 2568-dim × cientos de miles de filas.
