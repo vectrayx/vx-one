@@ -1,0 +1,62 @@
+{
+  "vendor": "opencode",
+  "model": "jev-1.13-free",
+  "sample": {
+    "n_normal": 3,
+    "n_attack": 135,
+    "seed": 42,
+    "stratified": true
+  },
+  "gate": {
+    "vendor": {
+      "auroc": 0.7901234567901234,
+      "fpr_at_95": 1.0,
+      "tpr95": 0.95,
+      "ece15": 0.712536231884058
+    },
+    "ours": {
+      "auroc": 0.9753086419753086,
+      "fpr_at_95": 0.3333333333333333,
+      "tpr95": 0.95,
+      "ece15": 0.03000466436859713
+    }
+  },
+  "choice": {
+    "vendor_macro_f1": 0.004285714285714286,
+    "our_macro_f1": 0.5919294306335204,
+    "vendor_acc": 0.021739130434782608,
+    "our_acc": 0.572463768115942
+  },
+  "severity": {
+    "vendor_mae": 1.4583333333333333,
+    "our_mae": 0.45415853115600197
+  },
+  "latency_ms": {
+    "p50": 481.29211850027787,
+    "p95": 5508.697310246134
+  },
+  "cost": {
+    "input_tokens_total": 151143,
+    "usd": 0.006348006000000001
+  },
+  "notes": {
+    "candidates": [
+      "normal",
+      "dos",
+      "recon",
+      "exploitation",
+      "shellcode",
+      "backdoor",
+      "analysis",
+      "fuzzing",
+      "generic",
+      "worms"
+    ],
+    "with_unknown": false,
+    "thresholds": {
+      "noul": 1.058034011194953,
+      "score": 0.9442013369717253
+    },
+    "alignment": "te npz filas == parquet test en orden natural (verificado)"
+  }
+}

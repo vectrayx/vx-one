@@ -10,6 +10,10 @@ Compara contra nuestros logits del npz oficial en las mismas filas.
 Vendor:
 - typesafe:  POST https://api.typesafe.ai/v1/systemone  (Bearer TYPESAFE_API_KEY,
              modelo jev-1.13.0 = alias estable en 2026-10; $42/Btok input>$0).
+- opencode:  MISMA API System One pero vía el proxy/opencode:
+             POST https://opencode.ai/zen/v1/systemone con OPENCODE_API_KEY
+             (oc_sk_...) y modelo jev-1.13-free — costo $0 (tier free de
+             OpenCode passthrough al Jev 1.13 real; verificado 2026-10-20).
 - azure:     DESCARTADA por decisión del usuario (2026-10-20): la suscripción
              Azure está suspendida por compliance y no se usará. E7 corre solo
              por la ruta TypeSafe Jev.
@@ -110,14 +114,22 @@ def build_questions(candidates: list[str], with_unknown: bool = False) -> dict:
 
 
 # ── HTTP ──────────────────────────────────────────────────────────────
-def ask_one(model: str, state: dict, questions: dict,
+VENDORS = {
+    "typesafe": {"base": "https://api.typesafe.ai", "env": "TYPESAFE_API_KEY"},
+    "opencode": {"base": "https://opencode.ai/zen", "env": "OPENCODE_API_KEY"},
+}
+
+
+def ask_one(vendor: str, model: str, state: dict, questions: dict,
             api_key: str, tries: int = 8) -> tuple[dict, float, dict]:
+    base = VENDORS[vendor]["base"]
     body = json.dumps({"model": model, "state": state, "questions": questions},
                       separators=(",", ":")).encode()
     req = urllib.request.Request(
-        "https://api.typesafe.ai/v1/systemone", data=body, method="POST",
+        f"{base}/v1/systemone", data=body, method="POST",
         headers={"Authorization": f"Bearer {api_key}",
-                 "Content-Type": "application/json"})
+                 "Content-Type": "application/json",
+                 "User-Agent": "vxone-e7/0.1"})  # WAF bloquea Python-urllib
     delay = 2.0
     for i in range(tries):
         t0 = time.perf_counter()
@@ -176,8 +188,9 @@ def macro_f1(y_true: np.ndarray, y_pred: np.ndarray, n_classes: int) -> float:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--vendor", choices=["typesafe"], default="typesafe")
-    ap.add_argument("--model", default="jev-1.13.0")
+    ap.add_argument("--vendor", choices=["typesafe", "opencode"], default="opencode")
+    ap.add_argument("--model", default=None,
+                 help="default: jev-1.13.0 (typesafe) / jev-1.13-free (opencode)")
     ap.add_argument("--n-normal", type=int, default=1000)
     ap.add_argument("--n-attack", type=int, default=1000)
     ap.add_argument("--with-unknown", action="store_true",
@@ -258,13 +271,15 @@ def main() -> None:
               f"{macro_f1(label_idx, our_choice_pred, len(cand)):.4f}")
         return
 
-    api_key = os.environ.get("TYPESAFE_API_KEY")
-    assert args.vendor == "typesafe"
-    assert api_key, "TYPESAFE_API_KEY no definido"
+    if args.model is None:
+        args.model = "jev-1.13.0" if args.vendor == "typesafe" else "jev-1.13-free"
+    env = VENDORS[args.vendor]["env"]
+    api_key = os.environ.get(env)
+    assert api_key, f"{env} no definido"
 
     def work(k: int):
         s = build_state(rows[k])
-        resp, lat, _ = ask_one(args.model, s, questions, api_key)
+        resp, lat, _ = ask_one(args.vendor, args.model, s, questions, api_key)
         return k, resp["answers"], lat, resp["usage"]["input_tokens"]
 
     n_gate = np.full(len(idx), np.nan)
