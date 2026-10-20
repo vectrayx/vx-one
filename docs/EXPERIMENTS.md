@@ -349,12 +349,17 @@ Conclusiones honestas para la discusión del paper:
   Credencial: API key del console `console.typesafe.ai/keys` (registro browser;
   no hay key guardada en ninguna parte del repo/servers). Cuando exista:
   `TYPESAFE_API_KEY=sk-... python scripts/e7_vendor_api.py`.
-- **Microsoft-Decision-1** (DESCARTADA por decisión del usuario 2026-10-20):
-  no usar la suscripción `Azure subscription 1` (c341251f-…-ea873) — está
-  Disabled por `SuspiciousActivity` en el billing account (compliance) y el
-  titular no la reactivará. Verificado igualmente por si cambia de opinión:
-  el modelo está disponible en eastus y la cuenta `vectrayx-openai`
-  sobrevive en read-only. E7 corre solo por la ruta TypeSafe Jev.
+- **Microsoft-Decision-1** (Project, cuenta `juan.s.santillana@outlook.com`,
+  sub `bb62f1e2-…-93c84579e9bf` Enabled): recursos creados 2026-10-20 —
+  AIServices `vxone-e7` (eastus) + Foundry hub `vxone-hub` y project
+  `vxone-proj` (`rg hola`). Deploy blockeado por Microsoft:
+  `DataZoneStandard` → InsufficientQuota (cuota RPM=0 para la sub, y
+  `Microsoft.Quota` no acepta self-serve PUT para este tipo: BadRequest);
+  `GlobalStandard` → `SpecialFeatureOrQuotaIdRequired` (feature oculta, no
+  registrable por CLI). Faltan: desde **ai.azure.com** → Model catalog →
+  Microsoft-Decision-1 → Deploy (disparar el registro de feature/quota que
+  el portal hace), o ticket de soporte Cognitive Services. Coste de los
+  recursos creados: 0 mientras no haya uso (AIServices S0 cobra por uso).
 
 Protocolo (fijo): muestra estratificada seed-42 del test UNSW (1,000 normal +
 1,000 ataque ∝ familias, min 15/familia → 2,021 filas); 1 request por fila con
