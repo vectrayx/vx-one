@@ -349,12 +349,17 @@ Conclusiones honestas para la discusión del paper:
   Credencial: API key del console `console.typesafe.ai/keys` (registro browser;
   no hay key guardada en ninguna parte del repo/servers). Cuando exista:
   `TYPESAFE_API_KEY=sk-... python scripts/e7_vendor_api.py`.
-- **Microsoft-Decision-1** (Azure Bloqueada): la suscripción `Azure subscription
-  1` (billing@jsantillana.com) está ReadOnlyDisabled — wave/budget suspendida
-  (deploy→`ReadOnlyDisabledSubscription`; reactivar en portal → Cost
-  Management → subscription). El modelo está disponible en eastus (`az
-  cognitiveservices model list` ✓) y la cuenta `vectrayx-openai` existe; el
-  deploy + adapter del endpoint espera a la reactivación.
+- **Microsoft-Decision-1** (Azure bloqueada): la suscripción `Azure subscription
+  1` está Disabled por **`SuspiciousActivity`/`UnusualActivity`** en el billing
+  account "Cynthia Vargas" (Individual/MicrosoftCustomerAgreement) —
+  verificado con `az rest` (soporte suspensionReasons) el 2026-10-20. **No hay
+  ruta API/CLI para reactivar** (tampoco spend-limit: es compliance). Única
+  vía (titular): portal → banner "Reactivate subscription" con verificación
+  de identidad/documento, o ticket de soporte gratuito
+  (portal → Help+Support → tipo "Billing", categoría "Subscriptions",
+  problema "Re-enable my disabled subscription"). El modelo está disponible
+  en eastus y la cuenta `vectrayx-openai` sobrevive en read-only; el deploy
+  + adapter se hace en minutos tras reactivación.
 
 Protocolo (fijo): muestra estratificada seed-42 del test UNSW (1,000 normal +
 1,000 ataque ∝ familias, min 15/familia → 2,021 filas); 1 request por fila con
