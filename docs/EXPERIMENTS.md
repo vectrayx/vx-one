@@ -367,6 +367,17 @@ del dataset
 Con E7 medido, la comparativa "primitivas congeladas vs pipeline fincado" queda
 cerrada con números de un tercero comercial.
 
+**Ablación `--with-unknown` (2026-10-20, 1,039 filas = subsample seed-42
+500 normal + 500 ataque, protocolo congelado idéntico; la opción explícita
+"unknown" se añade al criteria del choice)**: vendor macro-F1 0.085 (con
+unknown) vs 0.069 (sin unknown, corrida main n=2,021) — la opción casi no se
+usa (**unknown-rate 0.9% overall; 1.7% en ataques; 0% en normales**) y el F1
+sobre filas no-unknown no cambia (0.087). Nuestro known-choice en el mismo
+subsample: 0.601. Veredicto: **abstención explícita no rescata al vendor
+zero-shot**; el gap es de dominio (fine-tuning), no de falta de opción de
+abstención. JSON: `vendor_jev_free_ablation.json` (nota de comparación
+cross-sample dentro).
+
 Infra y hallazgos técnicos (anotación, fuera del paper):
 - El free tier de OpenCode aplica una ventana diaria **por IP** (~250 requests;
   verificado cruzando 2 keys en 3 IPs). La corrida full se distribuyó entonces

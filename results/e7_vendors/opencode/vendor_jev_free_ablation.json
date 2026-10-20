@@ -1,0 +1,40 @@
+{
+  "vendor": "opencode",
+  "model": "jev-1.13-free",
+  "rows_done": 1039,
+  "rows_total": 1039,
+  "complete": true,
+  "choice_unknown_option": {
+    "vendor_macro_f1_all_rows": 0.08491834828952763,
+    "vendor_macro_f1_nonunknown_rows": 0.08695036799396112,
+    "our_macro_f1": 0.6006658445474815,
+    "unknown_rate_overall": 0.008662175168431183,
+    "unknown_rate_attack": 0.016697588126159554,
+    "unknown_rate_normal": 0.0,
+    "vendor_macro_f1_known_only_main_run_n2021": 0.0692582457868394,
+    "sample_note": "ablation subsample seed-42 (500 normal + 500 attack, min 15) \u2014 draw distinto del main (1000+1000); comparaci\u00f3n cross-sample con protocolo congelado id\u00e9ntico. Intersecci\u00f3n main\u2229abl: solo 72 filas.",
+    "our_macro_f1_main_run_n2021": 0.5339964459637085
+  },
+  "gate": {
+    "vendor": {
+      "auroc": 0.5757922077922077,
+      "fpr@95": 0.914,
+      "ece15": 0.27515880654475455
+    },
+    "ours": {
+      "auroc": 0.9829313543599257,
+      "fpr@95": 0.146,
+      "ece15": 0.08940640069347239
+    }
+  },
+  "severity": {
+    "vendor_mae": 0.8479114533205006
+  },
+  "latency_ms": {
+    "p50": 206.3,
+    "p95": 445.9499999999993
+  },
+  "tokens": {
+    "total": 1155188
+  }
+}
