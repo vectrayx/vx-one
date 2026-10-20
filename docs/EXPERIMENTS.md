@@ -453,6 +453,61 @@ futuro" → ahora medido: mejora acotada (Brier −6.5% worst-day con walk-platt
 calibración. Runbook/protocolo: `e8_window_recal.py`; outputs en
 `results/e8_recal/`.
 
+## 9c. E9 — Per-window retraining (continue-train) bajo drift CIC ✅ (2026-10-20)
+
+**Estado: EJECUTADA (local CPU, ~1.5 min/época).** Cierra el único next-step de
+E8: "retraining por ventana es lo que queda". Protocolo congelado en
+`scripts/e9_window_retrain.py`: continue-train del checkpoint oficial
+`results/artifacts/cic_small_time.pt` (by-day s42) sobre
+train ∪ Friday-DDos (n=138,145 labels retrasadas al cierre del día-1),
+FeatureStage/candidates/ω congelados del artifact, AdamW lr 1.5e-4 (×0.15 del
+original), wd D11, seed 42, 1 pasada por defecto (streaming-honesto).
+Calibración doble de la MISMA corrida: as-run (val del pipeline) y val∪day-1
+(semántica walk de E8). Sensibilidad: ep2/ep4 (`--tag`). Eval sobre día-2
+(Friday-PortScan, n=286,467) con los MISMOS evaluadores de E8.
+
+**Tabla día-2 PortScan (estático = corrida by-day pre-E9):**
+
+| variante | AUROC | ECE15 | Brier | ECE-oracle-recal |
+|---|---|---|---|---|
+| static (E8) | 0.560 | 0.5531 | 0.5390 | 0.4452 |
+| E9 1 ep | 0.800 | 0.5539 | 0.5464 | 0.1165 |
+| E9 2 ep | 0.8392 | 0.5540 | 0.5467 | 0.1003 |
+| E9 4 ep | 0.760 | 0.5538 | 0.5465 | 0.1735 |
+
+Sanity día-1 (las filas se entrenaron): AUROC 1.0, ECE 0.0006-0.0007 — eval
+in-window, no generalización. Choice macro-F1 día-2 queda 0.102 (sin cambios
+medibles), ECE-ch plano; el gate AUROC es lo que se recupera.
+FPR@95(cal) día-2 = 0.0 en static y E9 (el umbral 0.95cuantil de val separa;
+el score de PortScan-flow se comprime en p<0.1 — la discriminación vive en el
+orden full-precision del logit, AUROC es estándar sobre scores completos).
+
+**Lectura honesta (3 hallazgos medidos):**
+1. **El retraining con ventana fresca recupera RANKING**: gate AUROC día-2
+   0.560 → 0.800 (1 pasada) → 0.8392 (2 pasadas); **4 pasadas CAE a 0.760** —
+   existe sweet-spot y el overfit al día-1 (persistencia + saturación) degrada.
+2. **El techo post-hoc del STATIC estaba limitado por su ranking, no por el
+   mecanismo de recal**: el mismo oracle-platt sobre el modelo retrained baja
+   el ECE-oracle de 0.4452 → 0.1165 (1 ep) / 0.1003 (2 ep) — con ranking 0.8+
+   el refit a=0.83--1.08, b≈9--12 expresa la composición del día y recupera
+   confianza. La recalibración "solo" (sin retrain) no tiene nada que expresar.
+3. **El walk-recal con labels retrasadas SIGUE siendo insuficiente incluso con
+   ranking recuperado**: platt día-1→día-2 sobre E9 da b≈−0.32…−0.67 (el shift
+   requerido es b≈+9.5) porque el día-1 quedó memorizado (BCE-fit 0.002-0.003,
+   scores saturados) y su composición-pos-rate difiere. La prior del día
+   nuevo no se infiere de ventanas previas — ECE as-run se mantiene 0.554.
+
+Cierre del arco E8→E9 para el paper: under drift fuerte, (a) recalibración
+calibra pero no detecta (E8), (b) retraining por ventana recupera parte del
+ranking (0.56→0.84 peak) y re-habilita la recalibración (ECE-oracle
+0.45→0.10), (c) ni retraining ni recal fijan el prior de composición del día
+(as-run ECE 0.55₁; la semántica `unknown`/coverage sigue siendo el mecanismo
+honesto para día cero real). Runbook/protocolo: `scripts/e9_window_retrain.py`
+(+ `e9_vs_static.py`, `e9_walkplatt.py`); outputs en `results/e9_retrain/`
+({e9_retrain,e9_retrain{ep2,ep4}}.json+npz, e9_vs_static.json, e9_walk{,ep2,ep4}.json,
+e9_oracle.json).
+
+
 ## 10. Limitaciones a declarar (→ § del paper)
 
 1. Score/severidad = rubrik familia→nivel, no etiquetas reales de severidad.

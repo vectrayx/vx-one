@@ -1,0 +1,66 @@
+{
+ "protocol": {
+  "epochs": 1,
+  "lr_scale": 0.15,
+  "lr": 0.00015,
+  "bs": 2048,
+  "temperatures": {
+   "asrun_val": {
+    "T_noul": 2.0484,
+    "T_choice": 1.3818
+   },
+   "calib_valday": {
+    "T_noul": 1.8826,
+    "T_choice": 1.2993
+   }
+  },
+  "artifact": "/home/jsantillana/projects/paper-fix-glm/results/artifacts/cic_small_time.pt",
+  "seed": 42
+ },
+ "per_day": {
+  "day1_ddos[asrun_val]": {
+   "n": 138145,
+   "auroc": 1.0,
+   "ece15": 0.0006,
+   "brier": 0.0009,
+   "fpr@95": 0.0,
+   "macro_f1": 0.333,
+   "ece15_choice": 0.0141,
+   "sev_mae": 0.0542,
+   "thr@0.95cal": 0.9924
+  },
+  "day2_portscan[asrun_val]": {
+   "n": 286467,
+   "auroc": 0.8,
+   "ece15": 0.5539,
+   "brier": 0.5464,
+   "fpr@95": 0.0,
+   "macro_f1": 0.1024,
+   "ece15_choice": 0.5474,
+   "sev_mae": 0.5578,
+   "thr@0.95cal": 0.9924
+  },
+  "day1_ddos[calib_valday]": {
+   "n": 138145,
+   "auroc": 1.0,
+   "ece15": 0.0005,
+   "brier": 0.0008,
+   "fpr@95": 0.0,
+   "macro_f1": 0.333,
+   "ece15_choice": 0.0116,
+   "sev_mae": 0.0542,
+   "thr@0.95cal": 0.9951
+  },
+  "day2_portscan[calib_valday]": {
+   "n": 286467,
+   "auroc": 0.8,
+   "ece15": 0.5538,
+   "brier": 0.5489,
+   "fpr@95": 0.0,
+   "macro_f1": 0.1024,
+   "ece15_choice": 0.549,
+   "sev_mae": 0.5578,
+   "thr@0.95cal": 0.9951
+  }
+ }
+}

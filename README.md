@@ -67,6 +67,17 @@ no de los números aspiracionales del draft antiguo.
       — oracle ECE del gate queda en 0.445 con day-AUROC 0.56; choice ECE
       oracle 0.056 (sí recalibrable). Resultados en `results/e8_recal/`;
       integrado al paper (Limitations + Apéndice E8 + Conclusion).
+- [x] E9 (per-window retraining bajo drift): continue-train del checkpoint
+      oficial by-day sobre train ∪ Friday-DDos (labels retrasadas del día-1),
+      protocolo congelado `scripts/e9_window_retrain.py` (local CPU, 1.4
+      min/época; sensibilidad ep2/ep4). Veredicto día-2 PortScan: gate
+      AUROC 0.560→0.800 (1 ep) →0.8392 (2 ep) →0.760 (4 ep, degradación);
+      as-run ECE 0.553→0.554 sin cambio (el prior de composición del día
+      nuevo no se infiere de labels previas, b fit −0.3…−0.7 vs +9.5
+      requerido); el techo oracle-recal colapsa 0.445→0.117/0.100 con el
+      ranking recuperado. Resultados en `results/e9_retrain/`
+      (e9_vs_static.md, e9_oracle.json, e9_walk*.json); integrado al paper
+      (Limitations + Apéndice E9 + Conclusion "five next steps").
 - [x] Pendientes mínimos del advisory que reusan logits ya computados (§12 de `docs/EXPERIMENTS.md`): sweep de τ_abs ✅, reliability por condicional CORN ✅, classwise calibration ✅, diagnóstico Bayes-vs-Chow ✅, protocolo conformal EMBER (12 semanas + weighted + cota d_TV) ✅ (2026-10-20).
 - [x] 3 seeds en las 4 corridas principales de tablas (Modal cuenta 2, 12/12 ok): seed-42
   reproduce la fila oficial UNSW al 4º decimal; AUROC se mueve ≤0.002 salvo CIC by-day
