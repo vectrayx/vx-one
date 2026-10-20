@@ -60,6 +60,13 @@ no de los números aspiracionales del draft antiguo.
       baseline comercial zero-shot a nivel de azar en gate. Resultados en
       `results/e7_vendors/opencode/vendor_jev_free_full.json`; detalle
       técnico/experimental en EXPERIMENTS.md §9 (2026-10-20).
+- [x] E8 (recalibración por ventana walk-forward bajo drift): corrida en los
+      logits del by-day CIC (2 ventanas reales: Friday-DDos → Friday-PortScan)
+      con protocolo congelado `scripts/e8_window_recal.py` — walk/platt/walkacc
+      + fila oracle (techo). Veredicto: recalibrar calibra pero NO detects
+      — oracle ECE del gate queda en 0.445 con day-AUROC 0.56; choice ECE
+      oracle 0.056 (sí recalibrable). Resultados en `results/e8_recal/`;
+      integrado al paper (Limitations + Apéndice E8 + Conclusion).
 - [x] Pendientes mínimos del advisory que reusan logits ya computados (§12 de `docs/EXPERIMENTS.md`): sweep de τ_abs ✅, reliability por condicional CORN ✅, classwise calibration ✅, diagnóstico Bayes-vs-Chow ✅, protocolo conformal EMBER (12 semanas + weighted + cota d_TV) ✅ (2026-10-20).
 - [x] 3 seeds en las 4 corridas principales de tablas (Modal cuenta 2, 12/12 ok): seed-42
   reproduce la fila oficial UNSW al 4º decimal; AUROC se mueve ≤0.002 salvo CIC by-day

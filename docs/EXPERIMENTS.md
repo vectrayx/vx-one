@@ -403,6 +403,56 @@ ECE15 del gate; macro-F1/acc del choice; MAE de severidad; latencia p50/p95;
 tokens y coste USD. Dry-run nuestro en la muestra: AUROC 0.9810, FPR@95 0.157,
 ECE15 0.0973, macro-F1 0.5340.
 
+## 9b. E8 — Recalibración por ventana (walk-forward) bajo drift ✅ (2026-10-20)
+
+**Estado: EJECUTADA.** Cierra el next-step (i) de la conclusión del paper. Protocolo
+congelado en `scripts/e8_window_recal.py`: sobre el npz de la corrida CIC by-day
+(`results/outputs_seed/cic_small_time.npz`, días de test en orden de captura
+verificado contra el parquet — 2 ventanas: Friday-DDos n=138,145 →
+Friday-PortScan n=286,467), variantes:
+
+- **static**: recalibración congelada con la val del pipeline (lo que reporta
+  hoy el paper).
+- **walk**: temperatura del gate re-fit con las labels del día anterior
+  (día-1 usa la val — streaming honesto con labels retrasadas).
+- **walkplatt**: idem pero Platt (a·logit+b) — el sesgo b expresa cambio de prior.
+- **walkacc**: val + todos los días de test previos (reservoir acumulado).
+- **oracle**: calibración con las PROPIAS labels del día — el techo absoluto
+  de cualquier recalibración post-hoc.
+
+| día | variante | AUROC | ECE15 | Brier | FPR@95(cal) | ECE15-ch |
+|---|---|---|---|---|---|---|
+| DDoS | static | 0.9931 | 0.1273 | 0.1254 | 0.0 | 0.1071 |
+| DDoS | oracle | 0.9931 | **0.0287** | **0.0267** | 0.0 | 0.1048 |
+| PortScan | static | 0.56 | 0.5531 | 0.5390 | 0.0 | 0.5426 |
+| PortScan | walk | 0.56 | 0.5531 | 0.5037 | 0.0 | 0.5280 |
+| PortScan | walkplatt | 0.56 | **0.5255** | 0.5080 | 0.0 | 0.5280 |
+| PortScan | walkacc | 0.56 | 0.5531 | 0.5315 | 0.0 | 0.5385 |
+| PortScan | oracle | 0.56 | 0.4452 | **0.2462** | 0.1481 | **0.0564** |
+
+Macro-F1 del choice es idéntico por construcción (la temperatura no muta el
+argmax) — lo recalibrable es la confianza.
+
+**Lectura honesta (3 hallazgos medidos):**
+1. **La calibración por ventana ayuda donde el día discrimina**: DDoS-day
+   AUROC 0.99 → oracle ECE 0.13→0.03; walk-platt captura casi todo el techo
+   con 2 parámetros y labels de un día (b≈6.7 expresa el prior del día).
+2. **El techo bajo drift fuerte es discriminación, no calibración**: PortScan
+   AUROC 0.56; **ni siquiera el oracle** baja el ECE del gate de 0.445
+   (static 0.55). Recalibrar calibra; no emperra la detección — el parche
+   post-hoc no existe para un día con disc 0.56; ahí el mecanismo honesto
+   sigue siendo la semántica `unknown` (E2).
+3. **El confidence del choice SÍ es recalibrable incluso en days débiles**:
+   ECE15-ch 0.543 → 0.056 oracle (softmax NLL de 6 vías es más exprersive que
+   temp binaria: el margen del argmax da señal extra); con walk-platt
+   day-lag solo −1.5 pts — la frescura del label es la variable.
+
+Resultado para el paper (Limitations): "recalibración por ventana = trabajo
+futuro" → ahora medido: mejora acotada (Brier −6.5% worst-day con walk-platt;
+−54% con oracle), y el cuello pasa a ser detectar-per-ventana (retrain), no
+calibración. Runbook/protocolo: `e8_window_recal.py`; outputs en
+`results/e8_recal/`.
+
 ## 10. Limitaciones a declarar (→ § del paper)
 
 1. Score/severidad = rubrik familia→nivel, no etiquetas reales de severidad.
