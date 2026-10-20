@@ -39,7 +39,7 @@ no de los números aspiracionales del draft antiguo.
 5. **Limitaciones declaradas en el propio paper** (§ Limitations): score por
    rubrik, datasets con etiquetas auditadas, LOAO ≠ mundo real, E5 con supuesto
    de independencia documentado, Fase 1 = Suricata de referencia (no el motor
-   C++ VectrayX), una sola seed por corrida, costo pendiente.
+   C++ VectrayX), corridas principales con 3 seeds (LOAO/ablation/E4/E5 en 1 seed), costo pendiente.
 
 ## Estado
 
@@ -55,5 +55,8 @@ no de los números aspiracionales del draft antiguo.
   Los paquetes ACM que la TeX Live 2024 de Fedora no traía (`acmart`, `libertine`, `newtx`, `ec`, `cm-super`, etc.) están instalados en `~/texmf` (TEXMFHOME), fetched del histórico TL2024 — no hace falta repetir nada.
 - [ ] E7 (baseline comercial vía API) — no ejecutado; queda como pendiente barato (~$2).
 - [ ] Pendientes mínimos del advisory que reusan logits ya computados (§12 de `docs/EXPERIMENTS.md`): sweep de τ_abs + risk-coverage, reliability por condicional CORN, classwise calibration, diagnóstico Bayes-vs-Chow.
-- [ ] 3 seeds en las 4 corridas principales de tablas (diferencias <1 pt son ruido hasta entonces).
+- [x] 3 seeds en las 4 corridas principales de tablas (Modal cuenta 2, 12/12 ok): seed-42
+  reproduce la fila oficial UNSW al 4º decimal; AUROC se mueve ≤0.002 salvo CIC by-day
+  (0.7336±0.0176); macro-F1 de CIC es inestable a cualquier escala (strat 0.831±0.074,
+  by-day 0.344±0.085). Resultados en `results/e1_seed/`, integrados al paper (E1 + Limitations).
 - [ ] Resolver los ⚠ de `paper/refs.bib` (listas de autores: Engels 2021, Rosay 2022, EMBER2024, SecureBERT) y el venue de CORN/shi2023 antes de la bibliografía final.
