@@ -339,14 +339,34 @@ Conclusiones honestas para la discusión del paper:
 - **a2:** la ganancia del multi-tarea está en la detección (Gate AUROC
   0.9834→0.9784 sin; FPR@95 0.1211→0.1446), Choice no la necesita.
 
-## 9. E7 — Baseline comercial (pendiente)
+## 9. E7 — Baseline comercial (protocolo listo; bloqueado por credenciales)
 
-Zero-shot de Microsoft-Decision-1 vía API sobre muestra estratificada (1–5K
-eventos, `State` serializado como JSON). Costo ~$2. Hipótesis del proveedor:
-"calibración más fuerte en tipos de tarea familiares" → el modelo especializado
-(gana en sus tareas) vs el nuestro (dominio). No ejecutado: pendiente de
-credenciales; los claims de "primera evaluación del paradigma en seguridad" se
-matizan en el paper mientras tanto.
+**Estado 2026-10-20**: script completo y validado en `scripts/e7_vendor_api.py`
+(`--dry-run` = pipeline/muestras/métricas sin red). Solo falta la credencial:
+
+- **TypeSafe Jev** (ruta activa): API `POST https://api.typesafe.ai/v1/systemone`,
+  modelo `jev-1.13.0`, $42/Btok input (~**$0.05** la corrida 2k eventos).
+  Credencial: API key del console `console.typesafe.ai/keys` (registro browser;
+  no hay key guardada en ninguna parte del repo/servers). Cuando exista:
+  `TYPESAFE_API_KEY=sk-... python scripts/e7_vendor_api.py`.
+- **Microsoft-Decision-1** (Azure Bloqueada): la suscripción `Azure subscription
+  1` (billing@jsantillana.com) está ReadOnlyDisabled — wave/budget suspendida
+  (deploy→`ReadOnlyDisabledSubscription`; reactivar en portal → Cost
+  Management → subscription). El modelo está disponible en eastus (`az
+  cognitiveservices model list` ✓) y la cuenta `vectrayx-openai` existe; el
+  deploy + adapter del endpoint espera a la reactivación.
+
+Protocolo (fijo): muestra estratificada seed-42 del test UNSW (1,000 normal +
+1,000 ataque ∝ familias, min 15/familia → 2,021 filas); 1 request por fila con
+las 3 primitivas sobre el MISMO state (39 features nombradas según
+`UNSW_FEATURE_COLUMNS` congelado + proto/service/state): gate=noul(¿ataque?),
+choice=el MISMO candidate set congelado del run (10) — abl `--with-unknown`
+agrega la opción; score=rubrik severidad 0–3 alineada a la nuestra. Alineación
+te-npz↔parquet verificada fila a fila (y_bin idéntico). Métricas vendor-vs-
+nuestro en las mismas filas: AUROC/FPR@95 (`fpr_at_tpr` exacto del repo)/
+ECE15 del gate; macro-F1/acc del choice; MAE de severidad; latencia p50/p95;
+tokens y coste USD. Dry-run nuestro en la muestra: AUROC 0.9810, FPR@95 0.157,
+ECE15 0.0973, macro-F1 0.5340.
 
 ## 10. Limitaciones a declarar (→ § del paper)
 
