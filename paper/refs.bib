@@ -1,7 +1,7 @@
 %% refs.bib — VX-One paper
 %% Todas las entradas provienen del lit review verificado
 %% (docs/reference/Literature_Review_VectrayX_One.md) y del advisory Opus §4
-%% (19 citas verificadas una a una). Los ⚠ "autores incompletos" están marcados.
+%% (19 citas verificadas una a una). Los ⚠ de autores incompletos y venues se resolvieron 2026-10-20.
 
 %% ---------- System One / productos (fuentes primarias verificadas 2026-10-16) ----------
 @misc{typesafejev,
@@ -184,12 +184,15 @@
   note    = {Venue not confirmed; cited as preprint}
 }
 
-@inproceedings{shi2023corn,
-  author    = {Shi, Xintong and Cao, Martin and Raschka, Sebastian},
-  title     = {CORN: Conditional Ordinal Regression for Neural Networks},
-  booktitle = {arXiv preprint arXiv:2111.08251},
-  year      = {2021},
-  note      = {Cited as preprint; recheck venue}
+@article{shi2023corn,
+  author  = {Shi, Xintong and Cao, Wenzhi and Raschka, Sebastian},
+  title   = {Deep Neural Networks for Rank-Consistent Ordinal Regression Based on Conditional Probabilities},
+  journal = {Pattern Analysis and Applications},
+  volume  = {26},
+  number  = {3},
+  pages   = {941--955},
+  year    = {2023},
+  doi     = {10.1007/s10044-023-01181-9}
 }
 
 %% ---------- Determinista / NIDS / datasets ----------
@@ -246,21 +249,22 @@
   year      = {2003}
 }
 
-%% ⚠ lista completa de autores pendiente (lit review §11): Engels et al.
-@inproceedings{engels2021,
-  author    = {Engels, G. and others},
-  title     = {Troubleshooting an Intrusion Detection Dataset: The {CICIDS2017} Case Study},
-  booktitle = {IEEE SMC / conference variant to confirm},
+%% Verificado 2026-10-20 (SPW 2021, pp. 7–12; antes "Engels, G. and others" — error: el primer autor es Engelen).
+@inproceedings{engelen2021,
+  author    = {Engelen, Gints and Rimmer, Vera and Joosen, Wouter},
+  title     = {Troubleshooting an Intrusion Detection Dataset: the {CICIDS2017} Case Study},
+  booktitle = {2021 IEEE Security and Privacy Workshops (SPW)},
+  pages     = {7--12},
   year      = {2021},
-  note      = {IEEE 9474286}
+  doi       = {10.1109/SPW53761.2021.00009}
 }
 
-@inproceedings{rosay2022errors,
-  author    = {Rosay, Antoine and Carlier, Fran{\c{c}}ois and Camtepe, Seyit Ahmet},
-  title     = {Errors in the {CICIDS2017} Dataset and the Significant Differences in Performance of Machine Learning Models Between the Original and Corrected Versions},
-  booktitle = {ACISP},
+@inproceedings{lanvin2022errors,
+  author    = {Lanvin, Maxime and Gimenez, Pierre-Fran{\c{c}}ois and Han, Yufei and Majorczyk, Fr{\'e}d{\'e}ric and M{\'e}, Ludovic and Totel, Eric},
+  title     = {Errors in the {CICIDS2017} Dataset and the Significant Differences in Detection Performances It Makes},
+  booktitle = {17th International Conference on Risks and Security of Internet and Systems (CRiSIS)},
   year      = {2022},
-  note      = {DOI 10.1007/978-3-031-31108-6\_2}
+  doi       = {10.1007/978-3-031-31108-6\_2}
 }
 
 @inproceedings{moustafa2015unsw,
@@ -285,23 +289,25 @@
   year    = {2018}
 }
 
-%% ⚠ autores completos del paper EMBER2024 (arXiv:2506.05074) pendientes
-@article{botacin2024ember,
-  author  = {Botacin, Marcus and others},
-  title   = {EMBER2024: A Benchmark Dataset for Holistic Evaluation of Malware Detection},
-  journal = {arXiv preprint arXiv:2506.05074},
-  year    = {2025},
-  note    = {DOI ACM 10.1145/3711896.3737431}
+%% Verificado 2026-10-20 (KDD 2025 V.2, pp. 5516–5526; antes "Botacin, M. and others" — error de primera autoría).
+@inproceedings{joyce2025ember,
+  author    = {Joyce, Robert J. and Miller, Gideon and Roth, Phil and Zak, Richard and Zaresky-Williams, Elliott and Anderson, Hyrum and Raff, Edward and Holt, James},
+  title     = {{EMBER2024} --- A Benchmark Dataset for Holistic Evaluation of Malware Classifiers},
+  booktitle = {Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), Vol.~2},
+  pages     = {5516--5526},
+  year      = {2025},
+  doi       = {10.1145/3711896.3737431}
 }
 
 %% ---------- LLMs en ciberseguridad ----------
-%% ⚠ lista completa de autores pendiente (lit review §11): Aghaei et al.
-@article{aghaei2022securebert,
-  author  = {Aghaei, Ehsan and others},
-  title   = {{SecureBERT}: A Domain-Specific Language Model for Cybersecurity},
-  journal = {arXiv preprint arXiv:2204.02685},
-  year    = {2022},
-  note    = {Springer DOI 10.1007/978-3-031-25538-0\_3}
+%% Verificado 2026-10-20 (SecureComm 2022/Springer; antes "Aghaei, E. and others").
+@inproceedings{aghaei2022securebert,
+  author    = {Aghaei, Ehsan and Niu, Xi and Shadid, Waseem and Al-Shaer, Ehab},
+  title     = {{SecureBERT}: A Domain-Specific Language Model for Cybersecurity},
+  booktitle = {18th EAI International Conference on Security and Privacy in Communication Networks (SecureComm)},
+  publisher = {Springer},
+  year      = {2022},
+  doi       = {10.1007/978-3-031-25538-0\_3}
 }
 
 @inproceedings{greshake2023injection,

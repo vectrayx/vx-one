@@ -54,9 +54,15 @@ no de los números aspiracionales del draft antiguo.
   ```
   Los paquetes ACM que la TeX Live 2024 de Fedora no traía (`acmart`, `libertine`, `newtx`, `ec`, `cm-super`, etc.) están instalados en `~/texmf` (TEXMFHOME), fetched del histórico TL2024 — no hace falta repetir nada.
 - [ ] E7 (baseline comercial vía API) — no ejecutado; queda como pendiente barato (~$2).
-- [ ] Pendientes mínimos del advisory que reusan logits ya computados (§12 de `docs/EXPERIMENTS.md`): sweep de τ_abs + risk-coverage, reliability por condicional CORN, classwise calibration, diagnóstico Bayes-vs-Chow.
+- [x] Pendientes mínimos del advisory que reusan logits ya computados (§12 de `docs/EXPERIMENTS.md`): sweep de τ_abs ✅, reliability por condicional CORN ✅, classwise calibration ✅, diagnóstico Bayes-vs-Chow ✅ (2026-10-20, commits `eb439f0`+`4fc9cfd`).
 - [x] 3 seeds en las 4 corridas principales de tablas (Modal cuenta 2, 12/12 ok): seed-42
   reproduce la fila oficial UNSW al 4º decimal; AUROC se mueve ≤0.002 salvo CIC by-day
   (0.7336±0.0176); macro-F1 de CIC es inestable a cualquier escala (strat 0.831±0.074,
   by-day 0.344±0.085). Resultados en `results/e1_seed/`, integrados al paper (E1 + Limitations).
-- [ ] Resolver los ⚠ de `paper/refs.bib` (listas de autores: Engels 2021, Rosay 2022, EMBER2024, SecureBERT) y el venue de CORN/shi2023 antes de la bibliografía final.
+- [x] Resolver los ⚠ de `paper/refs.bib` y el venue de CORN (verificado contra
+  fuentes primarias 2026-10-20): `engels2021`→`engelen2021` (SPW 2021 — el
+  primer autor es Engelen, no Engels), `rosay2022errors`→`lanvin2022errors`
+  (CRiSIS 2022, Lanvin/Gimenez/Han/Majorczyk/Mé/Totel — autores Rosay eran de
+  otro paper), `botacin2024ember`→`joyce2025ember` (KDD 2025, Joyce et al. —
+  no Botacin), SecureBERT = SecureComm 2022 (Aghaei/Niu/Shadid/Al-Shaer) y
+  CORN = PAA 26(3):941–955, 2023, DOI 10.1007/s10044-023-01181-9.
