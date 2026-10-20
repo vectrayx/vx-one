@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2026.10.19)  20 OCT 2026 18:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2026.10.19)  20 OCT 2026 18:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1174,14 +1174,13 @@ Package fancyhdr Warning: \headheight is too small (13.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.02701pt}.
 
 [3.3]
+
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/it' will be
 (Font)              scaled to size 9.0pt on input line 174.
 
 
-
-
 [4.4{/home/jsantillana/texmf/fonts/enc/dvips/libertine/lbtn_ki75ao.enc}]
-<fig_tau.pdf, id=259, 614.77495pt x 272.20613pt>
+<fig_tau.pdf, id=260, 614.77495pt x 272.20613pt>
 File: fig_tau.pdf Graphic file (type pdf)
 <use fig_tau.pdf>
 Package pdftex.def Info: fig_tau.pdf  used on input line 207.
@@ -1354,11 +1353,11 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 2AFE9D35089B6AAB0D67D65E2D13B09E;3735.
  ) 
 Here is how much of TeX's memory you used:
- 21504 strings out of 475722
- 349542 string characters out of 5783517
+ 21501 strings out of 475722
+ 349467 string characters out of 5783517
  832576 words of memory out of 6000000
  42617 multiletter control sequences out of 15000+600000
- 792093 words of font info for 598 fonts, out of 8000000 for 9000
+ 791820 words of font info for 596 fonts, out of 8000000 for 9000
  175 hyphenation exceptions out of 8191
  90i,16n,131p,2213b,783s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/jsantillana/texmf/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb>
@@ -1376,10 +1375,10 @@ TZ.pfb></home/jsantillana/texmf/fonts/type1/public/newtx/NewTXMI.pfb></home/jsa
 ntillana/texmf/fonts/type1/public/newtx/txexs.pfb></home/jsantillana/texmf/font
 s/type1/public/newtx/txmiaX.pfb></home/jsantillana/texmf/fonts/type1/public/new
 tx/txsym.pfb></home/jsantillana/texmf/fonts/type1/public/newtx/txsys.pfb>
-Output written on main.pdf (10 pages, 705051 bytes).
+Output written on main.pdf (10 pages, 705190 bytes).
 PDF statistics:
- 538 PDF objects out of 1000 (max. 8388607)
- 433 compressed objects within 5 object streams
+ 539 PDF objects out of 1000 (max. 8388607)
+ 434 compressed objects within 5 object streams
  112 named destinations out of 1000 (max. 500000)
  114362 words of extra memory for PDF output out of 128383 (max. 10000000)
 
