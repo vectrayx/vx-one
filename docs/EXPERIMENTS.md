@@ -403,6 +403,36 @@ ECE15 del gate; macro-F1/acc del choice; MAE de severidad; latencia p50/p95;
 tokens y coste USD. Dry-run nuestro en la muestra: AUROC 0.9810, FPR@95 0.157,
 ECE15 0.0973, macro-F1 0.5340.
 
+### 9-anexo. E7-long con unknown — corrida PAIRED completa ✅ (2026-10-20 nocturna)
+
+**Estado: 2,021/2,021 filas, coste $0.** Upgrade del ablation: las MISMAS
+2,021 filas de la run principal vuelven a pedirse con la opción `unknown`
+(comparación paired; la única diferencia es el extra option en family).
+Launch: `scripts/e7_build_unknown_slices.py` (slice build barato: labels→idx
+→ take de 2,021 filas, exactamente la muestra del main — assert alineación
+npz↔parquet) + fleet 12 nodos (z4 down, su slice corrió en VM1) + worker
+retry-after (todos duermen en su cooldown IP y ejecutan solos de madrugada
+~4 min por nodo; pull con merge+dedupe en `results/e7_vendors/opencode/unkfull/`).
+Métricas: `scripts/e7_metrics_unknown_full.py` → `vendor_jev_free_unkfull.json`.
+
+**Resultados (paired vs main, mismas filas):**
+
+| métrica | vendor main (sin unknown) | vendor con unknown | nuestro |
+|---|---|---|---|
+| gate AUROC | 0.568 | **0.476** | 0.981 |
+| gate FPR@95 | 0.932 | 0.969 | 0.157 |
+| macro-F1 | 0.0693 | 0.0657 (0.0592 con unknown-cls) | 0.534 |
+| unknown-rate | — | 0.35% (0.2% atk / 0.5% normal) | — |
+| MAE sev | 0.809 | 0.848 | 0.333 |
+
+**Lectura**: a escala completa y paired, el veredicto del ablation subsample
+(0.9% unknown, macro 0.085) se CONFIRMA y refuerza: el vendor dispone del
+hatch de abstención y NO lo usa (0.35%); añadir la opción no cierra el gap
+(macro-F1 0.066) y el gate cae a 0.476 (ruido con la opción extra). "An
+explicit abstention option is not enough" queda medido a escala completa, sin
+la salvedad cross-sample del subsample. Tokens 2.24M ($0.09 si pagase);
+latency p50 178.8 ms / p95 494.2 ms (fleet). Integrado al paper §E7.
+
 ## 9b. E8 — Recalibración por ventana (walk-forward) bajo drift ✅ (2026-10-20)
 
 **Estado: EJECUTADA.** Cierra el next-step (i) de la conclusión del paper. Protocolo
