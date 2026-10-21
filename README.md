@@ -60,6 +60,12 @@ no de los números aspiracionales del draft antiguo.
       baseline comercial zero-shot a nivel de azar en gate. Resultados en
       `results/e7_vendors/opencode/vendor_jev_free_full.json`; detalle
       técnico/experimental en EXPERIMENTS.md §9 (2026-10-20).
+- [x] **E7-long (ablation unknown PAIRED n=2,021 ✅ nocturna via fleet)**: las
+      mismas filas del main con la opción `unknown` — gate AUROC 0.476,
+      macro-F1 0.066, unknown-rate 0.35% (el hatch está disponible y el
+      vendor no lo usa). El ablation subsample queda confirmado paired;
+      resultados en `results/e7_vendors/opencode/unkfull/` +
+      `vendor_jev_free_unkfull.json`.
 - [x] E8 (recalibración por ventana walk-forward bajo drift): corrida en los
       logits del by-day CIC (2 ventanas reales: Friday-DDos → Friday-PortScan)
       con protocolo congelado `scripts/e8_window_recal.py` — walk/platt/walkacc
