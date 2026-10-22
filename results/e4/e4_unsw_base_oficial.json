@@ -1,0 +1,12 @@
+{
+ "n": 3000,
+ "p50_us": 1651.8,
+ "p95_us": 1795.3,
+ "p99_us": 2081.8,
+ "max_us": 2334.8,
+ "mean_us": 1674.3,
+ "artifact": "results/artifacts/unsw_base_oficial.pt",
+ "threads": 1,
+ "batch": 1,
+ "host": "local-cpu"
+}

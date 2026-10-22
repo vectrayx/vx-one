@@ -1,0 +1,19 @@
+{
+  "run_id": "cic_time",
+  "model": "xgboost",
+  "candidates": [
+    "normal",
+    "dos_ddos",
+    "bruteforce",
+    "webattack",
+    "infiltration",
+    "exploitation"
+  ],
+  "temperatures": {
+    "noul": 4.046703952660777,
+    "choice": 4.254500004652808,
+    "score": 3.3795620126930173,
+    "ddos": null
+  },
+  "fit_s": 214.8
+}

@@ -1,0 +1,12 @@
+{
+ "n": 3000,
+ "p50_us": 675.3,
+ "p95_us": 714.5,
+ "p99_us": 773.2,
+ "max_us": 852.9,
+ "mean_us": 683.1,
+ "artifact": "results/artifacts/unsw_nano_oficial.pt",
+ "threads": 1,
+ "batch": 1,
+ "host": "local-cpu"
+}

@@ -1,0 +1,64 @@
+{
+  "day": "2017-07-07",
+  "n_flows": 702713,
+  "n_attack": 288785,
+  "n_alerts": 423,
+  "f1": {
+    "resolved": 0.0004,
+    "precision": 0.0665,
+    "recall": 0.0001,
+    "f1": 0.0001,
+    "accuracy": 0.5887,
+    "latency_s": {
+      "median": 0.0,
+      "p90": 0.0
+    }
+  },
+  "f2": {
+    "n_test": 105179,
+    "recall_by_fam": {
+      "botnet": 0.4169,
+      "dos_ddos": 0.9997,
+      "normal": 0.0007,
+      "recon": 0.9998
+    },
+    "fpr_benign": 0.0007,
+    "accuracy": 0.9979,
+    "f1": 0.9974,
+    "latency_us_p50": 955.2
+  },
+  "gray_zone": {
+    "n": 702397,
+    "share_of_day": 0.9996,
+    "composition": {
+      "botnet": 1953,
+      "dos_ddos": 128025,
+      "normal": 413633,
+      "recon": 158786
+    }
+  },
+  "combined_estimate": {
+    "precision": 0.998,
+    "recall": 0.9958,
+    "f1": 0.9969,
+    "accuracy": 0.9974
+  },
+  "per_class": {
+    "botnet": {
+      "n": 1956,
+      "f1_resolved": 0.0015
+    },
+    "dos_ddos": {
+      "n": 128025,
+      "f1_resolved": 0.0
+    },
+    "normal": {
+      "n": 413928,
+      "f1_resolved": 0.0007
+    },
+    "recon": {
+      "n": 158804,
+      "f1_resolved": 0.0001
+    }
+  }
+}

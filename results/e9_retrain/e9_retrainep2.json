@@ -1,0 +1,66 @@
+{
+ "protocol": {
+  "epochs": 2,
+  "lr_scale": 0.15,
+  "lr": 0.00015,
+  "bs": 2048,
+  "temperatures": {
+   "asrun_val": {
+    "T_noul": 2.0904,
+    "T_choice": 1.4033
+   },
+   "calib_valday": {
+    "T_noul": 1.8956,
+    "T_choice": 1.3081
+   }
+  },
+  "artifact": "results/artifacts/cic_small_time.pt",
+  "seed": 42
+ },
+ "per_day": {
+  "day1_ddos[asrun_val]": {
+   "n": 138145,
+   "auroc": 1.0,
+   "ece15": 0.0007,
+   "brier": 0.0008,
+   "fpr@95": 0.0,
+   "macro_f1": 0.333,
+   "ece15_choice": 0.0157,
+   "sev_mae": 0.0498,
+   "thr@0.95cal": 0.9903
+  },
+  "day2_portscan[asrun_val]": {
+   "n": 286467,
+   "auroc": 0.8392,
+   "ece15": 0.554,
+   "brier": 0.5467,
+   "fpr@95": 0.0,
+   "macro_f1": 0.1025,
+   "ece15_choice": 0.5476,
+   "sev_mae": 0.557,
+   "thr@0.95cal": 0.9903
+  },
+  "day1_ddos[calib_valday]": {
+   "n": 138145,
+   "auroc": 1.0,
+   "ece15": 0.0007,
+   "brier": 0.0007,
+   "fpr@95": 0.0,
+   "macro_f1": 0.333,
+   "ece15_choice": 0.0128,
+   "sev_mae": 0.0498,
+   "thr@0.95cal": 0.994
+  },
+  "day2_portscan[calib_valday]": {
+   "n": 286467,
+   "auroc": 0.8392,
+   "ece15": 0.554,
+   "brier": 0.5495,
+   "fpr@95": 0.0,
+   "macro_f1": 0.1025,
+   "ece15_choice": 0.5493,
+   "sev_mae": 0.557,
+   "thr@0.95cal": 0.994
+  }
+ }
+}

@@ -1,0 +1,20 @@
+{
+  "run_id": "cic_strat",
+  "model": "kitsune",
+  "candidates": [
+    "normal",
+    "dos_ddos",
+    "recon",
+    "bruteforce",
+    "webattack",
+    "botnet",
+    "infiltration",
+    "exploitation"
+  ],
+  "temperatures": {
+    "noul": 1.0,
+    "choice": 1.0
+  },
+  "platt_b": 1.6473849776783922,
+  "fit_s": 155.9
+}

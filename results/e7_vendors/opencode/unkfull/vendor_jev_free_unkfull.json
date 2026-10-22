@@ -1,0 +1,50 @@
+{
+ "vendor": "opencode",
+ "model": "jev-1.13-free",
+ "rows_done": 2021,
+ "rows_total": 2021,
+ "sample": "main (1000 normal + 1021 attack, seed 42) = PAIRED con la run principal",
+ "choice_unknown_option": {
+  "vendor_macro_f1_all_rows": 0.0592,
+  "vendor_macro_f1_known_rows": 0.0657,
+  "our_macro_f1": 0.534,
+  "unknown_rate_overall": 0.003464,
+  "unknown_rate_attack": 0.001959,
+  "unknown_rate_normal": 0.005,
+  "unknown_prob_mean_attack": 0.0454,
+  "unknown_prob_mean_normal": 0.0465
+ },
+ "gate": {
+  "vendor": {
+   "auroc": 0.4763,
+   "fpr@95": 0.969,
+   "ece15": 0.2738
+  },
+  "ours": {
+   "auroc": 0.981,
+   "fpr@95": 0.157,
+   "ece15": 0.0973
+  }
+ },
+ "severity": {
+  "vendor_mae": 0.8481,
+  "our_mae": 0.3329
+ },
+ "latency_ms": {
+  "p50": 178.8,
+  "p95": 494.2
+ },
+ "tokens": {
+  "total": 2242852,
+  "usd_if_paid": 0.0942
+ },
+ "paired_vs_main": {
+  "n_rows_paired": 2021,
+  "gate_vendor_auroc": 0.5677,
+  "gate_vendor_auroc_unkfull": 0.4763,
+  "gate_our_auroc": 0.981,
+  "vendor_macro_f1_main": 0.0693,
+  "vendor_macro_f1_unkfull": 0.0657,
+  "notes": "mismas filas (paired); la \u00fanica diferencia es la opci\u00f3n unknown en family"
+ }
+}

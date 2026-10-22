@@ -1,0 +1,23 @@
+{
+  "run_id": "unsw_oficial",
+  "model": "xgboost",
+  "candidates": [
+    "normal",
+    "dos",
+    "recon",
+    "exploitation",
+    "shellcode",
+    "backdoor",
+    "analysis",
+    "fuzzing",
+    "generic",
+    "worms"
+  ],
+  "temperatures": {
+    "noul": 1.164428187665977,
+    "choice": 1.1812057489838224,
+    "score": 1.0881371384538538,
+    "ddos": null
+  },
+  "fit_s": 81.5
+}

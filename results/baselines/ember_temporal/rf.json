@@ -1,0 +1,24 @@
+{
+  "run_id": "ember_temporal",
+  "model": "rf",
+  "candidates": [
+    "berbew",
+    "cosmu",
+    "wacatac",
+    "sfone",
+    "upatre",
+    "grandoreiro",
+    "glupteba",
+    "expiro",
+    "sinowal",
+    "flystudio",
+    "unknown"
+  ],
+  "temperatures": {
+    "noul": 0.5659500193771644,
+    "choice": 1.4166234745565882,
+    "score": null,
+    "ddos": null
+  },
+  "fit_s": 1092.4
+}

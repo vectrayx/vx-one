@@ -1,0 +1,57 @@
+{
+  "day": "2017-07-06",
+  "n_flows": 458483,
+  "n_attack": 2216,
+  "n_alerts": 795,
+  "f1": {
+    "resolved": 0.0011,
+    "precision": 0.0586,
+    "recall": 0.0135,
+    "f1": 0.022,
+    "accuracy": 0.9942,
+    "latency_s": {
+      "median": 0.0,
+      "p90": 0.0
+    }
+  },
+  "f2": {
+    "n_test": 68856,
+    "recall_by_fam": {
+      "normal": 0.0028,
+      "webattack": 0.9939
+    },
+    "fpr_benign": 0.0028,
+    "accuracy": 0.9971,
+    "f1": 0.7673,
+    "latency_us_p50": 955.2
+  },
+  "gray_zone": {
+    "n": 457971,
+    "share_of_day": 0.9989,
+    "composition": {
+      "infiltration": 36,
+      "normal": 455785,
+      "webattack": 2150
+    }
+  },
+  "combined_estimate": {
+    "precision": 0.5521,
+    "recall": 0.9779,
+    "f1": 0.7057,
+    "accuracy": 0.9961
+  },
+  "per_class": {
+    "infiltration": {
+      "n": 36,
+      "f1_resolved": 0.0
+    },
+    "normal": {
+      "n": 456267,
+      "f1_resolved": 0.0011
+    },
+    "webattack": {
+      "n": 2180,
+      "f1_resolved": 0.0138
+    }
+  }
+}

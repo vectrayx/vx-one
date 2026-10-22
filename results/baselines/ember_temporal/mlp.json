@@ -1,0 +1,24 @@
+{
+  "run_id": "ember_temporal",
+  "model": "mlp",
+  "candidates": [
+    "berbew",
+    "cosmu",
+    "wacatac",
+    "sfone",
+    "upatre",
+    "grandoreiro",
+    "glupteba",
+    "expiro",
+    "sinowal",
+    "flystudio",
+    "unknown"
+  ],
+  "temperatures": {
+    "noul": 1.6675301537829692,
+    "choice": 1.6689996494046324,
+    "score": null,
+    "ddos": null
+  },
+  "fit_s": 568.0
+}

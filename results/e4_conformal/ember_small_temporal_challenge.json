@@ -1,0 +1,42 @@
+{
+  "artifact": "/vol/artifacts/ember_small_temporal.pt",
+  "challenge": true,
+  "scale": "small",
+  "split_scheme": "temporal",
+  "exclude": null,
+  "temperatures": {
+    "noul": 1.3317286866289495,
+    "choice": 1.5300506684097765
+  },
+  "m_val": 0.9169351584264369,
+  "candidates": [
+    "berbew",
+    "cosmu",
+    "wacatac",
+    "sfone",
+    "upatre",
+    "grandoreiro",
+    "glupteba",
+    "expiro",
+    "sinowal",
+    "flystudio",
+    "unknown"
+  ],
+  "omega": [
+    0.47499507665634155,
+    1.1264692544937134,
+    1.1540700197219849,
+    1.0710771083831787,
+    1.0889837741851807,
+    1.110131025314331,
+    1.1461535692214966,
+    1.2257575988769531,
+    1.205942988395691,
+    1.2452712059020996,
+    0.15114825963974
+  ],
+  "mode": "trained_unknown",
+  "tau_abs": 0.5,
+  "n": 6315,
+  "n_pos": 6315
+}

@@ -1,0 +1,30 @@
+{
+ "static_T": {
+  "noul": 2.9138,
+  "choice": 2.2139
+ },
+ "per_day_static": {
+  "day1_ddos": {
+   "n": 138145,
+   "auroc": 0.9931,
+   "ece15": 0.1273,
+   "brier": 0.1254,
+   "fpr@95": 0.0,
+   "macro_f1": 0.2971,
+   "ece15_choice": 0.1071,
+   "sev_mae": 0.2543,
+   "thr@0.95cal": 0.941
+  },
+  "day2_portscan": {
+   "n": 286467,
+   "auroc": 0.56,
+   "ece15": 0.5531,
+   "brier": 0.539,
+   "fpr@95": 0.0,
+   "macro_f1": 0.1024,
+   "ece15_choice": 0.5426,
+   "sev_mae": 0.5609,
+   "thr@0.95cal": 0.941
+  }
+ }
+}
