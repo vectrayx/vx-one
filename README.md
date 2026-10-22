@@ -1,5 +1,6 @@
 # VX-One — Typed, Calibrated Decision Heads for Real-Time Perimeter Triage
 
+[![arXiv](https://img.shields.io/badge/arXiv-2610.30090-b31b1b.svg)](https://arxiv.org/abs/2610.30090)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-jsantillana%2Fvx--one-FFD21E.svg?logo=huggingface&labelColor=ff5a5f)](https://huggingface.co/jsantillana/vx-one)
 
 Reproducible code and ACM paper for VX-One.
