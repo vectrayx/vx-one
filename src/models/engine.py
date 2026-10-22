@@ -1,15 +1,15 @@
-"""VXOneEngine — contrato de inferencia (spec F2 §8.1).
+"""VXOneEngine — inference contract (spec F2 §8.1).
 
-API tipada sobre un checkpoint self-contained (.pt, §8.2): la inferencia no
-necesita datos de train (feature stage, vocabularios, ω, temperaturas y τ
-viajan dentro del artefacto).
+API typed on a self-contained checkpoint (.pt, §8.2): inference does not
+needs train data (feature stage, vocabularies, ω, temperatures and τ
+travel inside the artifact).
 
-Invariantes congelados:
-- candidate == "unknown" ⟺ (modo abstención y max_prob < τ_abs) o (modo
-  trained_unknown y unknown ganó el argmax).
-- probs (Choice) suma 1 sobre los candidatos NATIVOS de la corrida (en EMBER
-  unknown ES candidato nativo; en UNSW/CIC nunca aparece como masa).
-- policy se deriva de las salidas calibradas (recomputable, sin estado).
+Frozen invariants:
+- candidate == "unknown" ⟺ (abstention mode and max_prob < τ_abs) or (abstention mode
+trained_unknown and unknown won the argmax).
+- probs (Choice) adds 1 over the NATIVE candidates of the run (in EMBER
+unknown ES native candidate; in UNSW/CIC it never appears as mass).
+- policy is derived from calibrated outputs (recomputable, stateless).
 """
 
 from __future__ import annotations
@@ -39,7 +39,7 @@ LEVELS = ("benign", "low", "high", "critical")
 class ChoiceResult:
     candidate: str                 # ∈ candidatos ∪ {"unknown"}
     probs: dict[str, float]        # calibradas + de-tilt; suma 1 sobre nativos
-    max_prob: float                # max_k p_cal (auditoría de abstención)
+    max_prob: float                # max_k p_cal (abstention audit)
 
 
 @dataclass(frozen=True)
@@ -53,16 +53,16 @@ class Decision:
     source: str
     noul: dict[str, float]         # {"is_attack"|"is_malicious": p_cal}
     choice: dict[str, ChoiceResult]
-    score: ScoreResult | None      # None en EMBER (S6)
+    score: ScoreResult | None      # None in EMBER (S6)
     policy: dict[str, bool]        # gates derivados
 
 
 class VXOneEngine:
     def __init__(self, artifact: str | Path, device: str = "cpu") -> None:
         ckpt = torch.load(artifact, map_location=device, weights_only=False)
-        self.ckpt = ckpt  # introspección (E4 latencia: config, d_num)
+        self.ckpt = ckpt  # introspection (E4 latency: config, d_num)
         self.device = device
-        self.source: str = SOURCE_ALIAS[ckpt["source"]]   # alias corto: unsw|cic|ember
+        self.source: str = SOURCE_ALIAS[ckpt["source"]]   # short alias: unsw|cic|ember
         self.source_key: str = ckpt["source"]             # clave del registro
         self.candidates: list[str] = ckpt["head_meta"]["choice"]["candidates"]
         self.mode: str = ckpt["head_meta"]["choice"]["mode"]  # abstain|trained_unknown
@@ -90,7 +90,7 @@ class VXOneEngine:
         self.net.load_state_dict(ckpt["state_dict"])
         self.net.to(device).eval()
 
-    # ── preparación de entrada ───────────────────────────────────────
+    # ── entry preparation ───────────────────────────────────────
     def _prepare(self, x_num: np.ndarray, x_txt: dict[str, list[str | None]] | None):
         x_num = np.asarray(x_num, dtype=np.float64)
         u_r, _ = self.stage.transform(x_num)
@@ -102,7 +102,7 @@ class VXOneEngine:
                 for f in self.vocab}
         return torch.tensor(u_r, device=self.device), slots
 
-    # ── predicción ───────────────────────────────────────────────────
+    # ── prediction ───────────────────────── ──────────────────────────
     @torch.no_grad()
     def predict_batch(self, x_num: np.ndarray,
                       x_txt: dict[str, list[str | None]] | None = None) -> list[Decision]:
@@ -117,11 +117,11 @@ class VXOneEngine:
         z = out["choice"] - torch.log(self.omega).unsqueeze(0).to(self.device)
         p_choice = torch.softmax(z / self.T_choice, dim=1)
 
-        # Score CORN calibrado (None en EMBER)
+        # Calibrated CORN Score (None in EMBER)
         pi = corn_pmf(out["corn_logits"] / self.T_score)[1] if self.T_score is not None else None
         s_exp = corn_expected(pi) if pi is not None else None
 
-        # ddos vector (solo CIC strat)
+        # ddos vector (CIC strat only)
         ddos_probs = None
         if self.has_ddos:
             z_d = out["ddos"] - torch.log(self.omega_ddos).unsqueeze(0).to(self.device)
@@ -129,11 +129,11 @@ class VXOneEngine:
 
         decisions: list[Decision] = []
         for i in range(u_r.shape[0]):
-            # Choice con unknown (D1): abstención τ_abs o unknown entrenado
+            # Choice with unknown (D1): abstention τ_abs or trained unknown
             pmax = float(p_choice[i].max())
             if self.mode == "abstain":
                 cand = self.candidates[int(p_choice[i].argmax())] if pmax >= self.tau_abs else "unknown"
-            else:  # trained_unknown (EMBER): unknown es candidato nativo
+            else:  # trained_unknown (EMBER): unknown is native candidate
                 cand = self.candidates[int(p_choice[i].argmax())]
             probs = {c: float(p_choice[i, j]) for j, c in enumerate(self.candidates)}
 
@@ -148,7 +148,7 @@ class VXOneEngine:
                                  {lv: float(pi[i, k]) for k, lv in enumerate(LEVELS)})
                      if pi is not None else None)
 
-            # Gates derivados (D9): funciones exactas de salidas calibradas
+            # Derived Gates (D9): Exact Functions of Calibrated Outputs
             policy = {"g_attack": bool(p_mal[i] >= TAU_DET)}
             if pi is not None:
                 # g_drop: P(sev ≥ 2) = C2 = π2+π3 (acumulada CORN exacta)
@@ -166,14 +166,14 @@ class VXOneEngine:
         return decisions
 
     def predict(self, x_num: np.ndarray, x_txt: dict[str, str | None] | None = None) -> Decision:
-        """batch-1 sin maquinaria de batch (E4)."""
+        """batch-1 without batch machinery (E4)."""
         xt = {k: [v] for k, v in (x_txt or {}).items()} if x_txt else None
         return self.predict_batch(np.asarray(x_num)[None, ...], xt)[0]
 
 
 def save_artifact(path: str | Path, net: VXOneNet, run_meta: dict,
                   temperatures: dict[str, float], d_num: int) -> None:
-    """Escribe el checkpoint self-contained (§8.2)."""
+    """Write the self-contained checkpoint (§8.2)."""
     ckpt = {
         "source": run_meta["source_key"],
         "feature_stage": run_meta["feature_stage"].to_dict(),

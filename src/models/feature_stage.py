@@ -1,15 +1,15 @@
-"""Feature stage φ (spec F2 §4.1): sanitización + normalización train-only.
+"""Feature stage φ (spec F2 §4.1): sanitization + train-only normalization.
 
-Pipeline por columna j (stats SOLO de train, aplicado igual a train/val/test):
-1. No-finitos: NaN/±inf → mediana de los finitos de train (fallback 0.0);
-   flag de fila r_i = 1[la fila tenía algún no-finito].
+Pipeline by column j (train ONLY statistics, applied equal to train/val/test):
+1. Non-finites: NaN/±inf → median of the train finites (fallback 0.0);
+row flag r_i = 1[row had some non-finite].
 2. Signed log1p: v = sign(x̃)·log1p(|x̃|).
-3. Robust scale: u = (v − med_j) / max(IQR_j, 1e-8), stats sobre la columna
-   ya transformada de train. Columna constante → v−med = 0 → u = 0.
+3. Robust scale: u = (v − med_j) / max(IQR_j, 1e-8), stats on the column
+already transformed from a train. Constant column → v−med = 0 → u = 0.
 4. Clip ±8.
-5. Entrada del modelo: [u ; r] ∈ R^{d+1} (el flag es la dim extra).
+5. Model input: [u ; r] ∈ R^{d+1} (the flag is the extra dim).
 
-Stats en float64, aplicación en float32. Serializado en el checkpoint:
+Stats in float64, application in float32. Serialized at the checkpoint:
 impute_median f32[d], center f32[d], scale f32[d], clip 8.0.
 """
 
@@ -22,7 +22,7 @@ IQR_EPS = 1e-8
 
 
 class FeatureStage:
-    """Ajusta (train) y aplica (todos) el pipeline φ. Stats en float64."""
+    """Adjust (train) and apply (all) the pipeline φ. Stats in float64."""
 
     def __init__(
         self,
@@ -60,9 +60,9 @@ class FeatureStage:
         return cls(impute, center, scale, CLIP)
 
     def transform(self, x: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        """x crudo [N, d] (float64 o float32) → (u float32 [N, d+1], None).
+        """x raw [N, d] (float64 or float32) → (u float32 [N, d+1], None).
 
-        Devuelve la matriz [u ; r] con el flag de fila como última columna.
+Returns the array [u; r] with the row flag as the last column.
         """
         x64 = np.asarray(x, dtype=np.float64)
         finite = np.isfinite(x64)
@@ -76,7 +76,7 @@ class FeatureStage:
         out[:, -1] = r
         return out, r
 
-    # ── serialización ────────────────────────────────────────────────
+    # ── serialization ──────────────────────── ────────────────────────
     def to_dict(self) -> dict:
         return {
             "impute_median": self.impute_median,

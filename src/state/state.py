@@ -1,12 +1,12 @@
-"""Estado tipado de VectrayX-One — spec F0 §1.
+"""VectrayX-One typed state — spec F0 §1.
 
-Contrato del compilador de estado: toda telemetría cruda se compila a un
-objeto `State` denso antes de tocar el motor System One. Las dimensiones
-(`d_num`) y las claves de `x_txt` están congeladas por fuente en
-`data/SCHEMA.md`; este módulo valida contra ese registro.
+State Compiler Contract: All raw telemetry is compiled to a
+dense `State` object before touching the System One engine. The dimensions
+(`d_num`) and `x_txt` keys are frozen by source in
+`data/SCHEMA.md`; this module validates against that record.
 
-NOTA de honestidad: `label_*` solo existe para entrenamiento/evaluación.
-En producción el compilador nunca los asigna (None).
+Honesty NOTE: `label_*` only exists for training/evaluation.
+In production the compiler never assigns them (None).
 """
 from __future__ import annotations
 
@@ -19,17 +19,17 @@ TelemetrySource = Literal[
     "ember2024_v1",       # features vectorizadas thrember — 2568 dims congeladas (SCHEMA §6)
 ]
 
-SplitHint = Literal["train", "val", "test", "unassigned"]  # unassigned: el split final lo decide materialize.py
+SplitHint = Literal["train", "val", "test", "unassigned"]  # unassigned: the final split is decided by materialize.py
 
-MAX_TXT_LEN = 256  # spec F0 §1: campos de texto truncados a 256 chars
+MAX_TXT_LEN = 256  # spec F0 §1: text fields truncated to 256 chars
 
-# Registro de fuentes: dims y claves congeladas en data/SCHEMA.md v1.0.
-# UNSW y CIC-MLCVE verificados contra headers reales (2026-10-16); EMBER pendiente.
+# Source log: dims and frozen keys in data/SCHEMA.md v1.0.
+# UNSW and CIC-MLCVE verified against real headers (2026-10-16); EMBER pending.
 SOURCE_REGISTRY: dict[TelemetrySource, dict] = {
     "unsw_nb15_v1": {
-        # 39 numéricas del header real: 45 cols = id + proto/service/state (x_txt)
-        # + 39 numéricas + attack_cat + label. (Corregido 2026-10-16: el "43"
-        # original contaba id + 3 textuales; lo pilló el assert de build_canonical.)
+        # 39 numeric of the real header: 45 cols = id + proto/service/state (x_txt)
+        # + 39 numeric + attack_cat + label. (Corrected 2026-10-16: the "43"
+        # original had id + 3 textual; build_canonical's assert caught it.)
         "d_num": 39,
         "x_txt_keys": ("proto", "service", "state"),
         "native_families": (
@@ -40,10 +40,10 @@ SOURCE_REGISTRY: dict[TelemetrySource, dict] = {
     "cicids2017_v1": {
         # MachineLearningCVE: 78 features del CSV menos 'Fwd Header Length.1'
         # (columna duplicada — bug original del dataset). Sin IPs/Protocol/
-        # timestamp: esos viven en el parquet enhanced (SCHEMA S1), que tendrá
-        # su PROPIA entrada de registro si se usa como fuente primaria.
+        # timestamp: those live in the enhanced parquet (SCHEMA S1), which will have
+        # your OWN log entry if used as primary source.
         "d_num": 77,
-        "x_txt_keys": ("protocol",),  # None en MLCVE; el compilador lo deja en None
+        "x_txt_keys": ("protocol",),  # None in MLCVE; the compiler leaves it at None
         "native_families": (
             "normal", "dos_ddos", "recon", "bruteforce", "webattack",
             "botnet", "infiltration", "exploitation",
@@ -51,21 +51,21 @@ SOURCE_REGISTRY: dict[TelemetrySource, dict] = {
     },
     "ember2024_v1": {
         # Feature version 3 (thrember 0.1.0, PEFeatureExtractor — verificado del
-        # código fuente 2026-10-16): 12 features por defecto =
+        # source code 2026-10-16): 12 features by default =
         # 7+256+256+34+177+224+1282+129+74+33+8+88 = 2568. Sin rama textual.
         #
-        # Heads congelados (decisión S6, 2026-10-16): Noul is_malicious +
+        # Frozen Heads (decision S6, 2026-10-16): Noul is_malicious +
         # Choice choice_family = top-10 familias AV del train + "unknown".
-        # Orden = frecuencia descendente del CENSO DEL TRAIN COMPLETO
-        # (3,120,000 líneas; logs/ember_family_census.log, SCHEMA §3.4):
+        # Order = descending frequency of the COMPLETE TRAIN CENSUS
+        # (3,120,000 lines; logs/ember_family_census.log, SCHEMA §3.4):
         # berbew 256,810 / cosmu 60,786 / wacatac 45,118 / sfone 44,216 /
         # upatre 43,954 / grandoreiro 40,728 / glupteba 39,814 / expiro
         # 35,434 / sinowal 34,560 / flystudio 34,262 = 635,682 malicious
         # (40.7%); corte 10→11 limpio (34,262 vs 17,974). Unknown absorbe
-        # benignos + malicious sin familia (188,682 = 12.1%) + la cola de
-        # ~46,590 familias. Sin head Score (no hay GT severidad). Lección:
-        # el placeholder de 4 semanas tuvo 3 familias fuera (eggnog/gepys/
-        # urelas eran ráfagas de sept-oct 2023) — censo ANTES de materializar.
+        # benign + malicious without family (188,682 = 12.1%) + the tail of
+        # ~46,590 families. No head score (no GT severity). Lesson:
+        # 4 week placeholder had 3 families out (eggnog/gepys/
+        # urelas were gusts of Sept-Oct 2023) — census BEFORE materializing.
         "d_num": 2568,
         "x_txt_keys": (),
         "native_families": (
@@ -79,21 +79,21 @@ SOURCE_REGISTRY: dict[TelemetrySource, dict] = {
 
 @dataclass(frozen=True, slots=True)
 class State:
-    """Objeto de estado denso que consume el motor de decisión (F0 §1)."""
+    """Dense state object consumed by the decision engine (F0 §1)."""
 
     telemetry_source: TelemetrySource
     x_num: Sequence[float]            # longitud == SOURCE_REGISTRY[source]["d_num"]; ndarray float32 permitido (EMBER: 2568 dims × 3.85M filas)
     x_txt: dict[str, str | None]      # claves == x_txt_keys; valores ≤ MAX_TXT_LEN
     split_hint: SplitHint
-    time: float | None = None         # epoch s, para splits por tiempo / ventana v0.2
-    # --- solo entrenamiento/evaluación; None en producción ---
-    label_family: str | None = None   # familia canónica (SCHEMA §3) o "unknown"
+    time: float | None = None         # epoch s, for time/window splits v0.2
+    # --- training/assessment only; None in production ---
+    label_family: str | None = None   # canonical family (SCHEMA §3) or "unknown"
     label_severity: int | None = None # rubrik 0-3 (SCHEMA §4)
-    label_full: str | None = None     # etiqueta nativa del dataset (auditoría)
-    label_binary: int | None = None   # objetivo Noul binario (EMBER2024); None si se deriva de label_family
+    label_full: str | None = None     # native tag of the dataset (audit)
+    label_binary: int | None = None   # binary Noul target (EMBER2024); None if derived from label_family
 
     def validate(self) -> None:
-        """Fail-fast: cualquier desviación del schema es un bug del pipeline."""
+        """Fail-fast: any deviation from the schema is a pipeline bug."""
         reg = SOURCE_REGISTRY[self.telemetry_source]
         if reg["d_num"] is not None and len(self.x_num) != reg["d_num"]:
             raise ValueError(
@@ -112,7 +112,7 @@ class State:
 
 
 def truncate_txt(value: str | None) -> str | None:
-    """Trunca un campo textual al límite del contrato (nunca debe reventar)."""
+    """Truncates a textual field to the contract boundary (it should never burst)."""
     if value is None:
         return None
     v = value.strip()

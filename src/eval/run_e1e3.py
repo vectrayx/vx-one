@@ -1,14 +1,14 @@
-"""Evaluador E1/E3 de baselines + tabla comparativa contra VX-One.
+"""E1/E3 baseline evaluator + comparison table against VX-One.
 
-Los npz de baselines guardan probs CRUDAS y las temperaturas van en el json
-(mismo protocolo §5.3). Para Choice/ddos se aplica el MISMO de-tilt analítico
-z − log ω que VX-One (mismos pesos de entrenamiento vía sample_weight ⇒ mismo
-tilt ⇒ mismo de-tilt, Prop. 2 simétrica). La ω se toma del meta json de la
-corrida VX correspondiente (mismos candidatos/conteos D12).
+The baselines npz store RAW probs and the temperatures go in the json
+(same protocol §5.3). For Choice/ddos the SAME analytical de-tilt is applied
+z − log ω than VX-One (same training weights via sample_weight ⇒ same
+tilt ⇒ same de-tilt, Prop. 2 symmetrical). The ω is taken from the meta json of the
+corresponding VX run (same candidates/D12 counts).
 
-Uso:
-    python -m src.eval.run_e1e3 --vx results/outputs --bl results/baselines \
-        --out results/e1e3
+Use:
+python -m src.eval.run_e1e3 --vx results/outputs --bl results/baselines \
+--out results/e1e3
 """
 
 from __future__ import annotations
@@ -26,8 +26,8 @@ from .metrics import (_calibration_measures, _mc_conf_correct, _mc_nll_brier,
 
 def _baseline_calibrated(npz: dict, temps: dict, omega: np.ndarray,
                          omega_ddos: np.ndarray | None) -> dict:
-    """probs crudas → crudas + calibradas (logits = log p para árboles).
-    Kitsune solo aporta p_noul (Platt) y no p_choice."""
+    """raw → raw + calibrated probs (logits = log p for trees).
+Kitsune only provides p_noul (Platt) and not p_choice."""
     out = {}
     eps = 1e-7
     p_n = np.clip(npz["p_noul"].astype(np.float64), eps, 1 - eps)
@@ -58,7 +58,7 @@ def eval_baseline_run(npz_path: str | Path, vx_meta_path: str | Path) -> dict:
                   if "omega_ddos" in vx_meta else None)
     cal = _baseline_calibrated(npz, meta["temperatures"], omega, omega_ddos)
     res: dict = {"model": meta["model"], "run_id": meta["run_id"]}
-    # los baselines solo guardan test
+    # baselines only save tests
     y_bin, y_fam = npz["y_bin"], npz["y_fam"]
     fam_mask = y_fam >= 0
     res["te"] = {
@@ -99,7 +99,7 @@ def main() -> None:
     for bl_dir in sorted(Path(args.bl).iterdir()):
         if not bl_dir.is_dir():
             continue
-        # la ω/candidatos vienen de la corrida VX small correspondiente:
+        # the ω/candidates come from the corresponding VX small run:
         # "unsw_oficial" → "unsw_small_oficial"; "unsw_loao_worms" →
         # "unsw_small_loao_worms" (los folds LOAO son Small)
         bl_name = bl_dir.name

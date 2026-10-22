@@ -1,5 +1,5 @@
-"""Motor VX-One (spec F2): red multi-cabeza, losses, datos, calibración,
-loop de entrenamiento y contrato de inferencia System One."""
+"""VX-One engine (spec F2): multi-head network, losses, data, calibration,
+training loop and System One inference contract."""
 
 from .calibration import (fit_choice_temperature, fit_corn_temperature,
                           fit_noul_temperature, fit_temperature_scalar)

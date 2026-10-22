@@ -1,18 +1,18 @@
-"""E2 — zero-day (LOAO §6.7) y drift temporal (EMBER).
+"""E2 — zero-day (LOAO §6.7) and temporal drift (EMBER).
 
-Para cada fold LOAO (npz con test COMPLETO, y_fam=−1 en la familia
-excluida + test_fam_names):
-- Noul restringido: AUROC y FPR@95TPR de la familia excluida vs normal
-  (¿el detector sigue viendo la familia nunca vista?).
-- Choice: cobertura de abstención sobre las filas de la familia excluida
-  (¿abstiene como debe o atribuye mal?) + macro-F1 sobre el resto (las
-  familias conocidas no deben degradarse).
-- Drift EMBER: métricas por familia nativa del test (recall/Unknown-rate),
-  contrastadas con los conteos de train (manifest) — narrativa sfone/
-  grandoreiro/sinowal ~desaparecidas, berbew creciendo, challenge evasivo.
+For each fold LOAO (npz with FULL test, y_fam=−1 in the family
+excluded + test_fam_names):
+- Restricted Noul: AUROC and FPR@95TPR of the excluded vs normal family
+(does the detector still see the never-before-seen family?).
+- Choice: abstention coverage on the ranks of the excluded family
+(does he abstain as he should or does he attribute wrongly?) + macro-F1 on the rest (the
+known families should not be degraded).
+- Drift EMBER: metrics by native test family (recall/Unknown-rate),
+contrasted with train (manifest) counts — narrative sfone/
+grandoreiro/sinowal ~disappeared, berbew growing, evasive challenge.
 
-Uso:
-    python -m src.eval.run_e2 --vx results/outputs --out results/e2
+Use:
+python -m src.eval.run_e2 --vx results/outputs --out results/e2
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ def eval_loao_fold(npz_path: str | Path) -> dict:
     meta = json.loads(Path(str(npz_path).replace(".npz", ".json")).read_text())
     excl = meta.get("exclude")
     if not excl:
-        return {}  # no es fold LOAO
+        return {}  # it's not fold LOAO
     p_c, _ = _choice_probs(npz, meta)
     y_bin, y_fam = npz["te_y_bin"], npz["te_y_fam"]
     names = np.asarray(npz["te_fam_names"], dtype=object)
@@ -46,12 +46,12 @@ def eval_loao_fold(npz_path: str | Path) -> dict:
     p_n = 1.0 / (1.0 + np.exp(-npz["te_noul_logits"].astype(np.float64)
                               / meta["temperatures"]["noul"]))
 
-    # 1) ¿detecta la familia excluida? (uno-vs-normal, detección pura)
+    # 1) Does it detect the excluded family? (one-vs-normal, pure detection)
     m_en = exc_mask | norm_mask
     detection = _binary_metrics(p_n[m_en], (y_bin[m_en] == 1).astype(int))
 
-    # 2) Choice sobre las filas de la familia excluida: ¿abstiene (τ_abs) o
-    # atribuye a una familia equivocada? (ground truth: candidata no existe)
+    # 2) Choice over the ranks of the excluded family: do they abstain (τ_abs) or
+    # attributed to the wrong family? (ground truth: candidate does not exist)
     conf = p_c[exc_mask].max(1)
     pred = p_c[exc_mask].argmax(1)
     cand = meta["candidates"]
@@ -65,7 +65,7 @@ def eval_loao_fold(npz_path: str | Path) -> dict:
                              if len(pred) else None),
     }
 
-    # 3) familias conocidas intactas: macro-F1 sobre filas NO excluidas
+    # 3) intact known families: macro-F1 over NOT excluded rows
     from sklearn.metrics import f1_score
     known = ~exc_mask & (y_fam >= 0)
     known_f1 = float(f1_score(y_fam[known], p_c[known].argmax(1),
@@ -84,8 +84,8 @@ def eval_ember_drift(npz_path: str | Path) -> dict | None:
     p_c, _ = _choice_probs(npz, meta)
     y_fam = npz["te_y_fam"]
     cand = meta["candidates"]
-    # modo trained_unknown: unknown ES candidato nativo; por familia nativa:
-    # recall (¿predice su familia?) y fracción atribuida a unknown
+    # trained_unknown mode: unknown IS native candidate; by native family:
+    # recall (does your family predict?) and fraction attributed to unknown
     per_family = {}
     for k, fam in enumerate(cand):
         m = y_fam == k

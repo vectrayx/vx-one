@@ -1,16 +1,16 @@
-"""Métricas E1/E3 computadas local desde npz (sin re-entrenar).
+"""E1/E3 metrics computed locally from npz (without re-training).
 
 E1 (spec F0/F2): AUROC, FPR@95TPR (micro + macro one-vs-rest), PR-AUC,
-macro-F1 Choice sin abstención, cobertura/accuracy con abstención τ_abs,
+macro-F1 Choice without abstention, coverage/accuracy with abstention τ_abs,
 MAE score (1−MAE/3), macro-F1 ddos.
-E3 (§5.3): ECE 15 bins, MCE, Brier, NLL — RAW y CALIBRADO — para Noul y
-Choice (max-prob binario/multiclase), + datos de reliability diagram.
+E3 (§5.3): ECE 15 bins, MCE, Brier, NLL — RAW and CALIBRATED — for Noul and
+Choice (max-prob binary/multiclass), + reliability diagram.
 
-VX-One: npz de dump_outputs (logits crudos) + json meta (T, ω, τ) →
-calibradas recomputadas con el MISMO contrato del engine (de-tilt→T).
-Baselines: npz de run_tabular (probs crudas) + json (T) → calibrated =
-f(raw, T); de-tilt choice con la ω de la corrida VX correspondiente
-(mismos pesos de entrenamiento, Prop. 2 simétrica).
+VX-One: dump_outputs npz (raw logits) + json meta (T, ω, τ) →
+calibrated recomputed with the SAME engine contract (de-tilt→T).
+Baselines: run_tabular npz (raw probs) + json (T) → calibrated =
+f(raw, T); de-tilt choice with the ω of the corresponding VX run
+(same training weights, Prop. 2 symmetrical).
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ ECE_BINS = 15
 
 # ── utilidades base ────────────────────────────────────────────────────
 def fpr_at_tpr(scores: np.ndarray, y: np.ndarray, tpr_target: float = 0.95) -> float:
-    """FPR al menor umbral con TPR ≥ target (estándar en detección)."""
+    """FPR at the lowest threshold with TPR ≥ target (standard in detection)."""
     pos, neg = scores[y == 1], scores[y == 0]
     if len(pos) == 0 or len(neg) == 0:
         return float("nan")
@@ -47,7 +47,7 @@ def _binary_metrics(p: np.ndarray, y: np.ndarray) -> dict:
 
 def _calibration_measures(p_conf: np.ndarray, correct: np.ndarray,
                           bins: int = ECE_BINS) -> dict:
-    """ECE/MCE + datos del reliability diagram sobre (conf, correct)."""
+    """ECE/MCE + reliability diagram data about (conf, correct)."""
     edges = np.linspace(0.0, 1.0, bins + 1)
     idx = np.clip(np.digitize(p_conf, edges[1:-1]), 0, bins - 1)
     ece = mce = 0.0
@@ -66,9 +66,9 @@ def _calibration_measures(p_conf: np.ndarray, correct: np.ndarray,
 
 
 def noul_block(p_raw: np.ndarray, p_cal: np.ndarray, y: np.ndarray) -> dict:
-    """E1+E3 para Noul (detección binaria). Para ECE/MCE la CONFIANZA es la
-    de la clase predicha: conf = max(p, 1−p) (p directo confundiría un
-    benigno con p≈0 correcto como gap ~1)."""
+    """E1+E3 for Noul (binary detection). For ECE/MCE, TRUST is the
+of the predicted class: conf = max(p, 1−p) (direct p would confuse a
+benign with p≈0 correct as gap ~1)."""
     p_conf_raw = np.maximum(p_raw, 1.0 - p_raw)
     p_conf_cal = np.maximum(p_cal, 1.0 - p_cal)
     correct_raw = (p_raw >= 0.5) == (y == 1)
@@ -105,7 +105,7 @@ def _mc_nll_brier(p: np.ndarray, y: np.ndarray) -> tuple[float, float]:
 def choice_block(p_raw: np.ndarray, p_cal: np.ndarray, y: np.ndarray,
                  tau_abs: float = 0.5,
                  candidates: list[str] | None = None) -> dict:
-    """E1+E3 para Choice (multiclase, sin abstención + política τ_abs)."""
+    """E1+E3 for Choice (multiclass, no abstention + τ_abs policy)."""
     K = p_cal.shape[1]
     from sklearn.metrics import f1_score
 
@@ -150,11 +150,11 @@ def score_block(pi_cal: np.ndarray, y_sev: np.ndarray) -> dict:
     return {"mae": mae, "score_m": 1.0 - mae / 3.0}
 
 
-# ── reconstrucción de probs calibradas desde npz+json ──────────────────
+# ── reconstruction of calibrated probs from npz+json ──────────────────
 def vx_calibrated(npz: dict, meta: dict) -> dict:
-    """Aplica el contrato del engine a los logits crudos: Noul σ(z/T);
-    Choice de-tilt z−log ω → softmax(z/T); Score CORN recomuesto; ddos igual
-    que choice. Devuelve probs crudas y calibradas."""
+    """Apply the engine contract to the raw logits: Noul σ(z/T);
+Choice de-tilt z−log ω → softmax(z/T); Score CORN recomposed; ddos equal
+what a choice. Returns raw and calibrated probs."""
     T = meta["temperatures"]
     omega = np.asarray(meta["omega"], dtype=np.float64)
     out = {}
@@ -196,7 +196,7 @@ def torch_tensor(a: np.ndarray):
     return torch.tensor(a)
 
 
-# ── evaluador de una corrida VX ────────────────────────────────────────
+# ── VX run evaluator ──────────────────── ────────────────────
 def eval_vx_run(npz_path: str | Path) -> dict:
     npz = dict(np.load(npz_path, allow_pickle=True))
     meta = json.loads(Path(str(npz_path).replace(".npz", ".json")).read_text())

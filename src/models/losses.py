@@ -1,13 +1,13 @@
-"""Losses del motor VX-One (spec F2 §3).
+"""VX-One engine losses (spec F2 §3).
 
-- Noul: BCE sin ponderar (Prop. 1: la ponderación introduce un shift
-  aditivo log(α+/α−) en el logit que la temperature scaling no revierte).
-- Choice: CE ponderada con ω_k = K·n_k^{-1/2}/Σ_j n_j^{-1/2} (media 1);
-  el de-tilt z − log ω es de INFERENCIA (Prop. 2), no del loss.
-- Score: CORN (Shi, Cao & Raschka 2021) — BCE condicional por tarea k=1..3
-  sobre filas elegibles y ≥ k−1, pmf válida por construcción.
-- Multi-task: incertidumbre homeostática de Kendall (2018) modificada:
-  s_q learnable init 0 + máscara de actividad a_q por batch.
+- Noul: BCE without weighting (Prop. 1: weighting introduces a shift
+additive log(α+/α−) in the logit that temperature scaling does not reverse).
+- Choice: weighted CE with ω_k = K·n_k^{-1/2}/Σ_j n_j^{-1/2} (mean 1);
+the de-tilt z − log ω is from INFERENCE (Prop. 2), not from the loss.
+- Score: CORN (Shi, Cao & Raschka 2021) — BCE conditional by task k=1..3
+over eligible rows and ≥ k−1, valid pmf by construction.
+- Multi-task: homeostatic uncertainty from Kendall (2018) modified:
+s_q learnable init 0 + activity mask a_q per batch.
 """
 
 from __future__ import annotations
@@ -17,9 +17,9 @@ import torch
 from torch import nn
 
 
-# ── pesos de clase (fórmula congelada §3.5) ───────────────────────────
+# ── class weights (frozen formula §3.5) ───────────────────────────
 def class_weights(train_counts: np.ndarray | list[int]) -> np.ndarray:
-    """ω_k = K·n_k^{-1/2} / Σ_j n_j^{-1/2}; media 1 sobre las K clases."""
+    """ω_k = K·n_k^{-1/2} / Σ_j n_j^{-1/2}; average 1 over the K classes."""
     n = np.asarray(train_counts, dtype=np.float64)
     assert (n > 0).all(), f"conteo de train 0: {n} — el candidate set (D12) debe excluir clases sin filas"
     inv_sqrt = n ** -0.5
@@ -42,7 +42,7 @@ def choice_loss(logits: torch.Tensor, y_idx: torch.Tensor,
 
 # ── Score CORN (§3.4) ──────────────────────────────────────────────────
 def corn_pmf(corn_logits: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
-    """[B,3] logits condicionales → (C acumuladas [B,4] con C0=1, π pmf [B,4])."""
+    """[B,3] conditional logits → (cumulative C [B,4] with C0=1, π pmf [B,4])."""
     q = torch.sigmoid(corn_logits)                      # q_k = P(y ≥ k | y ≥ k−1)
     C = torch.cat(
         [torch.ones_like(q[:, :1]), torch.cumprod(q, dim=1)], dim=1
@@ -54,8 +54,8 @@ def corn_pmf(corn_logits: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
 
 
 def corn_loss(corn_logits: torch.Tensor, y_sev: torch.Tensor) -> torch.Tensor:
-    """Suma de las 3 BCE condicionales, cada una normalizada por sus filas
-    elegibles y ≥ k−1 (reducción media por tarea, no global)."""
+    """Sum of the 3 conditional ECBs, each one normalized by its rows
+eligible and ≥ k−1 (average reduction per task, not overall)."""
     total = corn_logits.new_zeros(())
     for k in (1, 2, 3):
         m = y_sev >= (k - 1)
@@ -69,16 +69,16 @@ def corn_loss(corn_logits: torch.Tensor, y_sev: torch.Tensor) -> torch.Tensor:
 
 
 def corn_expected(pi: torch.Tensor) -> torch.Tensor:
-    """ŝ = Σ_k k·π_k ∈ [0,3] (decodificación tipada de F0 §2.3)."""
+    """ŝ = Σ_k k·π_k ∈ [0,3] (typed decoding of F0 §2.3)."""
     levels = torch.arange(4, device=pi.device, dtype=pi.dtype)
     return (pi * levels.unsqueeze(0)).sum(dim=1)
 
 
-# ── Multi-task Kendall homeostático modificado (§3.6) ──────────────────
+# ── Multi-task Kendall homeostatic modified (§3.6) ──────────────────
 class KendallMultiTask(nn.Module):
-    """L = Σ_q a_q·[e^{−s_q}·L̃_q + s_q]; s_q init 0 → λ_q arranca en 1.
-    a_q = 0 cuando el batch no tiene filas elegibles para la cabeza q
-    (el término +s_q tampoco aporta: sin actividad no debe derivar s_q)."""
+    """L = Σ_q a_q·[e^{−s_q}·L̃_q + s_q]; s_q init 0 → λ_q starts at 1.
+a_q = 0 when the batch has no rows eligible for head q
+(the term +s_q does not contribute either: without activity s_q should not be derived)."""
 
     def __init__(self, head_names: tuple[str, ...]) -> None:
         super().__init__()
@@ -96,6 +96,6 @@ class KendallMultiTask(nn.Module):
                 continue
             term = torch.exp(-self.s[q]) * losses[q] + self.s[q]
             total = term if total is None else total + term
-        if total is None:  # batch sin ninguna cabeza activa (no debería ocurrir)
+        if total is None:  # batch without any active head (should not occur)
             total = sum(losses.values()) if losses else torch.zeros(())
         return total, lambdas

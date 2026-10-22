@@ -1,14 +1,14 @@
-"""Dump de logits crudos de val/test de un artefacto VX-One (§8.2) a npz.
+"""Dump raw val/test logits of a VX-One artifact (§8.2) to npz.
 
-Puente entrenamiento→evaluación: los trabajos GPU (Modal) solo entrenan y
-dumpean; TODAS las métricas E1-E3 se computan local desde estos npz.
-Guarda logits crudos (la calibración viaja en el ckpt; calibrated =
-f(logits, T) se recomputa en eval) + labels + nombres nativos por fila
-(necesario para E2 LOAO: y_fam = -1 con test_fam_names = familia excluida).
+Training→evaluation bridge: GPU (Modal) jobs only train and
+they dump; ALL E1-E3 metrics are computed locally from these npz.
+Stores raw logits (calibration travels in the ckpt; calibrated =
+f(logits, T) is recomputed in eval) + labels + native names per row
+(required for E2 LOAO: y_fam = -1 with test_fam_names = family excluded).
 
-Uso:
-    python -m src.eval.dump_outputs --artifact results/artifacts/unsw_small_oficial.pt \
-        --out results/outputs/unsw_small_oficial.npz
+Use:
+python -m src.eval.dump_outputs --artifact results/artifacts/unsw_small_oficial.pt \
+--out results/outputs/unsw_small_oficial.npz
 """
 
 from __future__ import annotations
@@ -62,11 +62,11 @@ def _forward(net: VXOneNet, u: torch.Tensor, txt: dict | None,
 
 def dump_ember_challenge(artifact: str | Path, out_npz: str | Path,
                          device: str = "cpu") -> dict:
-    """Streaming de logits sobre el challenge set EMBER (estrés E2/E4:
-    0 benign, ~99% unknown, evasivo). Mismo pipeline/feature-stage que
-    dump_run (FeatureStage refit determinista en build_run), solo cambia
-    el fuente: challenge.parquet como único 'shard'.
-    Guarda noul + choice logits crudos + labels (y_bin/y_fam)."""
+    """Streaming of logits on the EMBER challenge set (E2/E4 stress:
+0 benign, ~99% unknown, evasive). Same pipeline/feature-stage as
+dump_run (FeatureStage refit deterministic in build_run), just change
+the source: challenge.parquet as the only 'shard'.
+Save noul + choice raw logits + labels (y_bin/y_fam)."""
     net, ckpt, _ = _load_net(artifact, device)
     source = SOURCE_ALIAS[ckpt["source"]]
     assert source == "ember", f"challenge solo para EMBER (source={source})"
@@ -129,8 +129,8 @@ def dump_run(artifact: str | Path, out_npz: str | Path,
     vocab_sizes_ckpt = {k: len(v["token_to_slot"]) + 2
                         for k, v in ckpt.get("vocab", {}).items()}
     if not vocab_sizes_ckpt:
-        # A1 (sin rama textual): el artefacto se entrenó sin vocab → correr
-        # sin txt (la red no tiene embeddings) en vez de chocar con el run
+        # A1 (without textual branch): the artifact was trained without vocab → run
+        # without txt (the network has no embeddings) instead of crashing with run
         run.train_txt = run.val_txt = run.test_txt = None
         vocab_sizes_run = {}
     else:
@@ -138,7 +138,7 @@ def dump_run(artifact: str | Path, out_npz: str | Path,
     assert vocab_sizes_ckpt == vocab_sizes_run, \
         f"vocab mismatch: ckpt {vocab_sizes_ckpt} vs run {vocab_sizes_run}"
 
-    # candidate set del artefacto puede diferir del run reconstruido
+    # candidate set of the artifact may differ from the rebuilt run
     # (A5-EMBER 10-way): remap y_fam run→ckpt, filas fuera → -1
     cand_ckpt = ckpt["head_meta"]["choice"]["candidates"]
     cand_map = None
@@ -174,7 +174,7 @@ def dump_run(artifact: str | Path, out_npz: str | Path,
         if fam_names is not None:
             parts[f"{prefix}_fam_names"] = np.asarray(fam_names, dtype=object)
     if source == "ember":
-        # EMBER: val/test por streaming (no materializados en RunData)
+        # EMBER: streaming val/test (not materialized in RunData)
         from ..models.data import EmberBatcher
         b = EmberBatcher(run)
         with torch.no_grad():
@@ -203,7 +203,7 @@ def dump_run(artifact: str | Path, out_npz: str | Path,
             "exclude": exc, "temperatures": ckpt["manifest"]["temperatures"],
             "m_val": ckpt["manifest"]["m_val"],
             "best_epoch": ckpt["manifest"]["best_epoch"],
-            # contrato de inferencia completo para recomputar calibradas
+            # full inference contract to recompute calibrated
             "candidates": hm["choice"]["candidates"],
             "omega": hm["choice"]["class_weights"].tolist(),
             "mode": hm["choice"]["mode"], "tau_abs": hm["choice"]["tau_abs"],
@@ -218,12 +218,12 @@ def dump_run(artifact: str | Path, out_npz: str | Path,
 
 
 def merge_a2_outputs(base: str, out_dir: str | Path) -> dict:
-    """A2 (sin multi-task): combina los dumps single-head (a2_noul /
-    a2_choice / a2_score) en el npz de la corrida `<base>_abl_a2`. Cada
-    contribución aporta SU cabeza entrenada (noul_logits de a2_noul,
-    choice_logits de a2_choice, corn_logits de a2_score); las cabezas sin
-    gradiente de cada corrida se descartan. El merge usa el mismo formato
-    §8.2, así que el evaluador E1-E3 estándar lo lee sin cambios."""
+    """A2 (without multi-task): combines single-head dumps (a2_noul /
+a2_choice / a2_score) in the npz of the run `<base>_abl_a2`. Each
+contribution contributes YOUR trained head (noul_logits of a2_noul,
+choice_logits of a2_choice, corn_logits of a2_score); the heads without
+gradient of each run are discarded. The merge uses the same format
+§8.2, so the standard E1-E3 evaluator reads it unchanged."""
     out_dir = Path(out_dir)
     parts_d: dict[str, dict] = {}
     metas: dict[str, dict] = {}
@@ -238,7 +238,7 @@ def merge_a2_outputs(base: str, out_dir: str | Path) -> dict:
         raise FileNotFoundError(f"[a2] se requieren noul y choice: {sorted(parts_d)}")
 
     merged: dict[str, np.ndarray] = {}
-    # labels + fam_names de la corrida noul (idénticos entre corridas)
+    # labels + fam_names of the noul run (identical between runs)
     for k, v in parts_d["noul"].items():
         if any(k.endswith(s) for s in ("y_bin", "y_fam", "y_sev", "fam_names",
                                        "ddos_mask", "y_ddos")):
@@ -263,7 +263,7 @@ def merge_a2_outputs(base: str, out_dir: str | Path) -> dict:
         if head in metas and head in metas[head]["temperatures"]:
             temps[head] = metas[head]["temperatures"][head]
     meta["temperatures"] = temps
-    # meta de la cabeza Choice (mode/tau_abs/ω/candidates) desde a2_choice
+    # Choice head meta (mode/tau_abs/ω/candidates) from a2_choice
     for k in ("candidates", "omega", "mode", "tau_abs",
               "omega_ddos", "ddos_candidates"):
         if "choice" in metas and k in metas["choice"]:

@@ -1,23 +1,23 @@
-"""Kitsune (Mirsky et al., NDSS 2018) adaptado a flujos — baseline
-no-supervisado obligatorio (spec §5.3, lit review: 'baseline conceptual').
+"""Kitsune (Mirsky et al., NDSS 2018) adapted to flows — baseline
+mandatory unsupervised (spec §5.3, lit review: 'conceptual baseline').
 
-Adaptación documentada (los datasets son flujos, no paquetes):
-- φ PROPIO: el FeatureStage compartido se fitted sobre TODO train (57%
-  ataques en UNSW) y deja al benigno fuera de centro — hostil para un
-  modelo benign-only (señal invertida verificada: AUROC(s,y)=0.38). Como
-  exige un despliegue no-supervisado real, Kitsune re-fitea φ (misma
-  mediana+IQR+log1p) SOLO sobre sus filas de entrenamiento benignas.
-- Feature bagging por correlación (algoritmo del paper §III-B): greedy que
-  agrupa las features más correlacionadas hasta r por miembro, M = ⌈d/r⌉.
-- Autoencoder embudo r → ⌈0.75r⌉ → ⌈0.5625r⌉ → r, ReLU; entrenamiento
-  SOLO con filas benignas de train (no-supervisado: nunca ve y_bin=1).
-- Score por muestra = RMSE máximo del ensemble (el del original).
-- Calibración §5.3: Platt afín p = σ((s−b)/T) fitted en val con Logistic
-  Regression sobre s (misma familia de 2 parámetros; w=1/T, b=−w₀/T).
-  El npz guarda la salida de Platt (su 'raw'); T_json = 1 (ya calibrado).
-- Solo detección (Noul-equivalente): Kitsune no atribuye familias —
-  esa es exactamente la diferenciación del paper (sin tipado, sin
-  abstención, sin semántica probabilística nativa).
+Documented adaptation (datasets are flows, not packets):
+- φ OWN: Shared FeatureStage was fitted on ALL train (57%
+attacks at UNSW) and leaves the benign off-center — hostile to a
+benign-only model (verified inverted signal: AUROC(s,y)=0.38). As
+requires an actual unsupervised deployment, Kitsune re-fits φ (same
+median+IQR+log1p) ONLY over your benign training rows.
+- Feature bagging by correlation (algorithm from paper §III-B): greedy that
+groups the most correlated features up to r per member, M = ⌈d/r⌉.
+- Funnel autoencoder r → ⌈0.75r⌉ → ⌈0.5625r⌉ → r, ReLU; training
+ONLY with benign train rows (unsupervised: never sees y_bin=1).
+- Score per sample = maximum RMSE of the ensemble (that of the original).
+- Calibration §5.3: Platt affine p = σ((s−b)/T) fitted in val with Logistic
+Regression on s (same family of 2 parameters; w=1/T, b=−w₀/T).
+The npz saves Platt's output (its 'raw'); T_json = 1 (already calibrated).
+- Detection only (Noul-equivalent): Kitsune does not attribute families —
+that is exactly the differentiation of the paper (without type, without
+abstention, without native probabilistic semantics).
 """
 
 from __future__ import annotations
@@ -36,15 +36,15 @@ from src.models.data import DATA, _read_x_num, _registry, _frozen_candidates
 from src.models.feature_stage import FeatureStage
 
 SEED = 42
-N_MEMBERS = 9          # tamaño del ensemble (default del original)
+N_MEMBERS = 9          # ensemble size (default of original)
 EPOCHS = 30
 BATCH = 8192
 LR = 1e-3
 
 
 def correlation_bagging(d: int, m: int, x_benign: torch.Tensor) -> list[list[int]]:
-    """Greedy del original: partiendo del par más correlacionado, cada
-    grupo crece con la feature de mayor |corr| media con el grupo."""
+    """Greedy of the original: starting from the most correlated pair, each
+group grows with the feature of greater |corr| average with the group."""
     sub = x_benign[torch.randperm(len(x_benign))[:100_000]]
     c = np.abs(np.corrcoef(sub.numpy(), rowvar=False))
     np.fill_diagonal(c, 0.0)
@@ -79,7 +79,7 @@ class AE(nn.Module):
 
 
 def rmse(net: AE, x: torch.Tensor, bs: int = 65536) -> np.ndarray:
-    """RMSE de reconstrucción por muestra (score del miembro)."""
+    """Reconstruction RMSE per sample (member score)."""
     out = np.empty(len(x), dtype=np.float64)
     with torch.no_grad():
         for i in range(0, len(x), bs):
@@ -110,7 +110,7 @@ def fit_kitsune(source: str, scheme: str, exclude_family: str | None = None,
     candidates = _frozen_candidates(source, counts)
     rid = f"{source}_{scheme}" + (f"_loao_{exclude_family}" if exclude_family else "")
 
-    # φ de Kitsune: fitted SOLO en las filas benignas de su train (§ arriba)
+    # Kitsune's φ: fitted ONLY in the benign rows of his train (§ above)
     x_ben_raw = x_all[m_tr & (y_all == 0)]
     stage = FeatureStage.fit(x_ben_raw.astype(np.float64))
     log(f"[kitsune] {rid}: d={x_all.shape[1]} benign_tr={len(x_ben_raw)} "
@@ -163,7 +163,7 @@ def fit_kitsune(source: str, scheme: str, exclude_family: str | None = None,
     s_va = ensemble_score(x_va)
     s_te = ensemble_score(x_te)
 
-    # Platt afín §5.3: LogisticRegression sobre s (w·s+w0 ⇒ T=1/w, b=−w0/w)
+    # Affine Platt §5.3: LogisticRegression on s (w·s+w0 ⇒ T=1/w, b=−w0/w)
     from sklearn.linear_model import LogisticRegression
     lr = LogisticRegression(max_iter=1000)
     lr.fit(s_va.reshape(-1, 1), y_va)

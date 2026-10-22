@@ -1,14 +1,14 @@
-"""Compilador dataset → `State` (F1).
+"""Dataset Compiler → `State` (F1).
 
-Regla dura (data/SCHEMA.md §1): el mapeo columna→canónico es un diccionario
-EXPLÍCITO y el compilador FALLA si falta una columna esperada — sin
-heurísticas silenciosas. Si un dataset cambia de header, queremos el error
-aquí, no un modelo entrenado con columnas desalineadas.
+Hard rule (data/SCHEMA.md §1): column→canonical mapping is a dictionary
+EXPLICIT and the compiler FAILS if an expected column is missing — without
+silent heuristics. If a dataset changes its header, we want the error
+here, not a model trained with misaligned columns.
 
-Hoy implementado: UNSW-NB15 (split oficial, lista), CIC-IDS2017
-MachineLearningCVE (generador por chunks — header verificado 2026-10-16) y
-EMBER2024 (líneas jsonl → State con thrember PEFeatureExtractor, 2568 dims
-congeladas — SCHEMA §3.4; heads S6: Noul is_malicious + Choice top-10).
+Today implemented: UNSW-NB15 (official split, list), CIC-IDS2017
+MachineLearningCVE (chunk generator — header verified 2026-10-16) and
+EMBER2024 (jsonl lines → State with thrember PEFeatureExtractor, 2568 dims
+frozen — SCHEMA §3.4; heads S6: Noul is_malicious + Choice top-10).
 """
 from __future__ import annotations
 
@@ -19,13 +19,13 @@ from pathlib import Path
 from state.state import SplitHint, State, SOURCE_REGISTRY, truncate_txt
 
 # ---------------------------------------------------------------------------
-# UNSW-NB15 — mapeo verificado contra el header real (2026-10-16).
-# 45 columnas: id + proto/service/state (→ x_txt) + 39 numéricas + attack_cat + label. UTF-8 con BOM
-# (los archivos oficiales empiezan con ﻿ → encoding="utf-8-sig").
+# UNSW-NB15 — mapping verified against real header (2026-10-16).
+# 45 columns: id + proto/service/state (→ x_txt) + 39 numeric + attack_cat + label. UTF-8 with BOM
+# (official files start with ﻿ → encoding="utf-8-sig").
 # ---------------------------------------------------------------------------
 
-# Columna real → índice canónico dentro de x_num (orden CONGELADO = orden del
-# header del CSV real, verificado 2026-10-16; son 39 numéricas).
+# Actual column → canonical index within x_num (FROZEN order = order of
+# real CSV header, verified 2026-10-16; there are 39 numbers).
 UNSW_FEATURE_COLUMNS: tuple[str, ...] = (
     "dur", "spkts", "dpkts", "sbytes", "dbytes", "rate",
     "sttl", "dttl", "sload", "dload", "sloss", "dloss",
@@ -39,17 +39,17 @@ UNSW_FEATURE_COLUMNS: tuple[str, ...] = (
     "ct_src_ltm", "ct_srv_dst", "is_sm_ips_ports",
 )
 
-# attack_cat nativo → familia canónica (SCHEMA §3.2 — política NATIVA,
-# sin colapso; familias aproximadas solo para experimentos cross-dataset).
+# attack_cat native → canonical family (SCHEMA §3.2 — NATIVE policy,
+# no collapse; approximate families only for cross-dataset experiments).
 UNSW_FAMILY_MAP: dict[str, str] = {
     "Normal": "normal",
     "DoS": "dos",
     "Reconnaissance": "recon",
     "Exploits": "exploitation",
     "Shellcode": "shellcode",
-    # ⚠️ quirk UNSW: el CSV oficial training/testing-set usa "Backdoor"
+    # ⚠️ quirk UNSW: official training/testing-set CSV uses "Backdoor"
     # (SINGULAR — censo 2026-10-16: 1,746 train + 583 test = 2,329); la
-    # documentación del dataset dice "Backdoors". Aceptamos ambas grafías.
+    # dataset documentation says "Backdoors". We accept both spellings.
     "Backdoor": "backdoor",
     "Backdoors": "backdoor",
     "Analysis": "analysis",
@@ -58,7 +58,7 @@ UNSW_FAMILY_MAP: dict[str, str] = {
     "Worms": "worms",
 }
 
-# Rubrik de severidad 0-3 (SCHEMA §4; limitación declarada en spec §8.1).
+# Rubrik severity 0-3 (SCHEMA §4; limitation stated in spec §8.1).
 UNSW_SEVERITY_MAP: dict[str, int] = {
     "normal": 0,
     "recon": 1, "fuzzing": 1, "generic": 1,
@@ -66,16 +66,16 @@ UNSW_SEVERITY_MAP: dict[str, int] = {
     "exploitation": 3, "shellcode": 3, "backdoor": 3, "worms": 3,
 }
 
-# 39 numéricas. Corrección 2026-10-16: el conteo original decía 43 — sumaba
-# id + 3 textuales + 39 numéricas (= columnas no-label); este assert lo pilló
-# antes de materializar cualquier parquet.
+# 39 numerical. Correction 2026-10-16: original count said 43 — added up
+# id + 3 textual + 39 numeric (= no-label columns); this assert got it
+# before materializing any parquet.
 assert len(UNSW_FEATURE_COLUMNS) == SOURCE_REGISTRY["unsw_nb15_v1"]["d_num"] == 39
 
 
 def compile_unsw_csv(
     path: Path, split_hint: SplitHint
 ) -> list[State]:
-    """Compila uno de los CSV oficiales de UNSW-NB15 a objetos State."""
+    """Compiles one of the official UNSW-NB15 CSVs to State objects."""
     n_expected = len(UNSW_FEATURE_COLUMNS)
     states: list[State] = []
     errors: list[str] = []
@@ -99,7 +99,7 @@ def compile_unsw_csv(
                 attack_cat = (row.get("attack_cat") or "").strip()
                 family = UNSW_FAMILY_MAP.get(attack_cat)
                 if family is None:
-                    # attack_cat vacío en filas benignas de algunas versiones
+                    # empty attack_cat on benign rows of some versions
                     family = "normal" if attack_cat == "" else "unknown"
                 states.append(
                     State(
@@ -125,8 +125,8 @@ def compile_unsw_csv(
                     ) from exc
 
     if errors:
-        # Reporte honesto: el dataset tiene NaNs/strings raros conocidos
-        # (p.ej. valores no numéricos en columnas numéricas de la versión completa)
+        # Honest report: dataset has known rare NaNs/strings
+        # (e.g. non-numeric values ​​in numeric columns in the full version)
         print(f"[warn] {path.name}: {len(errors)} filas descartadas; ej: {errors[:3]}")
     return states
 
@@ -134,14 +134,14 @@ def compile_unsw_csv(
 # ---------------------------------------------------------------------------
 # CIC-IDS2017 (MachineLearningCVE) — mapeo verificado contra header real
 # (2026-10-16, mirror c01dsnap/CIC-IDS2017). 79 columnas: 78 features + Label.
-# Nombres con espacios → strip. Columna 'Fwd Header Length' DUPLICADA en el
-# CSV original (pandas renombra la 2ª como 'Fwd Header Length.1' → descartada).
-# Sin IPs/puertos origen ni timestamp (solo Destination Port) — por eso el
-# parquet enhanced del autor es la fuente PRIMARIA (SCHEMA S1); esta versión
-# se usa para comparabilidad con literatura.
+# Names with spaces → strip. DUPLICATE 'Fwd Header Length' column in the
+# Original CSV (pandas renames the 2nd one as 'Fwd Header Length.1' → discarded).
+# No source IPs/ports or timestamp (Destination Port only) — that's why
+# author's parquet enhanced is the PRIMARY source (SCHEMA S1); this version
+# It is used for comparability with literature.
 # ---------------------------------------------------------------------------
 
-# Nombres EXACTOS tras strip() del header real (orden congelado):
+# EXACT names after strip() of the real header (frozen order):
 CIC_FEATURE_COLUMNS: tuple[str, ...] = (
     "Destination Port",
     "Flow Duration",
@@ -174,22 +174,22 @@ CIC_FEATURE_COLUMNS: tuple[str, ...] = (
     "Active Mean", "Active Std", "Active Max", "Active Min",
     "Idle Mean", "Idle Std", "Idle Max", "Idle Min",
 )
-# (nota: 'Fwd Header Length' duplicada del CSV se descarta — pandas '.1')
+# (note: duplicate 'Fwd Header Length' from CSV is discarded — pandas '.1')
 
 CIC_FAMILY_MAP: dict[str, str] = {
-    # Graffía EXACTA verificada por censo (2026-10-16, SCHEMA §3.1): 15 etiquetas.
-    # _norm_cic_label() normaliza caja, guiones y el U+FFFD mojibake antes del
-    # lookup, así una sola clave legible cubre las variantes del dataset.
+    # EXACT graphy verified by census (2026-10-16, SCHEMA §3.1): 15 labels.
+    # _norm_cic_label() normalizes box, dashes and the U+FFFD mojibake before the
+    # lookup, so a single readable key covers the dataset variants.
     "BENIGN": "normal",
     "DDoS": "dos_ddos",
     "DoS Hulk": "dos_ddos",
     "DoS GoldenEye": "dos_ddos",
-    "DoS slowloris": "dos_ddos",   # 's' minúscula en el CSV real
+    "DoS slowloris": "dos_ddos",   # Lowercase 's' in the actual CSV
     "DoS Slowhttptest": "dos_ddos",
     "PortScan": "recon",
     "FTP-Patator": "bruteforce",
     "SSH-Patator": "bruteforce",
-    "Web Attack – Brute Force": "webattack",  # en el CSV real: U+FFFD donde va el guion (mojibake); _norm lo iguala
+    "Web Attack – Brute Force": "webattack",  # in the actual CSV: U+FFFD where the script goes (mojibake); _norm equals it
     "Web Attack – XSS": "webattack",
     "Web Attack – Sql Injection": "webattack",
     "Bot": "botnet",
@@ -204,32 +204,32 @@ CIC_SEVERITY_MAP: dict[str, int] = {
     "botnet": 3, "infiltration": 3, "exploitation": 3,
 }
 
-# Config choice_ddos_vector (spec F0 §3.1) — graffía exacta del censo.
-# ⚠️ El label 'DDoS' (LOIT, 128,027 flujos) vive en el archivo del VIERNES,
-# NO el miércoles: tal cual F0, SYN_Flood quedaría con 0 muestras si el
-# subset se limita a miércoles. Decisión abierta (SCHEMA §3.3): extender el
+# Config choice_ddos_vector (spec F0 §3.1) — exact census spelling.
+# ⚠️ The 'DDoS' label (LOIT, 128,027 streams) lives in the FRIDAY archive,
+# NO on Wednesday: as F0, SYN_Flood would be left with 0 samples if the
+# subset is limited to Wednesday. Open decision (SCHEMA §3.3): extend the
 # subset a Wednesday+Friday-DDoS. No bloquea F1.
 CIC_DDoS_VECTOR_MAP: dict[str, str] = {
     "BENIGN": "Normal",
-    "DDoS": "SYN_Flood",          # LOIT — solo en Friday-...-DDos
+    "DDoS": "SYN_Flood",          # LOIT — only on Friday-...-DDos
     "DoS Hulk": "HTTP_DoS",
     "DoS GoldenEye": "HTTP_DoS",
     "DoS slowloris": "Slowloris",
     "DoS Slowhttptest": "Slowloris",
 }
 
-# d_num CIC = 77 features (78 del CSV menos la duplicada 'Fwd Header Length.1')
+# d_num CIC = 77 features (78 from the CSV minus the duplicate 'Fwd Header Length.1')
 
 
 def _norm_cic_label(s: str) -> str:
-    """Normaliza etiquetas `Label` para el lookup: espacios, guiones, caja.
+    """Normalizes `Label` tags for the lookup: spaces, dashes, box.
 
-    Verificado por hexdump (2026-10-16): el CSV real del jueves trae las
-    etiquetas Web Attack con U+FFFD (carácter de reemplazo — mojibake del
-    dataset oficial; bytes ef bf bd; el archivo es UTF-8 válido). Otras
-    versiones usan en-dash U+2013, U+2014 o guion. Los tres se mapean a '-'
-    antes del lookup; el resto de inconsistencias ('DoS GoldenEye' vs
-    variantes de caja) lo cubre casefold.
+Verified by hexdump (2026-10-16): Thursday's actual CSV brings the
+Web Attack tags with U+FFFD (replacement character — mojibake del
+official dataset; bytes ef bf bd; the file is valid UTF-8). Others
+versions use en-dash U+2013, U+2014 or dash. All three map to '-'
+before the lookup; the rest of the inconsistencies ('DoS GoldenEye' vs
+case variants) covers it casefold.
     """
     return (
         s.strip().casefold()
@@ -250,7 +250,7 @@ assert len(CIC_FEATURE_COLUMNS) == SOURCE_REGISTRY["cicids2017_v1"]["d_num"] == 
 
 
 def _cic_encoding(path: Path) -> str:
-    """Sonda de encoding (utf-8 primero; latin-1 de fallback nunca falla)."""
+    """Probe encoding (utf-8 first; fallback latin-1 never fails)."""
     import pandas as pd
 
     for enc in ("utf-8", "latin-1"):
@@ -268,13 +268,13 @@ def iter_cicids_states(
     family_map: dict[str, str] | None = None,
     chunksize: int = 100_000,
 ):
-    """Compila un CSV MachineLearningCVE de CIC-IDS2017 → GENERADOR de State.
+    """Compile a CIC-IDS2017 MachineLearningCVE CSV → State GENERATOR.
 
-    Lazy por chunks: los archivos llegan a 215 MB (~440K flujos) y el dataset
-    completo ~2.8M — materializar todo en RAM sería un error de diseño. Quien
-    consuma debe escribir shards a disco incrementalmente (script de F1).
-    Columnas extra del CSV se ignoran (selección por nombre); columnas del
-    schema faltantes revientan (fail-fast, sin heurísticas).
+Lazy by chunks: the files reach 215 MB (~440K streams) and the dataset
+full ~2.8M — materializing everything in RAM would be a design error. Who
+consume should write shards to disk incrementally (F1 script).
+Extra CSV columns are ignored (selection by name); columns of
+missing schema burst (fail-fast, no heuristics).
     """
     import numpy as np
     import pandas as pd
@@ -284,7 +284,7 @@ def iter_cicids_states(
         if family_map is None
         else {_norm_cic_label(k): v for k, v in family_map.items()}
     )
-    dup = "Fwd Header Length.1"  # bug original del CSV: columna duplicada
+    dup = "Fwd Header Length.1"  # Original CSV bug: duplicate column
     cols = list(CIC_FEATURE_COLUMNS)
 
     reader = pd.read_csv(
@@ -295,7 +295,7 @@ def iter_cicids_states(
     )
 
     n_rows = 0
-    n_bad = 0  # filas con NaN/inf en features (conocido: Flow Bytes/s con duración 0)
+    n_bad = 0  # rows with NaN/inf in features (known: Flow Bytes/s with duration 0)
     unknown_labels: set[str] = set()
     for chunk in reader:
         chunk.columns = [c.strip() for c in chunk.columns]
@@ -324,7 +324,7 @@ def iter_cicids_states(
             yield State(
                 telemetry_source="cicids2017_v1",
                 x_num=tuple(arr[i]),  # np.float64 ⊂ float
-                x_txt={"protocol": None},  # MLCVE no trae Protocol; solo el parquet enhanced (SCHEMA S1)
+                x_txt={"protocol": None},  # MLCVE does not come with Protocol; only enhanced parquet (SCHEMA S1)
                 split_hint=split_hint,
                 label_family=family,
                 label_severity=CIC_SEVERITY_MAP.get(family),
@@ -347,13 +347,13 @@ def iter_cicids_states(
 # ---------------------------------------------------------------------------
 # EMBER2024 (Win32) — compilador jsonl → State (heads S6, SCHEMA §3.4)
 #
-# Cada línea jsonl trae metadata (label, family, …) + las features PE crudas;
-# thrember PEFeatureExtractor las vectoriza a float32[2568]. Heads S6:
+# Each jsonl line brings metadata (label, family, ...) + the raw PE features;
+# thrember PEFeatureExtractor vectorizes them to float32[2568]. Heads S6:
 #   * Noul  `is_malicious`   ← label_binary (0/1, balance 50/50 exacto)
 #   * Choice `choice_family` ← top-10 familias AV del train + "unknown"
-#     (Unknown absorbe benignos, malicious sin familia y la cola de ~1,480
-#     familias); la familia cruda queda en label_full para auditoría.
-#   * Sin head Score: no hay ground truth de severidad en EMBER (S6).
+# (Unknown absorbs benign, malicious without family and tail of ~1,480
+# families); the raw family remains in label_full for auditing.
+# * No head Score: there is no ground truth of severity in EMBER (S6).
 # ---------------------------------------------------------------------------
 
 EMBER_D_NUM = SOURCE_REGISTRY["ember2024_v1"]["d_num"]  # 2568
@@ -363,13 +363,13 @@ assert len(EMBER_TOP_FAMILIES) == 10, (
     f"trae {len(EMBER_TOP_FAMILIES)} (SCHEMA §3.4)"
 )
 
-_EMBER_EXTRACTOR = None  # singleton perezoso — ver _ember_extractor()
+_EMBER_EXTRACTOR = None  # lazy singleton — see _ember_extractor()
 
 
 def _ember_extractor():
-    """Instancia PEFeatureExtractor una vez por PROCESO (los workers del pool
-    de materialize.py son procesos separados: cada uno importa thrember una
-    vez). Lazy para no arrastrar signify/thrember en imports de solo-red."""
+    """Instance PEFeatureExtractor once per PROCESS (the pool workers
+of materialize.py are separate processes: each one imports thrember a
+time). Lazy to not drag signify/thrember into network-only imports."""
     global _EMBER_EXTRACTOR
     if _EMBER_EXTRACTOR is None:
         from thrember import PEFeatureExtractor
@@ -384,13 +384,13 @@ def _ember_extractor():
 
 
 def compile_ember_line(line: str, subset: SplitHint, week_idx: int) -> State:
-    """Una línea jsonl de EMBER2024 → State (reglas S6, SCHEMA §3.4).
+    """A jsonl line from EMBER2024 → State (rules S6, SCHEMA §3.4).
 
-    benign                        → label_family="unknown", label_full="benign"
-    malicious + familia top-10    → (familia, familia)          [Choice]
-    malicious + familia de cola   → ("unknown", familia_cruda)  [Unknown absorbe]
-    malicious sin familia (null)  → ("unknown", "malicious")
-    label_severity SIEMPRE None (EMBER no trae GT de severidad — S6).
+benign → label_family="unknown", label_full="benign"
+malicious + family top-10 → (family, family) [Choice]
+malicious + tail family → ("unknown", raw_family) [Unknown absorbs]
+malicious without family (null) → ("unknown", "malicious")
+label_severity ALWAYS None (EMBER does not bring severity GT — S6).
     """
     rec = json.loads(line)
     label = rec.get("label")
@@ -403,8 +403,8 @@ def compile_ember_line(line: str, subset: SplitHint, week_idx: int) -> State:
         if family in EMBER_TOP_FAMILIES:
             label_family, label_full = family, family
         else:
-            # Cola de ~1,480 familias: Unknown la absorbe y la cruda queda en
-            # label_full (auditoría + posible re-mapeo del top-10 en v0.2).
+            # Queue of ~1,480 families: Unknown absorbs it and the crude remains in
+            # label_full (audit + possible re-mapping of top-10 in v0.2).
             label_family, label_full = "unknown", family
     else:
         label_family, label_full = "unknown", "malicious"
@@ -414,7 +414,7 @@ def compile_ember_line(line: str, subset: SplitHint, week_idx: int) -> State:
         telemetry_source="ember2024_v1",
         x_num=x_num,  # np.float32[2568] — ndarray satisface Sequence[float]
         x_txt={},     # rama textual desactivada (SCHEMA §2)
-        split_hint=subset,  # train/val/test según el carve semanal S7
+        split_hint=subset,  # train/val/test according to weekly carve S7
         label_family=label_family,
         label_severity=None,
         label_full=label_full,

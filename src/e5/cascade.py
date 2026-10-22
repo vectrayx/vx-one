@@ -1,31 +1,31 @@
-"""E5 (§4.4): harness de cascada Fase1 (Suricata) → Fase2 (VX-One).
+"""E5 (§4.4): Phase1 (Meerkat) → Phase2 (VX-One) cascade harness.
 
-NOTA DE DISEÑO (hallazgo empírico): el parquet enhanced NO es una copia
-fila-a-fila de MLCVE — recomputa las estadísticas de flujo (misma secuencia
-de captura, stats corregidas; la fila 0-1 coincide exacta, la fila 2 difiere
-en 12 de 76 features, maxdiff 8e6 µs). No existe join fila-a-fila entre
-ambos, así que la cascada es TWO-SAMPLE por día:
+DESIGN NOTE (empirical finding): enhanced parquet is NOT a copy
+MLCVE row-by-row — recompute flow statistics (same sequence
+capture, stats corrected; row 0-1 matches exactly, row 2 differs
+in 12 of 76 features, maxdiff 8e6 µs). There is no row-by-row join between
+both, so the waterfall is TWO-SAMPLE per day:
 
-- Fase 1 (per-row REAL): flujos del día del parquet enhanced + alertas de
-  eve.json casadas por 5-tupla + ventana temporal → cobertura de F1,
-  composición de la zona gris (lo que F1 NO resuelve), latencia de alerta.
-- Fase 2 (estimación insesgada): filas TEST del día (split_strat + day_idx
-  del parquet processed) con las logits del npz → recall/FPR de F2 por
-  familia sobre el mismo día.
-- Combinado (estimación, supuesto documentado): P(F2 flag | familia, día)
-  es independiente de "¿lo detectó F1?" dado el tipo de flujo — los flujos
-  que F1 deja pasar son una muestra aleatoria de su familia (exacto para
-  familias invisibles a F1 sin payload, p. ej. web: zona gris = clase
-  completa; optimista para clases donde F1 falla los sigilosos). Se
-  reporta como estimación con el supuesto explícito.
+- Phase 1 (REAL per-row): enhanced parquet day flows + alerts
+eve.json married by 5-tuple + time window → F1 coverage,
+gray zone composition (what F1 does NOT resolve), alert latency.
+- Phase 2 (unbiased estimation): TEST rows of the day (split_strat + day_idx
+of the processed parquet) with the logits of the npz → recall/FPR of F2 by
+family on the same day.
+- Combined (estimate, documented assumption): P(F2 flag | family, day)
+is independent of "did F1 detect it?" given the type of flow — the flows
+that F1 passes up are a random sample of his family (exactly for
+invisible families to F1 without payload, p. e.g. web: gray zone = class
+complete; optimistic for classes where F1 fails stealth). HE
+reported as an estimate with the explicit assumption.
 
-Métricas por día (§4.4): % resuelto por F1 por familia, composición de la
-zona gris, accuracy/P/R combinado vs F1-solo vs F2-solo, latencia E2E
-(F1: ts de la 1ª alerta − inicio de flujo; F2: p50 de E4, batch=1 CPU).
+Metrics per day (§4.4): % resolved by F1 by family, composition of the
+gray zone, accuracy/P/R combined vs F1-only vs F2-only, E2E latency
+(F1: ts of the 1st alert − start of flow; F2: p50 of E4, batch=1 CPU).
 
-Uso:
-    .venv/bin/python -m src.e5.cascade --day 2017-07-06
-    .venv/bin/python -m src.e5.cascade --report      # tabla e5.md
+Use:
+.venv/bin/python -m src.e5.cascade --day 2017-07-06
+.venv/bin/python -m src.e5.cascade --report # table e5.md
 """
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ PROCESSED = "data/processed/cicids2017/cicids2017.parquet"
 NPZ = "results/outputs/cic_small_strat.npz"
 OUT_DIR = pathlib.Path("results/e5")
 
-# día calendario → day_idx de los CSVs MLCVE (SCHEMA §5; jueves = 2 CSVs,
+# calendar day → day_idx of the MLCVE CSVs (SCHEMA §5; Thursday = 2 CSVs,
 # viernes = 3)
 DAY_FILES = {"2017-07-03": [0], "2017-07-04": [1], "2017-07-05": [2],
              "2017-07-06": [3, 4], "2017-07-07": [5, 6, 7]}
@@ -60,7 +60,7 @@ FAM_MAP = {"BENIGN": "normal", "DoS Hulk": "dos_ddos", "DDoS": "dos_ddos",
 
 _NON = ("flow_id", "source_ip", "source_port", "destination_ip",
         "destination_port", "Timestamp", "attack_label")
-F1_T0_SLACK, F1_END_SLACK = 2.0, 5.0   # s alrededor de [inicio, inicio+dur]
+F1_T0_SLACK, F1_END_SLACK = 2.0, 5.0   # s around [start, start+dur]
 
 
 def _norm_day(s: str) -> str:
@@ -104,7 +104,7 @@ def load_alerts(eve_path: pathlib.Path) -> list[dict]:
 
 
 def load_day(day: str) -> dict:
-    """Flujos del día (enhanced): 5-tupla, inicio, dur, familia mapeada."""
+    """Day flows (enhanced): 5-tuple, start, dur, mapped family."""
     pf = pq.ParquetFile(ENH)
     want = datetime.strptime(day, "%Y-%m-%d").strftime("%-d/%-m/%Y")
     idx, ts_s = [], []
@@ -135,7 +135,7 @@ def load_day(day: str) -> dict:
 
 
 def match_f1(flows: dict, alerts: list[dict]) -> np.ndarray:
-    """flag[i] = F1 alertó el flujo i; lat[i] = 1ª alerta − inicio (o nan)."""
+    """flag[i] = F1 alerted flow i; lat[i] = 1st alert − start (or nan)."""
     buckets: dict[tuple, list[float]] = {}
     for a in alerts:
         buckets.setdefault((a["src"], a["sport"], a["dst"], a["dport"],
@@ -159,7 +159,7 @@ def match_f1(flows: dict, alerts: list[dict]) -> np.ndarray:
 
 
 def load_f2(day: str) -> dict:
-    """Filas test del día + probs Noul del npz (test_pos → fila del npz)."""
+    """Rows test of the day + probs Noul of the npz (test_pos → row of the npz)."""
     d_idx = DAY_FILES[day]
     tbl = pq.read_table(PROCESSED, columns=["day_idx", "split_strat",
                                             "label_family"])
@@ -168,13 +168,13 @@ def load_f2(day: str) -> dict:
     test_all = np.flatnonzero(scol == "test")   # filas test del parquet, orden parquet
     is_test_day = np.isin(scol, ["test"]) & np.isin(dcol, d_idx)
     rows = np.flatnonzero(is_test_day)
-    # posición de cada fila test-del-día dentro del npz = rango en test_all
+    # position of each row test-of-day within the npz = range in test_all
     npz_pos = np.searchsorted(test_all, rows)
     parts = np.load(NPZ, allow_pickle=True)
     meta = json.loads(pathlib.Path(NPZ.replace(".npz", ".json")).read_text())
     T = meta["temperatures"]["noul"]
     p_noul = 1.0 / (1.0 + np.exp(-parts["te_noul_logits"][npz_pos] / T))
-    fam_names = meta["candidates"]   # te_fam_names es por fila, no vocab
+    fam_names = meta["candidates"]   # te_fam_names is per row, not vocab
     y_fam = parts["te_y_fam"][npz_pos]
     return {"fam": [fam_names[i] if i >= 0 else "otros" for i in y_fam],
             "flag": p_noul >= 0.5, "p": p_noul}
@@ -201,19 +201,19 @@ def run_day(day: str, f2_lat_us: float) -> dict:
     f2 = load_f2(day)
     fams = sorted(set(flows["fam"]))
 
-    # ── cobertura F1 por familia (per-row real, día completo) ──
+    # ── F1 coverage per family (actual per-row, full day) ──
     per_class = {}
     for f in fams:
         m = np.array(flows["fam"]) == f
         per_class[f] = {"n": int(m.sum()),
                         "f1_resolved": round(float(f1_flag[m].mean()), 4)}
 
-    # ── zona gris = flujos que F1 NO resolvió (día completo) ──
+    # ── gray area = flows that F1 did NOT resolve (full day) ──
     gz = ~f1_flag
     gz_comp = {f: int((gz & (np.array(flows["fam"]) == f)).sum())
                for f in fams if int((gz & (np.array(flows["fam"]) == f)).sum())}
 
-    # ── F2 sobre filas test del día: recall por familia + FPR ──
+    # ── F2 on test rows of the day: recall by family + FPR ──
     f2_fam = np.array(f2["fam"])
     f2_flag = f2["flag"]
     y2 = f2_fam != "normal"
@@ -223,9 +223,9 @@ def run_day(day: str, f2_lat_us: float) -> dict:
     f2_acc = prf(int((f2_flag & y2).sum()), int((f2_flag & ~y2).sum()),
                  int((~f2_flag & y2).sum()), int((~f2_flag & ~y2).sum()))
 
-    # ── combinado (estimación por familia): zona gris → F2 ──
-    # TP = ataques resueltos por F1 + zona gris de cada FAMILIA DE ATAQUE
-    # (la de 'normal' aporta al FP, no al TP)
+    # ── combined (estimate per family): gray area → F2 ──
+    # TP = attacks resolved by F1 + gray area of ​​each ATTACK FAMILY
+    # (the 'normal' one contributes to the FP, not to the TP)
     gz_benign = int((gz & ~y).sum())
     est_tp = int(f1_flag[y].sum()) + sum(
         n_att * f2_recall.get(f, 0.0) for f, n_att in gz_comp.items()
@@ -267,7 +267,7 @@ def run_day(day: str, f2_lat_us: float) -> dict:
 def e4_latency() -> float:
     for p in sorted(pathlib.Path("results/e4").glob("e4_cic*.json")):
         return json.loads(p.read_text())["p50_us"]
-    return 955.2  # unsw small (única medida E4 disponible)
+    return 955.2  # unsw small (only E4 size available)
 
 
 def report() -> None:

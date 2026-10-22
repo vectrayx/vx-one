@@ -1,35 +1,35 @@
-"""Materializa los datasets crudos a parquet canónico (F1).
+"""Materializes the raw datasets to canonical parquet (F1).
 
-Consume los compiladores de `build_canonical.py` y produce:
+Consumes compilers from `build_canonical.py` and produces:
 
-  data/processed/unsw_nb15/unsw_nb15.parquet
-      Split oficial: training-set → train+val (estratificado 85/15 por familia,
-      SEED fija), testing-set → test. Columna `split`.
+data/processed/unsw_nb15/unsw_nb15.parquet
+Official split: training-set → train+val (stratified 85/15 by family,
+SEED fixed), testing-set → test. `split` column.
 
-  data/processed/cicids2017/cicids2017.parquet
-      2,830,743 flujos de los 8 CSVs MachineLearningCVE, en orden de día y de
-      fila original. Dos columnas de split (SCHEMA §5, ambas se reportan en E1):
-        * split_strat — estratificado 70/15/15 por familia (SEED fija)
-        * split_time  — corte posicional 70/15/15 sobre el orden
-          Lun→Mar→Mié→Jue→Vie (el día es el proxy temporal: MLCVE no trae
-          timestamps), preservando el orden de captura intra-día.
+data/processed/cicids2017/cicids2017.parquet
+2,830,743 flows of the 8 MachineLearningCVE CSVs, in order of day and
+original row. Two split columns (SCHEMA §5, both reported in E1):
+* split_strat — stratified 70/15/15 per family (fixed SEED)
+* split_time — positional split 70/15/15 on order
+Mon→Mar→Wed→Thu→Fri (the day is the temporary proxy: MLCVE does not bring
+timestamps), preserving the intra-day capture order.
 
-  data/processed/ember2024/part_{ii:02d}_{subset}.parquet + challenge.parquet
-      64 semanas Win32 → un part por semana con split TEMPORAL congelado S7
-      (train semanas 0-45, val 46-51, test 52-63) y challenge evasivo (6,315)
-      como parquet único. x_num float32[2568] (mitad de disco que float64);
-      cada worker escribe su part y borra el jsonl de esa semana (S7:
-      re-descargable); los challenge jsonl NUNCA se borran.
+data/processed/ember2024/part_{ii:02d}_{subset}.parquet + challenge.parquet
+64 weeks Win32 → one part per week with TEMPORARY frozen S7 split
+(train weeks 0-45, val 46-51, test 52-63) and evasive challenge (6,315)
+as a single parquet. x_num float32[2568] (half disk than float64);
+each worker writes his part and deletes that week's jsonl (S7:
+re-downloadable); jsonl challenges are NEVER deleted.
 
-Reglas duras:
-  * Protección de test: si el destino existe, aborta sin --force.
-  * x_num mantiene NaN/inf tal cual — la imputación se ajusta SOLO en train
-    y se aplica al resto (SCHEMA §1, sin leakage). Este script no entrena.
-  * Cada State pasa por validate() antes de escribirse (fail-fast del contrato).
+Hard rules:
+* Test protection: if the target exists, abort without --force.
+* x_num keeps NaN/inf as is — imputation fits ONLY in train
+and applies to the rest (SCHEMA §1, without leakage). This script does not train.
+* Each State goes through validate() before being written (contract fail-fast).
 
-Uso (desde la raíz del repo, venv con pandas/pyarrow/scikit-learn/thrember):
-  .venv/bin/python -I src/features/materialize.py --dataset all    # unsw + cic
-  .venv/bin/python -I src/features/materialize.py --dataset ember  # aparte: borra jsonl semanales (S7)
+Usage (from repo root, venv with pandas/pyarrow/scikit-learn/thrember):
+.venv/bin/python -I src/features/materialize.py --dataset all # unsw + cic
+.venv/bin/python -I src/features/materialize.py --dataset ember # aside: delete weekly jsonl (S7)
 """
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # src/ al path (python -I)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # src/ to path (python -I)
 
 from features.build_canonical import (  # noqa: E402
     CIC_FAMILY_MAP_NORM,
@@ -59,16 +59,16 @@ from state.state import SOURCE_REGISTRY, State  # noqa: E402
 
 PAPER_ROOT = Path(__file__).resolve().parents[2]
 DATA = PAPER_ROOT / "data"
-SEED = 42  # F0 D7: seed fija documentada; cambiarla invalida los splits previos
+SEED = 42  # F0 D7: documented fixed seed; changing it invalidates previous splits
 
-# Dims congeladas del registro — única fuente de verdad (SCHEMA §6). Sin
-# literales en este archivo: el assert de build_canonical cruza la tupla contra
-# el registro y State.validate() cruza cada fila; aquí solo referenciamos.
+# Frozen log dims — single source of truth (SCHEMA §6). Without
+# literals in this file: build_canonical's assert crosses the tuple against
+# the record and State.validate() traverses each row; here we only reference.
 UNSW_D_NUM = SOURCE_REGISTRY["unsw_nb15_v1"]["d_num"]   # 39
 CIC_D_NUM = SOURCE_REGISTRY["cicids2017_v1"]["d_num"]   # 77
 EMBER_D_NUM = SOURCE_REGISTRY["ember2024_v1"]["d_num"]  # 2568
 
-# Orden temporal de los CSVs MLCVE (idx = posición en la semana; SCHEMA §5).
+# Temporal order of the MLCVE CSVs (idx = position in the week; SCHEMA §5).
 CIC_DAY_ORDER: dict[str, int] = {
     "Monday-WorkingHours.pcap_ISCX.csv": 0,
     "Tuesday-WorkingHours.pcap_ISCX.csv": 1,
@@ -91,7 +91,7 @@ UNSW_SCHEMA = pa.schema([
 
 CIC_SCHEMA = pa.schema([
     ("x_num", pa.list_(pa.float64(), CIC_D_NUM)),
-    ("x_txt_protocol", pa.string()),  # all-null en MLCVE (solo el enhanced trae Protocol)
+    ("x_txt_protocol", pa.string()),  # all-null in MLCVE (only the enhanced one comes with Protocol)
     ("day", pa.string()), ("day_idx", pa.int8()),
     ("split_strat", pa.string()), ("split_time", pa.string()),
     ("label_family", pa.string()), ("label_full", pa.string()),
@@ -99,20 +99,20 @@ CIC_SCHEMA = pa.schema([
 ])
 
 # EMBER2024: x_num float32 — 2568 dims × 3.85M filas ≈ 20 GB comprimidos;
-# float64 los duplicaría. Split temporal por semana (S7), NO estratificado:
-# estratificar mezclaría el futuro en train.
+# float64 would duplicate them. Temporal split by week (S7), NOT stratified:
+# Stratifying would mix the future in train.
 EMBER_SCHEMA = pa.schema([
     ("x_num", pa.list_(pa.float32(), EMBER_D_NUM)),
     ("label_binary", pa.int8()),    # objetivo Noul is_malicious (S6)
     ("label_family", pa.string()),  # top-10 o "unknown" (S6)
-    ("label_full", pa.string()),    # familia cruda / "benign" / "malicious" (auditoría)
+    ("label_full", pa.string()),    # crude family / "benign" / "malicious" (audit)
     ("subset", pa.string()),        # train/val/test — carve semanal S7 (SCHEMA §5)
     ("week_idx", pa.int16()),       # 0-51 train(0-45)/val(46-51), 52-63 test, 64 challenge
 ])
-EMBER_EXPECTED_LINES = 60_000      # TODAS las semanas traen exactamente 60,000 líneas (censo 2026-10-16)
+EMBER_EXPECTED_LINES = 60_000      # EVERY week brings exactly 60,000 lines (census 2026-10-16)
 EMBER_CHALLENGE_EXPECTED = 6_315   # challenge evasivo, 100% malicious (censo 2026-10-16)
-EMBER_BUFFER = 25_000              # filas por row-group (~256 MB de features en RAM por worker)
-EMBER_WORKERS = 12                 # 12 × ~400 MB ≈ 5 GB < 7 GB disponibles (24 workers reventaba la RAM de 15 GB)
+EMBER_BUFFER = 25_000              # rows per row-group (~256 MB of features in RAM per worker)
+EMBER_WORKERS = 12                 # 12 × ~400 MB ≈ 5 GB < 7 GB available (24 workers burst the 15 GB RAM)
 
 
 def _guard(out: Path, force: bool) -> None:
@@ -128,11 +128,11 @@ def _x_num_array(states: list[State], d_num: int) -> pa.Array:
 
 
 def _stratified_two_step(y: np.ndarray, first_test: float, seed: int) -> np.ndarray:
-    """Split 3-vías estratificado en dos pasos (sklearn no hace 3-vías directo).
+    """Split 3-way stratified in two steps (sklearn does not do direct 3-way).
 
-    Devuelve array de 'train'/'val'/'test' alineado con y. Si la estratificación
-    es imposible (clases con <2 miembros en un subconjunto), cae sin estratificar
-    con warning — honesto y visible, nunca silencioso.
+Returns array of 'train'/'val'/'test' aligned with y. If the stratification
+is impossible (classes with <2 members in a subset), falls unstratified
+with warning — honest and visible, never silent.
     """
     from sklearn.model_selection import train_test_split
 
@@ -175,8 +175,8 @@ def materialize_unsw(force: bool) -> None:
         split_hint="test",
     )
 
-    # Conteo oficial del dataset (SCHEMA §5): si el compilador descartó filas
-    # (parse errors) o el archivo cambió, abortamos — nunca un parquet corto.
+    # Official dataset count (SCHEMA §5): whether the compiler discarded rows
+    # (parse errors) or the file changed, we abort — never a short parquet.
     for name, sts, expected in (
         ("training-set", tr_states, 175_341),
         ("testing-set", te_states, 82_332),
@@ -193,8 +193,8 @@ def materialize_unsw(force: bool) -> None:
     # val estratificado 85/15 DENTRO del training-set (SCHEMA §5).
     fams = np.asarray([s.label_family for s in tr_states])
     splits = _stratified_two_step(fams, first_test=0.15, seed=SEED)
-    # first_test=0.15 deja val+test juntos: renombramos 'test'→'val' — el test
-    # real es el testing-set oficial, nunca se toca aquí.
+    # first_test=0.15 leave val+test together: rename 'test'→'val' — the test
+    # real is the official testing-set, it is never touched here.
     splits = np.where(splits == "test", "val", splits)
 
     print(f"[3/3] escribiendo {out} ({len(tr_states) + len(te_states)} filas)…")
@@ -234,7 +234,7 @@ def materialize_unsw(force: bool) -> None:
 
 
 # ---------------------------------------------------------------------------
-# CIC-IDS2017 (MLCVE) — dos pasadas: labels para splits, luego stream de features
+# CIC-IDS2017 (MLCVE) — two passes: labels for splits, then stream of features
 # ---------------------------------------------------------------------------
 def _cic_files() -> list[Path]:
     d = DATA / "raw" / "cicids2017" / "canonical_mlcve"
@@ -248,7 +248,7 @@ def _cic_files() -> list[Path]:
 
 
 def _cic_families_pass1(files: list[Path]) -> list[str]:
-    """Pasada 1: familia canónica por fila (solo columna Label — rápido)."""
+    """Pass 1: canonical family per row (Label column only — quick)."""
     fams: list[str] = []
     for p in files:
         n0 = len(fams)
@@ -345,17 +345,17 @@ def materialize_cic(force: bool) -> None:
 
 
 # ---------------------------------------------------------------------------
-# EMBER2024 — pool de semanas; cada worker compila, escribe y limpia (S7)
+# EMBER2024 — pool of weeks; each worker compiles, writes and cleans (S7)
 # ---------------------------------------------------------------------------
 def _ember_weeks(raw_dir: Path) -> list[tuple[list[Path], str, int]]:
-    """(rutas, subset, week_idx) por semana — carve temporal S7 (SCHEMA §5):
-    train = semanas 0-45, val = 46-51 (últimas 6 del año), test = 52-63.
-    El challenge (evasivo) va aparte como parquet único (materialize_ember)."""
+    """(routes, subset, week_idx) per week — S7 temporary carve (SCHEMA §5):
+train = weeks 0-45, val = 46-51 (last 6 of the year), test = 52-63.
+The challenge (evasive) is separate as a single parquet (materialize_ember)."""
     train = sorted(raw_dir.glob("*_Win32_train.jsonl"))
     test = sorted(raw_dir.glob("*_Win32_test.jsonl"))
-    # S7 borra los jsonl al materializar: 0/0 es el estado NORMAL del resume
-    # (los parts mandan). Un conteo parcial sí es anomalía — la trampa real
-    # (part ausente + jsonl ausente) la pilla materialize_ember por semana.
+    # S7 deletes the jsonl when materializing: 0/0 is the NORMAL status of the resume
+    # (the parts rule). A partial count is an anomaly — the real trap
+    # (part missing + jsonl missing) materialize_ember catches per week.
     if (len(train), len(test)) not in ((0, 0), (52, 12)):
         raise SystemExit(
             f"[abort] EMBER: esperaba 52 train + 12 test jsonl en {raw_dir} "
@@ -367,13 +367,13 @@ def _ember_weeks(raw_dir: Path) -> list[tuple[list[Path], str, int]]:
 
 
 def _ember_week_task(args: tuple) -> tuple[str, str, int, int, dict]:
-    """Proceso hijo del pool: compila sus archivos → parquet → replace → unlink.
+    """Pool's child process: compile its files → parquet → replace → unlink.
 
-    La escritura vive AQUÍ a propósito: devolver 60K filas × 2568 float32 por
-    IPC son ~615 MB por semana (× workers = reventaba la RAM de 15 GB). Cada
-    worker lleva un ring-buffer de EMBER_BUFFER filas y escribe row-groups al
-    mismo ParquetWriter (~400 MB pico por proceso). Falla ANTES de os.replace
-    si el conteo no cuadra — nunca un part corto; el jsonl NO se borra (S7).
+The script lives HERE on purpose: return 60K rows × 2568 float32 by
+IPC is ~615 MB per week (× workers = bursting 15 GB RAM). Each
+worker carries a ring-buffer of EMBER_BUFFER rows and writes row-groups to
+same ParquetWriter (~400 MB peak per process). Failure BEFORE os.replace
+if the count doesn't add up - never a short part; the jsonl is NOT cleared (S7).
     """
     paths, subset, week_idx, out_str, delete_src, expected = args
     out = Path(out_str)
@@ -390,7 +390,7 @@ def _ember_week_task(args: tuple) -> tuple[str, str, int, int, dict]:
         if not meta:
             return
         n = len(meta)
-        # pa.array copia por defecto: el ring-buffer se reutiliza al volver
+        # pa.array default copy: ring-buffer is reused upon return
         writer.write_table(pa.Table.from_arrays([
             pa.FixedSizeListArray.from_arrays(
                 pa.array(buf[:n].reshape(-1)), EMBER_D_NUM),
@@ -421,7 +421,7 @@ def _ember_week_task(args: tuple) -> tuple[str, str, int, int, dict]:
             f"inspeccionar {tmp}"
         )
     writer.close()
-    os.replace(tmp, out)  # atómico: ningún part se ve a medio escribir
+    os.replace(tmp, out)  # atomic: no part is seen half written
     if delete_src:
         for path in paths:
             path.unlink()  # S7: jsonl re-descargable; challenge NUNCA (delete_src=False)
@@ -429,12 +429,12 @@ def _ember_week_task(args: tuple) -> tuple[str, str, int, int, dict]:
 
 
 def materialize_ember(force: bool) -> None:
-    """Materializa EMBER2024 Win32: 64 semanas → parts + challenge.parquet.
+    """Materialize EMBER2024 Win32: 64 weeks → parts + challenge.parquet.
 
-    Resume (S7): el part existente manda — si el jsonl sobrevivió (crash entre
-    replace y unlink) se completa el borrado; sin part y sin jsonl es abort
-    (la fuente es re-descargable con el bootstrap). Verificación global de
-    conteos por subset leyendo solo (subset, label_family) de los parquets.
+Resume (S7): existing part commands — if jsonl survived (crash between
+replace and unlink) the deletion is completed; without part and without jsonl it is abort
+(the source is re-downloadable with bootstrap). Global verification of
+counts by subset reading only (subset, label_family) from the parquets.
     """
     raw_dir = DATA / "raw" / "ember2024"
     out_dir = DATA / "processed" / "ember2024"
@@ -452,7 +452,7 @@ def materialize_ember(force: bool) -> None:
             )
         if have_src and out.exists() and not force:
             for p in paths:
-                p.unlink()  # crash entre replace y unlink: completar el borrado S7
+                p.unlink()  # crash between replace and unlink: complete S7 wipe
             print(f"  resume {out.name}: part completo → jsonl redundante eliminado")
         if not have_src or (out.exists() and not force):
             skipped += 1
@@ -495,8 +495,8 @@ def materialize_ember(force: bool) -> None:
             .group_by(["subset", "label_family"])
             .aggregate([([], "count_all")])
         )
-        # El nombre de la columna de conteo varía entre versiones de pyarrow
-        # ("subset_count" / "count_all" / …); tomamos la ÚLTIMA por posición.
+        # Count column name varies between versions of pyarrow
+        # ("subset_count" / "count_all" / …); we take the LAST by position.
         count_col = agg.column(agg.num_columns - 1)
         for s, fam, c in zip(
             agg.column("subset").to_pylist(),

@@ -1,15 +1,15 @@
-"""Runner de baselines tabulares (XGBoost, RF, MLP) sobre los MISMOS splits
-y el MISMO preprocesado que VX-One (build_run), con calibración §5.3.
+"""Runner of tabular baselines (XGBoost, RF, MLP) on the SAME splits
+and the SAME preprocessing as VX-One (build_run), with calibration §5.3.
 
-Uso:
-    python -I -m src.baselines.run_tabular --source unsw --out results/baselines
-    python -I -m src.baselines.run_tabular --source cic --scheme strat --out results/baselines
-    python -I -m src.baselines.run_tabular --source unsw --exclude-family worms ...
+Use:
+python -I -m src.baselines.run_tabular --source unsw --out results/baselines
+python -I -m src.baselines.run_tabular --source cic --scheme strat --out results/baselines
+python -I -m src.baselines.run_tabular --source unsw --exclude-family worms ...
 
-Salidas por corrida (results/baselines/<run_id>/):
-    xgboost.npz / rf.npz / mlp.npz   — probs crudas de test + labels
-    xgboost.json / rf.json / mlp.json — temperaturas val, tiempos, M_val
-Probs crudas + T ⇒ calibrated = f(raw, T) en eval (E1-E3 reportan ambos).
+Outputs per run (results/baselines/<run_id>/):
+xgboost.npz / rf.npz / mlp.npz — raw probs from test + labels
+xgboost.json / rf.json / mlp.json — val temperatures, times, M_val
+Raw probs + T ⇒ calibrated = f(raw, T) in eval (E1-E3 both report).
 """
 
 from __future__ import annotations
@@ -30,10 +30,10 @@ from .tabular import (_mlp_forward, _probs_to_logits, baseline_features,
 
 
 def _compact(y: np.ndarray, n_full: int) -> tuple[np.ndarray, np.ndarray] | None:
-    """Compacta clases de train a contiguas cuando el split deja huecos
-    (scheme time: clases que solo aparecen en val/test). XGBoost/RF exigen
-    targets [0..K-1]. Devuelve (y_compacto, ids originales); None si ya es
-    contiguo (caso común)."""
+    """Compact adjacent train classes when the split leaves gaps
+(scheme time: classes that only appear in val/test). XGBoost/RF require
+targets [0..K-1]. returns (y_compact, originalids); None if it is already
+contiguous (common case)."""
     present = np.unique(y)
     if np.array_equal(present, np.arange(int(y.max()) + 1)):
         return None
@@ -43,7 +43,7 @@ def _compact(y: np.ndarray, n_full: int) -> tuple[np.ndarray, np.ndarray] | None
 
 
 def _scatter(p: np.ndarray, cols: np.ndarray, n_full: int) -> np.ndarray:
-    """Probs compactas → matriz [N, n_full] en las columnas originales."""
+    """Compact Probs → matrix [N, n_full] in the original columns."""
     if len(cols) == n_full:
         return p
     out = np.zeros((p.shape[0], n_full), dtype=p.dtype)
@@ -52,8 +52,8 @@ def _scatter(p: np.ndarray, cols: np.ndarray, n_full: int) -> np.ndarray:
 
 
 def _remap_val(y_va: np.ndarray, cols: np.ndarray, n_full: int) -> np.ndarray:
-    """y de val/test a espacio compacto; clases ausentes de train → -1
-    (excluidas de f1/CE igual que las sin familia)."""
+    """and from val/test to compact space; absent classes from train → -1
+(excluded from f1/CE just like those without family)."""
     if len(cols) == n_full:
         return y_va
     remap = np.full(n_full, -1, dtype=np.int64)
@@ -63,11 +63,11 @@ def _remap_val(y_va: np.ndarray, cols: np.ndarray, n_full: int) -> np.ndarray:
 
 
 def _collect_split(run, split: str, split_labels) -> dict[str, np.ndarray]:
-    """Features + labels de un split en formato baselines."""
+    """Features + labels of a split in baselines format."""
     x = {"train": run.train, "val": run.val, "test": run.test}[split].numpy()
     txt = {"train": run.train_txt, "val": run.val_txt, "test": run.test_txt}[split]
-    # one-hot necesita las listas crudas, no los ids: re-encode desde vocab
-    # (los tensores *_txt ya son ids; los one-hoteamos directo)
+    # one-hot needs the raw lists, not the ids: re-encode from vocab
+    # (the *_txt tensors are already ids; we one-hot them directly)
     blocks = [x.astype(np.float32)]
     if txt and run.vocab:
         for k, vocab in run.vocab.items():
@@ -89,9 +89,9 @@ def _collect_split(run, split: str, split_labels) -> dict[str, np.ndarray]:
 
 
 def _collect_ember(run, bs: int = 32768) -> tuple[dict, dict, dict]:
-    """EMBER: materializa u+labels desde los shards (RunData no materializa
-    splits; el batcher yield-ea (u, y_fam, y_bin) ya transformados por φ —
-    mismos inputs que el motor, sin one-hot textual)."""
+    """EMBER: materializes u+labels from shards (RunData does not materialize
+splits; the batcher yield-ea (u, y_fam, y_bin) already transformed by φ —
+same inputs as the engine, without one-hot textual)."""
     from ..models.data import EmberBatcher
     b = EmberBatcher(run)
     out = {}
@@ -172,8 +172,8 @@ def run_baselines(source: str, scheme: str, out_dir: Path,
     out = out_dir / run_id
     out.mkdir(parents=True, exist_ok=True)
 
-    # EMBER no materializa splits (streaming por shards; el marcador es
-    # torch.empty(0), NO None): colección aparte vía EmberBatcher
+    # EMBER does not materialize splits (streaming through shards; the marker is
+    # torch.empty(0), NO None): separate collection via EmberBatcher
     if run.ember_train_shards is not None:
         tr, va, te = _collect_ember(run)
     else:
@@ -185,14 +185,14 @@ def run_baselines(source: str, scheme: str, out_dir: Path,
     omega = run.omega.numpy()
     omega_ddos = run.omega_ddos.numpy() if run.omega_ddos is not None else None
 
-    # calibración necesita las PROBS de val por modelo + labels comunes
+    # calibration needs val PROBS per model + common labels
     def val_dict(p: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
         d = dict(p)
         d.update(y_bin=va["y_bin"], y_fam=va["y_fam"], fam_mask=va["fam_mask"],
                  y_sev=va["y_sev"])
         if "p_ddos" in d:
-            # p_ddos viaja full-length; recortar a las filas de la máscara
-            # ANTES de calibrar (gather tolera desalineados en silencio)
+            # p_ddos travels full-length; trim to mask rows
+            # BEFORE calibrating (gather tolerates misalignments silently)
             d["p_ddos"] = d["p_ddos"][va["ddos_mask"]]
             d["y_ddos"] = va["y_ddos"]
         return d
@@ -224,8 +224,8 @@ def run_baselines(source: str, scheme: str, out_dir: Path,
     has_score = run.heads.has_score
     ddos = run.ddos_candidates is not None
 
-    # compactación de clases UNA vez (scheme time: huecos en train) +
-    # filas de choice = solo con familia (EMBER tiene y_fam=-1 en train)
+    # compaction of classes ONE time (scheme time: gaps in train) +
+    # choice rows = only with family (EMBER has y_fam=-1 in train)
     n_full = len(run.candidates)
     fm_tr = tr["fam_mask"]
     y_ch_tr = tr["y_fam"][fm_tr]
@@ -242,15 +242,15 @@ def run_baselines(source: str, scheme: str, out_dir: Path,
         comp_d = _compact(tr["y_ddos"], len(run.ddos_candidates))
         y_d_fit, cols_d = comp_d if comp_d else (tr["y_ddos"],
                                                  np.arange(len(run.ddos_candidates)))
-    # clases de val ausentes en train → fuera de la calibración
+    # val classes absent in train → out of calibration
     fam_keep = np.isin(va["y_fam"], cols_c) if len(cols_c) != n_full else None
     sev_keep = (np.isin(va["y_sev"], cols_s)
                 if has_score and len(cols_s) != 4 else None)
 
     if "xgboost" in models or "rf" in models:
-        w_ch = omega[y_ch_tr]  # ω por fila sobre las filas con familia
+        w_ch = omega[y_ch_tr]  # ω per row over the rows with family
         w_ch = w_ch * (len(w_ch) / w_ch.sum())
-        w_sc = None  # score sin pesos (simétrico con CORN, D3)
+        w_sc = None  # score without weights (symmetric with CORN, D3)
         ch_rows = fm_tr if not bool(fm_tr.all()) else None
         specs = {"noul": (tr["y_bin"], None, None, 2, None),
                  "choice": (y_ch_fit, w_ch, cols_c, n_full, ch_rows)}
@@ -295,7 +295,7 @@ def run_baselines(source: str, scheme: str, out_dir: Path,
 
     if "mlp" in models:
         t0 = time.time()
-        om_c = omega[cols_c]  # ω acotada a las clases presentes
+        om_c = omega[cols_c]  # ω bounded to the present classes
         yf_va_c = _remap_val(va["y_fam"], cols_c, n_full)
         net = train_mlp(tr["x"], tr["y_bin"], y_mlp_fit, om_c,
                         tr["y_sev"], va["x"], va["y_bin"], yf_va_c,

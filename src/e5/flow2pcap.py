@@ -1,19 +1,19 @@
-"""E5 v0.1 (§4.4): parquet enhanced → pcap sintético para Suricata.
+"""E5 v0.1 (§4.4): enhanced parquet → synthetic pcap for Suricata.
 
-El C++ de VectrayX F1 no existe; Fase 1 es Suricata 7 + ET Open, que
-procesa pcap (no flujos). Reconstrucción documentada, cota inferior:
-- Cabeceras REALES del enhanced: 5-tupla, timestamp de inicio, flags TCP
-  agregados del flujo, tamaños de paquete de los stats del flujo.
-- SIN payload: las reglas ET de contenido (payload match) no disparan —
-  cota inferior de Fase 1 documentada (el paper reporta las métricas de
-  cascada estructural: matching 5-tupla, zona gris, latencia E2E).
-- TCP: SYN → SYN/ACK → ACK + un paquete data por dirección con los flags
-  agregados; cierre FIN/RST si el flujo los registra. UDP: un paquete por
-  dirección. Los IAT reales del flujo no se reproducen (solo el orden).
-- Pcap por día con timestamps reales ordenados (Suricata exige orden).
+VectrayX F1 C++ does not exist; Phase 1 is Suricata 7 + ET Open, which
+processes pcap (not streams). Documented reconstruction, lower level:
+- REAL enhanced headers: 5-tuple, start timestamp, TCP flags
+flow aggregates, flow stats packet sizes.
+- NO payload: ET content rules (payload match) do not fire —
+documented Phase 1 lower bound (the paper reports the metrics of
+structural cascade: 5-tuple matching, gray zone, E2E latency).
+- TCP: SYN → SYN/ACK → ACK + one data packet per direction with the flags
+aggregates; close FIN/RST if the flow registers them. UDP: one packet per
+address. The actual IATs in the stream are not played (only the order).
+- Pcap per day with ordered real timestamps (Meerkat demands order).
 
-Uso:
-    python -m src.e5.flow2pcap --day 2017-07-05 --out pcaps_e5
+Use:
+python -m src.e5.flow2pcap --day 2017-07-05 --out pcaps_e5
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ import pyarrow.parquet as pq
 from scapy.all import IP, TCP, UDP, Ether, PcapWriter, Raw
 
 ENHANCED = Path("data/raw/cicids2017/enhanced_flows/CICIDS_Flow.parquet")
-# 2 formatos documentados en S1: 03/07/2017 08:55:58 y 5/7/2017 2:59
+# 2 formats documented in S1: 07/03/2017 08:55:58 and 7/5/2017 2:59
 _DAYS = {"2017-07-03": "3/7/2017", "2017-07-04": "4/7/2017",
          "2017-07-05": "5/7/2017", "2017-07-06": "6/7/2017",
          "2017-07-07": "7/7/2017"}
@@ -43,13 +43,13 @@ _COLS = ["flow_id", "source_ip", "source_port", "destination_ip",
 
 
 def _norm_day(s: str) -> str:
-    """'03/07/2017' y '3/7/2017' → '3/7/2017' (día y mes sin cero)."""
+    """'07/03/2017' and '7/3/2017' → '7/3/2017' (day and month without zero)."""
     d, m, y = s.split("/")
     return f"{int(d)}/{int(m)}/{y}"
 
 
 def build_day_pcap(day: str, out_dir: Path) -> tuple[Path, int, int]:
-    """Pcap de UN día. Devuelve (path, paquetes, flujos)."""
+    """Pcap of ONE day. Returns (path, packets, streams)."""
     tbl = pq.read_table(ENHANCED, columns=_COLS)
     ts = tbl.column("Timestamp").to_numpy(zero_copy_only=False).astype(str)
     want = _DAYS[day]
@@ -101,9 +101,9 @@ def build_day_pcap(day: str, out_dir: Path) -> tuple[Path, int, int]:
         pk = Ether() / IP(src=ip_s[i], dst=ip_d[i]) / l4
         if pay:
             pk = pk / Raw(pay)
-        # IP.len lo calcula scapy al serializar — fijarlo a mano (el tamaño
-        # de frame de las stats) mintía en 14 bytes y Suricata descartaba
-        # todos los paquetes como truncados (corridas 1-3: 0 flujos)
+        # IP.len is calculated by scapy when serializing — set it by hand (the size
+        # frame of the stats) lied in 14 bytes and Suricata discarded
+        # all packets as truncated (runs 1-3: 0 flows)
         pk.time = max(0.0, t)  # EPOCH float; PcapWriter.write usa pkt.time
         w.write(pk)
         n_pk += 1

@@ -1,17 +1,17 @@
-"""VXOneNet (spec F2 §2): proyección + embeddings de texto + tronco + cabezas.
+"""VXOneNet (spec F2 §2): projection + text embeddings + trunk + heads.
 
-Estructura por bloque: Linear → LayerNorm → GELU → Dropout(0.1); bloque 1
-mapea R^{d_in} → R^w, bloques 2..L son w→w con residual h_b = h_{b-1} +
-bloque_b(h_{b-1}). LayerNorm (no BatchNorm): streaming por shards, batch-1 en
-inferencia y drift temporal (F2 §2.1).
+Block structure: Linear → LayerNorm → GELU → Dropout(0.1); block 1
+maps R^{d_in} → R^w, blocks 2..L are w→w with residual h_b = h_{b-1} +
+block_b(h_{b-1}). LayerNorm (not BatchNorm): streaming over shards, batch-1 in
+inference and temporal drift (F2 §2.1).
 
-Cabezas por dataset (F2 §3.1):
-- UNSW: noul(1) + choice_family(10) + corn(3 condicionales)
-- CIC:  noul(1) + choice_family(8|6) + corn + choice_ddos(4)   [solo strat]
-- EMBER: noul(1) + choice_family(11, unknown entrenado)
+Heads per dataset (F2 §3.1):
+- UNSW: noul(1) + choice_family(10) + corn(3 conditionals)
+- CIC: noul(1) + choice_family(8|6) + corn + choice_ddos(4) [strat only]
+- EMBER: noul(1) + choice_family(11, unknown trained)
 
-Dims congeladas (§2.2) y conteo de parámetros verificado (§2.3): los tests
-comparan contra la tabla exacta de la spec.
+Frozen dims (§2.2) and verified parameter count (§2.3): the tests
+They compare against the exact table of the spec.
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ from dataclasses import dataclass
 import torch
 from torch import nn
 
-# ── Dims congeladas por escala (F2 §2.2) ────────────────────────────────
+# ── Frozen dims by scale (F2 §2.2) ────────────────────────────────
 SCALES: dict[str, dict[str, int]] = {
     "nano": {"L": 2, "w_unsw": 224, "w_cic": 224, "w_ember": 192,
              "d0_unsw": 112, "d0_cic": 112, "d0_ember": 20, "e": 16},
@@ -36,10 +36,10 @@ DROPOUT = 0.1
 
 @dataclass(frozen=True)
 class HeadSpec:
-    """Cabezas activas de una corrida (nombres congelados)."""
+    """Active heads of a bullfight (frozen names)."""
     n_candidates: int          # choice_family (K)
     ddos_candidates: int = 0   # 0 = head ddos ausente
-    has_score: bool = True     # False en EMBER (S6)
+    has_score: bool = True     # False in EMBER (S6)
 
     @property
     def names(self) -> tuple[str, ...]:
@@ -53,9 +53,9 @@ class HeadSpec:
 
 def head_spec_for(source: str, scale: str, split_scheme: str,
                   n_candidates: int) -> HeadSpec:
-    """Candidate set por corrida (D12): familias con ≥1 fila en train.
+    """Candidate set per run (D12): families with ≥1 row in train.
 
-    La verificación de n_candidates ocurre en data.py; aquí solo se tipa.
+Verification of n_candidates occurs in data.py; here it is only typed.
     """
     if source == "unsw":
         return HeadSpec(n_candidates=n_candidates)
@@ -81,15 +81,15 @@ class _Block(nn.Module):
 
 
 class VXOneNet(nn.Module):
-    """Motor VX-One v0.1. d_num incluye el flag de fila (d+1 ya aplicado
-    por el feature stage: la entrada de P0 es [u ; r] ∈ R^{d+1})."""
+    """VX-One Engine v0.1. d_num includes the row flag (d+1 already applied
+by the feature stage: the input of P0 is [u ; r] ∈ R^{d+1})."""
 
     def __init__(
         self,
         source: str,
         scale: str,
         heads: HeadSpec,
-        d_num: int,               # d canónico (sin flag); P0 entra con d+1
+        d_num: int,               # d canonical (no flag); P0 enters with d+1
         vocab_sizes: dict[str, int] | None = None,  # {campo: V+2} (solo UNSW)
     ) -> None:
         super().__init__()
@@ -107,14 +107,14 @@ class VXOneNet(nn.Module):
         self.vocab_sizes = vocab_sizes or {}
         m = len(self.vocab_sizes)
 
-        # P0: Linear((d+1) → d0) — el +1 es el flag de fila (§2.3)
+        # P0: Linear((d+1) → d0) — the +1 is the row flag (§2.3)
         self.proj = nn.Linear(d_num + 1, d0)
-        # Embeddings lookup: una tabla por campo, (V+2) × e
+        # Embeddings lookup: one table per field, (V+2) × e
         self.emb = nn.ModuleDict(
             {f: nn.Embedding(vs, e) for f, vs in self.vocab_sizes.items()}
         )
         d_in = d0 + m * e
-        # Tronco: bloque 1 d_in→w, bloques 2..L w→w con residual
+        # Trunk: block 1 d_in→w, blocks 2..L w→w with residual
         self.blocks = nn.ModuleList([_Block(d_in, w)] + [_Block(w, w) for _ in range(L - 1)])
 
         # Cabezas (§2.3): Noul w+1; Choice wK+K; CORN w+3; ddos 4w+4
@@ -154,6 +154,6 @@ class VXOneNet(nn.Module):
             out["ddos"] = self.ddos(h)                 # logits [B, 4]
         return out
 
-    # ── conteo de parámetros (contrato §2.3; Apéndice B) ─────────────
+    # ── parameter count (contract §2.3; Appendix B) ─────────────
     def n_parameters(self) -> int:
         return sum(p.numel() for p in self.parameters())

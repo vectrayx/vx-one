@@ -1,15 +1,15 @@
-"""E4 — latencia de decisión (§7 del spec): batch-1 en CPU con 1 hilo.
+"""E4 — decision latency (§7 of the spec): batch-1 on CPU with 1 thread.
 
-Protocolo: el triage perimetral decide EN LÍNEA (batch 1, flujo a flujo), así
-que la métrica es p50/p95/p99 de la ruta COMPLETA de inferencia —
-φ (feature stage) + forward del tronco + cabezas + de-tilt/gates — sin
-contar la carga del parquet. Se mide en el CPU local (peor caso absoluto, sin
-GPU) y, opcionalmente, en Modal L4 para el punto GPU. La primera medición se
-descarta (warmup de allocator/JIT).
+Protocol: perimeter triage decides ONLINE (batch 1, flow by flow), thus
+that the metric is p50/p95/p99 of the FULL inference path —
+φ (feature stage) + trunk forward + heads + de-tilt/gates — without
+count the load of the parquet. It is measured in the local CPU (absolute worst case, without
+GPU) and optionally in Modal L4 for the GPU point. The first measurement is
+discard (allocator/JIT warmup).
 
-Uso:
-    python -m src.eval.run_e4 --artifact results/artifacts/unsw_small_oficial.pt \
-        --n 2000 --out results/e4/
+Use:
+python -m src.eval.run_e4 --artifact results/artifacts/unsw_small_oficial.pt \
+--n 2000 --out results/e4/
 """
 
 from __future__ import annotations
@@ -33,10 +33,10 @@ def bench_engine(artifact: Path, n: int) -> dict:
     eng = VXOneEngine(str(artifact))
     d_num = eng.ckpt["config"]["d_num"]
     rng = np.random.default_rng(42)
-    # features en la escala que φ produce (post-clip ±8): lo que entra al net
+    # features on the scale that φ produces (post-clip ±8): what enters the net
     x = rng.normal(0.0, 1.5, size=(1, d_num)).astype(np.float32)
-    # x_txt de predict_batch es texto CRUDO (el motor encodea); None → UNK,
-    # misma ruta de cómputo que una fila real
+    # x_txt of predict_batch is RAW text (engine encodes); None → UNK,
+    # same compute path as a real row
     x_txt = {k: [None] for k in (eng.vocab or {})}
 
     # warmup (se descarta)

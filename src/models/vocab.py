@@ -1,8 +1,8 @@
-"""Vocabulario de x_txt (spec F2 §4.2): embedding lookup con slots reservados.
+"""x_txt vocabulary (spec F2 §4.2): embedding lookup with reserved slots.
 
-Slots: `<miss>`=0 (campo ausente/None), `<unk>`=1 (valor fuera del vocab de
-train). Vocabulario = valores distinctos de train, normalizados
-casefold+strip. Los vocabularios son cerrados y diminutos (≤135): lookup, no
+Slots: `<miss>`=0 (absent field/None), `<unk>`=1 (value outside the word
+train). Vocabulary = distinct values ​​of train, normalized
+casefold+strip. The vocabularies are closed and tiny (≤135): lookup, no
 hashing (F2 D7).
 """
 
@@ -30,7 +30,7 @@ class TextVocab:
 
     @property
     def size(self) -> int:
-        """Tamaño de tabla: V + 2 slots reservados."""
+        """Table size: V + 2 reserved slots."""
         return len(self.token_to_slot) + 2
 
     def encode(self, values: list[str | None]) -> list[int]:

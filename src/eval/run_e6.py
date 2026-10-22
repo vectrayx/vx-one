@@ -1,20 +1,20 @@
-"""E6 — ablations (spec F2 §7, a Small; A3/A4/A5 en los 3 datasets).
+"""E6 — ablations (spec F2 §7, a Small; A3/A4/A5 in the 3 datasets).
 
-Los ablations re-ENTRENAN variantes del motor con un solo cambio cada una:
-A1 sin rama textual (embeddings a cero; solo UNSW, la única con texto)
-A2 sin multi-task (single-head, presupuesto total igual)          [pendiente]
-A3 sin calibración (T=1; las métricas threshold-free no cambian — se
-   verifica — y E3 muestra la degradación de la semántica absoluta)
-A4 pesos uniformes ω≡1 (sin de-tilt: el posterior hereda el tilt del train)
-A5 unknown off (EMBER: 10-way sin unknown; UNSW/CIC: τ_abs→1, sin abstención)
-A6 dropout 0 (regularización)
+The ablations re-TRAIN engine variants with a single change each:
+A1 without textual branch (embeddings to zero; only UNSW, the only one with text)
+A2 without multi-task (single-head, total budget equal) [pending]
+A3 without calibration (T=1; threshold-free metrics do not change — they are
+verifies — and E3 shows absolute semantics degradation)
+A4 uniform weights ω≡1 (without de-tilt: the posterior inherits the tilt of the train)
+A5 unknown off (EMBER: 10-way without unknown; UNSW/CIC: τ_abs→1, no abstention)
+A6 dropout 0 (regularization)
 
-Cada ablation produce el MISMO artefacto/npz que una corrida normal, así que
-el evaluador E1-E3 estándar sirve para comparar contra la corrida completa.
+Each ablation produces the SAME artifact/npz as a normal run, so
+The standard E1-E3 evaluator is used to compare against the entire run.
 
-Uso:
-    modal run modal/app.py::ablation --kind a3 --source unsw   (en Modal)
-    python -m src.eval.run_e6 --vx results/outputs-abl          (eval local)
+Use:
+modal run modal/app.py::ablation --kind a3 --source unsw (in Modal)
+python -m src.eval.run_e6 --vx results/outputs-abl (local eval)
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ ABLATIONS = {
 
 
 def compare(run_dir: Path, baseline_dir: Path = Path("results/outputs")) -> dict:
-    """Tabla ablation vs corrida completa (Small) por dataset."""
+    """Table ablation vs complete run (Small) per dataset."""
     out: dict = {}
     for npz in sorted(run_dir.glob("*.npz")):
         stem = npz.stem

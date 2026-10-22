@@ -1,15 +1,15 @@
-"""E5: parcheador in-place de pcaps flow2pcap — repara ip.len.
+"""E5: in-place pcaps patcher flow2pcap — fix ip.len.
 
-Los pcaps generados con `pk[IP].len = ln` (tamaño de frame de las stats
-del flujo) declaran 14 bytes de más que el IP real → Suricata descarta
-todos los paquetes como truncados. Fix: reescribir el campo IP total
-length (offset 16-17 del frame, big-endian) = caplen − 14 (el payload ya
-está completo en el frame; el frame ES la longitud real). Checksums IP/TCP
-quedan de la longitud vieja — irrelevante, la corrida va con
-checksum-checks=no (pcap sintético, documentado).
+The pcaps generated with `pk[IP].len = ln` (stats frame size
+of the flow) declare 14 bytes more than the real IP → Suricata discards
+all packets as truncated. Fix: rewrite total IP field
+length (frame offset 16-17, big-endian) = caplen − 14 (the payload is already
+is complete in the frame; the frame IS the actual length). IP/TCP Checksums
+remain of the old length — irrelevant, the run goes with
+checksum-checks=no (synthetic pcap, documented).
 
-Uso:
-    .venv/bin/python -m src.e5.patch_iplen pcaps_e5/e5_2017-07-06.pcap [...]
+Use:
+.venv/bin/python -m src.e5.patch_iplen pcaps_e5/e5_2017-07-06.pcap [...]
 """
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ REC = 16   # record header
 
 
 def patch(path: str) -> tuple[int, int]:
-    """Reescribe ip.len por paquete. Devuelve (paquetes, bytes_parcheados)."""
+    """Rewrites ip.len per packet. Returns (packets, patched_bytes)."""
     buf = bytearray(Path(path).read_bytes())
     off = HDR
     n = 0

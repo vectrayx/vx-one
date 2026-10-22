@@ -1,16 +1,16 @@
-"""Calibración por temperatura (spec F2 §5): 1 escalar por cabeza, fitted
-en val (nunca test), criterio NLL (proper scoring rule; el ECE se reporta
-pero no participa en la selección).
+"""Temperature calibration (spec F2 §5): 1 scalar per head, fitted
+in val (never test), NLL criterion (proper scoring rule; the ECE is reported
+but does not participate in the selection).
 
-Búsqueda determinista: grid log-uniforme de 200 puntos en [0.05, 20] +
-refinamiento por sección dorada en el mejor intervalo hasta tolerancia
-relativa 1e-3.
+Deterministic search: log-uniform grid of 200 points in [0.05, 20] +
+refinement by golden section in the best range up to tolerance
+relative 1e-3.
 
-- Noul: NLL de σ(z/T) contra y binaria.
-- Choice: de-tilt z − log ω PRIMERO (parte del contrato, Prop. 2), luego
-  NLL de softmax(z'/T) contra la clase verdadera.
-- Score CORN: un único T escala los tres logits condicionales y la pmf se
-  recompone; NLL de π^(T) en el nivel verdadero.
+- Noul: NLL of σ(z/T) against and binary.
+- Choice: de-tilt z − log ω FIRST (part of contract, Prop. 2), then
+NLL of softmax(z'/T) against the true class.
+- Score CORN: a single T scales the three conditional logits and the pmf is
+recomposes; NLL of π^(T) at the true level.
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ def _nll_multiclass(z_detailed: torch.Tensor, y: torch.Tensor, T: float) -> floa
 
 
 def _golden_minimize(f, lo: float, hi: float) -> float:
-    """Sección dorada sobre [lo, hi] hasta tolerancia relativa 1e-3."""
+    """Golden section over [lo, hi] up to relative tolerance 1e-3."""
     a, b = lo, hi
     c = b - _PHI * (b - a)
     d = a + _PHI * (b - a)
@@ -55,7 +55,7 @@ def _golden_minimize(f, lo: float, hi: float) -> float:
 
 
 def fit_temperature_scalar(f_nll) -> float:
-    """Grid log-uniforme 200 puntos en [GRID_LO, GRID_HI] + sección dorada."""
+    """Grid log-uniform 200 points in [GRID_LO, GRID_HI] + gold section."""
     grid = np.logspace(np.log10(GRID_LO), np.log10(GRID_HI), GRID_N)
     vals = np.array([f_nll(float(T)) for T in grid])
     i = int(np.argmin(vals))
@@ -70,13 +70,13 @@ def fit_noul_temperature(logits: torch.Tensor, y: torch.Tensor) -> float:
 
 def fit_choice_temperature(logits: torch.Tensor, y: torch.Tensor,
                            omega: torch.Tensor) -> float:
-    """De-tilt analítico ANTES de la búsqueda de T (orden importa, §5.2)."""
+    """Analytical de-tilt BEFORE searching for T (order matters, §5.2)."""
     z_tilted = logits - torch.log(omega).unsqueeze(0)
     return fit_temperature_scalar(lambda T: _nll_multiclass(z_tilted, y, T))
 
 
 def fit_corn_temperature(corn_logits: torch.Tensor, y_sev: torch.Tensor) -> float:
-    """T común sobre las 3 condicionales; NLL de la pmf recompuesta."""
+    """Common T over the 3 conditionals; NLL of the recomposed pmf."""
     def f(T: float) -> float:
         from .losses import corn_pmf
         _, pi = corn_pmf(corn_logits / T)
