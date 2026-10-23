@@ -701,3 +701,348 @@ El paper (`paper/main.tex`) incorpora el advisory `docs/reference/VX_One_F2_Advi
   dominio-clf en SGD streaming float32 con preallocazione, pool de
   pyarrow en modo `system_memory_pool()` y `ulimit -v 12GB` siempre que
   un script toque features 2568-dim × cientos de miles de filas.
+
+## 14. E8b — Label shift explícito bajo drift (2026-10-22, ítem 6 del informe externo)
+
+Motivación: la caída de calibración del día 2 (PortScan del viernes) — ¿es
+"falta corregir el prior" (label shift) o es techo de discriminación?
+Script: `scripts/e8_labelshift.py` (solo logits ya computados; CPU segundos).
+Protocolo: mapas base (temperature/Platt/isotonic) ajustados SOLO con labels
+del día 1 (retrasados, despliegue honesto) → estimadores del prior del día 2
+(BBSE-hard, BBSE-soft, EM/Saerens) → corrección de prior preservando el
+ranking (odds-reweighting). Dato: q1=0.5573 (DDos), q2_true=0.5548
+(PortScan, prevalence ALTA — nota: el informe que la creía baja se equivoca).
+
+Resultados (`results/e8_recal/e8_labelshift.json/.md`):
+- Estimadores FALLAN: q̂2 ∈ {0.000–0.041} vs q2=0.5548 para TODOS los mapas
+  y TODOS los estimadores. Un modelo confidente-eqivocado no deja señal
+  legible por ningún estimador estándar (BBSE/EM).
+- Cota oracle-prior: constante en el prior verdadero = ECE 0.0000,
+  Brier 0.2470=q(1−q). ⚠️ CORRECCIÓN del apéndice E8 del paper: el "mapa
+  constante cerca del prior en 0.445" del binfit NO es en el prior sino en
+  la media del score crudo (p.mean()≈0.001); la narrativa del plateau 0.445
+  se reescribe (constante en el prior y perfectamente calibrada existe;
+  lo no resoluble sin labels es el prior del día nuevo y el ranking).
+- Con q̂ equivocado la corrección preservando ranking mueve ECE ≤0.01.
+
+Conclusion: la restricción vinculante es prior estimabilidad + discriminación,
+NO la familia de mapas. Añade la defensa del protocolo E9 (delays labels) y
+del abstention semantics.
+
+## 15. E5c — Phase-2 por-día (honesto) para la cascada (2026-10-22, falla crítica 1 del informe)
+
+La cascada del paper (tab:e5) estima Fase 2 con el artefacto STRATIFICADO
+(cic_small_strat): in-distribución POR FAMILIA (el train contiene filas de
+todas las familias). Re-estimación con el artefacto POR-DÍA
+(cic_small_time.npz; te=viernes en orden de captura; train no vio las
+familias del viernes): `scripts/e5_phase2_byday.py` →
+
+| día | F1 R | F2(byday) acc | comb(byday) P/R | comb(strat) P/R |
+|---|---|---|---|---|
+| 2017-07-06 | 0.0135 | 0.0 (sin filas test por-día: jueves ∈ train del split time) | 0.0586/0.0135 | 0.552/0.9779 |
+| 2017-07-07 | 0.0001 | 0.143 | **0.9707/0.3394** | 0.998/0.9958 |
+
+Por familia en Friday (byday): dos_ddos recall 0.7654; recon/PortScan NO
+existe como candidato en el modelo por-día (D12 lo retira del train al no
+haber ejemplos) → zona gris de PortScan = 0 recuperación. Combined honesto
+en el día de onda: R 0.34 vs 0.996 (strat). El "plateau de recuperación de
+la zona gris" del paper queda anclado como cota SUPERIOR con Fase-2
+family-covered; el motor por día solo recupera DoS/DDoS. Mon–Thu por-día no
+computable con los artefactos actuales (esos días están en el train del
+split time) — se declara en el paper/caption.
+
+## 16. E2d — LOAO baselines + OOD (2026-10-22, ítem 2 del informe) 🔄 en curso
+
+Protocolo idéntico a E1 baselines (`src/baselines/run_tabular.py`, mismos
+splits, misma φ, temperaturas val) por fold LOAO con exclude-family, con lo
+que el "clasificador binario entrenado con el resto de familias" y los
+árboles multi-clase NO son strawman:
+- UNSW (9 folds × xgboost/rf/mlp + logreg + Mahalanobis-LedoitWolf):
+  `results/baselines_loao/unsw_oficial_loao_*` + `unsw_small_oficial_loao_*` (OOD),
+  evaluador `scripts/e2_loao_baselines_eval.py` → `results/e2_baselines/`.
+- CIC (7 folds × igual, cpu=32/132GB en Modal cuenta 2): en curso.
+Los primeros folds UNSW ya muestran: xgboost gate AUROC 0.977–0.998 (peor que
+VX 0.99–1.0 en los mismos folds), FPR@95 ~0.03–0.28 (mucho peor que VX en
+analysis), y la tolerancia de compromiso de abstención de los árboles es
+distinta (falseAtt@0.5 0.19–0.68 vs atribución honesta de VX con unknown).
+
+### 16b. Resultado final E2d (2026-10-22, completo: 9 UNSW + 7 CIC folds, árboles + OOD)
+
+`results/e2_baselines/e2_loao_baselines_{unsw,cic}.{json,md}` — medianas por fold:
+
+| modelo | UNSW AUROC (med) | UNSW FPR@95 med | CIC AUROC (med) | CIC FPR@95 med |
+|---|---|---|---|---|
+| xgboost | 0.855–0.998 (0.974) | 0.149 | 0.826–0.999 (0.976) | 0.101 |
+| rf | 0.870–0.990 (0.962) | 0.151 | 0.505–0.995 (0.854) | 0.730 |
+| mlp | 0.860–0.998 (0.991) | 0.047 | 0.027–0.963 (0.607) | 0.898 |
+| logreg | 0.780–0.956 (0.930) | 0.263 | 0.163–0.765 (0.560) | 0.864 |
+| mahalanobis | 0.653–0.870 (0.832) | 0.517 | 0.003–0.573 (0.230) | 0.988 |
+
+Lectura (doble sentido, ya integrada al paper §e2):
+- UNSW: la gate tipada de VX lidera 9/9 folds (baseline med 0.93–0.99 vs VX
+  ≥0.95–1.0); la sospecha del informe queda refutada ahí.
+- CIC estratificado: la sospecha se CONFIRMA en los folds débiles — XGBoost
+  transfiere mejor que la gate de VX justo donde VX degrada (botnet 0.905
+  vs 0.750; recon 0.830 vs 0.426); los OOD clásicos colapsan (logreg 0.16–0.77,
+  Mahalanobis 0.00–0.57). Y los árboles reproducen la patología de
+  saturación: abstención @τ=0.5 ≈ 0 en CIC con absorción a normal.
+- En UNSW la frontera max-prob de RF es real (abst 0.80 / falseAtt 0.14 med)
+  pero es abstención por baja confianza, no declaración de clase nueva.
+
+## 17. E5d — Fase 1 con payload REAL (pcaps originales) ✅ (2026-10-22, ítem 1 del informe)
+
+Motivación: la falla crítica 1 del informe (¿la zona gris es artefacto de la
+reconstrucción sin payload?). Descarga de los 5 pcaps originales de
+CICIDS2017 (cicresearch.ca, md5 verificados contra los .md5 oficiales;
+Monday 10.8GB, Tuesday 11.0GB, Wednesday ~14GB?, Thursday 8.3GB, Friday 8.8GB)
+en Modal cuenta 2 (vol paper-data→/vol/e5_original/pcaps) + Suricata
+7.0.10 con el MISMO motor/ruleset (52,706 ET Open + 8 estructurales;
+el paper referenciaba 52,674 — drift diario del ruleset, declarado).
+eve → `results/e5_original/eve_original_*.json.gz` (los consolidados de
+cicresearch traen la semana completa; filtrado por fecha).
+
+Matching: NO por ventana temporal (los Timestamp del enhanced están
+re-computados; desfase no constante ±10min..+10h, modos medidos) sino por
+**5-tupla del día** (bidireccional; el reuso de puertos efímeros sesga
+"benign flagged" hacia arriba, declarado). Script `scripts/e5_original_match.py`.
+
+| día | alertas día | attack resolved | benign flagged | P | R |
+|---|---|---|---|---|---|
+| 2017-07-03 | 9,425 | 0.0 (solo benigno) | 0.0478 | — | — |
+| 2017-07-04 | 2,644 | 0.0205 | 0.0238 | 0.0269 | 0.0205 |
+| 2017-07-05 | 2,799 | 0.0219 | 0.0236 | 0.3463 | 0.0219 |
+| 2017-07-06 | 26,652 | 0.0208 | 0.0222 | 0.0045 | 0.0208 |
+| 2017-07-07 | 2,745/12,170 | **0.0023** | 0.0215 | 0.0702 | 0.0023 |
+
+Por familia: bruteforce 2.05%, dos_ddos(DoS) 2.18%, webattack 0.5%,
+infiltration 97.2% (36 flows), Heartbleed 1/1, dos_ddos(DDoS LOIT) 0.45%,
+recon/PortScan **0.06%**, botnet 0%.
+
+**Conclusión (más fuerte que el paper actual): la zona gris NO es artefacto
+de la reconstrucción** — con payload real, ET Open sigue resolviendo solo
+0.2–2.2% del volumen diario de ataques (99.5% de zona gris en el día de
+onda). Las firmas de contenido capturan payloads de exploit (Heartbleed,
+Infiltration), no floods ni scans. El FP-rate de Fase 1 sobre tráfico real
+(2.2–4.8% de los benignos alertados por reglas informacionales) es no
+trivial. Integrado al paper (abstract (iii), intro, §e5, limitaciones,
+conclusión: el "next step" de payload-inclusive queda MEDIDO y cerrado).
+
+## 18. E6b — semillas de ablación (2026-10-22, ítem 3 del informe) ✅
+
+Re-entrenadas en Modal cuenta 2 (L4) con seeds 43/44 (ref = 42):
+`results/outputs_abl_seed/` + `results/e6_seed/e6.json` (evaluador estándar).
+
+| ablación | macro-F1 seeds 42/43/44 | σ |
+|---|---|---|
+| UNSW a2 (single-head merge) | 0.4598 / 0.4560 / 0.4548 | 0.0026 |
+| UNSW a6 (dropout 0) | 0.4507 / 0.4522 / 0.4481 | 0.0021 |
+| CIC a6 (dropout 0) | 0.7360 / 0.6628 / 0.9120 | **0.1281** |
+| CIC a4 (sin tilt) | 0.9313 / 0.9254 / 0.9213 (Δ +4.9/+4.3/+3.9 vs ref 0.8826) | 0.005 |
+
+Lectura:
+- UNSW: a2 y a6 son seed-estables (σ ≈ 0.002–0.003).
+- CIC a4: el exceso +4.9 del tilt es direccionalmente estable (σ 0.005).
+- **CIC a6 es seed-UNSTABLE (σ 0.128, rango 0.66–0.91)**: el coste −14.7 de
+  dropout-0 del ref está dentro del ruido de semilla (una seed incluso
+  queda por encima del ref). El paper ahora lo declara (§e6 y conclusión).
+
+## 19. Correcciones de la segunda revisión externa (2026-10-22, tarde)
+
+1. **LOAO UNSW: la gate de VX NO lidera todos los folds** (revisión externa,
+   correcto). Por fold: VX gana 4/9 (analysis 0.999, backdoor, dos, generic),
+   MLP 3 (recon 0.963, shellcode, worms 0.991), RF 1 (fuzzing 0.870), XGB 1
+   (exploitation 0.974). Medianas: MLP 0.991 > VX 0.987 > XGB 0.974 > RF 0.962.
+   Todos degradan en fuzzing (0.65–0.87). Bootstrap 95% CI por fold
+   (`results/e2_baselines/auroc_bootstrap_ci_unsw.json`): ±0.004–0.005 en folds
+   con n≥378; ±0.024 en worms (n=44). §e2 reescrito: "empate en AUROC cuyo
+   tie-break depende de fold/dataset; lo medible del diseño tipado bajo LOAO
+   es la opción unknown entrenada, la calibración con garantías y la honestidad
+   en CIC-recon — no superioridad AUROC".
+2. **Validación del matching 5-tupla** (`scripts/e5_original_match_validate.py`
+   → `results/e5_original/matching_validation.*`): presencia alertas→enhanced
+   = 1.000 en los 5 días (ninguna alerta se pierde por ausencia de tupla);
+   cobertura de flujos de ataque con la IP del atacante documentada
+   (172.16.0.1) idéntica a la global (0.0205/0.0219/0.0023 Mar/Mié/Vie;
+   Jueves 0.005 vs 0.021 explicado por per-familia: webattack 0.5% vs
+   infiltration 97%). Sesgo declarado: reuso de puertos → solo hacia arriba.
+3. **BBSE/EM reencuadrados**: son consistentes bajo label shift (P(x|y)
+   invariante); el día de onda es open-set (PortScan ausente del train →
+   P(x|y) cambia). Su fallo NO prueba "prior no estimable en general":
+   muestra que el shift está fuera del modelo label-shift (y que la gate
+   confidente-equivocada no da señal ni in-scope). Apéndice E8, limitaciones
+   y conclusión corregidos.
+4. **Cascada en el abstract/intro**: ahora el ancla honesta va primero
+   (by-day 0.34 = share in-scope 44% × recall 0.77; el resto PortScan es
+   agregación temporal fuera de alcance por-evento, coherente con el párrafo
+   Scope de §e5) y el ≥0.977 queda como cota superior family-covered.
+5. **Abstract**: "always includes unknown" → semántica híbrida (clase
+   entrenada donde hay población unknown; abstención en el resto).
+   También (i) ahora declara el margen estrecho en UNSW (0.983 vs 0.982).
+6. **Conclusión**: eliminada la contradicción (decía a la vez que las
+   ablaciones ya se midieron y que faltaba medirlas). Pendientes reales:
+   varianza de E7 (fleet N=5) y abstention head con outlier exposure.
+
+## 20. Corrección de métrica E8 + restos de la tercera revisión (2026-10-22, noche)
+
+**La corrección más importante del ciclo**: el `ece_bin` de las tablas E8
+(`scripts/e8_window_recal.py`, `scripts/e8_nonparam.py`) NO es la ECE
+estándar — computa `|mean(1[p≥0.5]) − mean(y)|` sobre bins de confianza
+(el desbalance FP-vs-FN del mapa binarizado), mientras E3 usa la top-label
+estándar `|acc − conf|`. Con esa lente:
+
+| mapa (PortScan, q=0.5548) | softECE (E3) | hardGap (tablas E8) | Brier | err duro |
+|---|---|---|---|---|
+| cruda | 0.5538 | 0.5534 | 0.5537 | 0.5554 |
+| temp day-self (a=.06) | 0.1823 | **0.4452** | 0.2462 | 0.4452 |
+| iso day-self | **0.0000** | 0.2603 | 0.1775 | 0.2609 |
+| constante en q | **0.0000** | **0.4452** | 0.2470 | 0.4452 |
+
+- **El "plateau 0.445" es 1−q**: el piso de CUALQUIER predictor todo-unos
+  bajo la métrica hard-gap (la temp day-self con a=0.06 y la constante en
+  el prior caen exactamente ahí). No es un techo de calibración.
+- La isotonica day-self es soft-calibrada in-sample (ECE 0.000) con Brier
+  0.178; su "0.260" es el ERROR DURO de la mejor binarización monótona
+  (piso de Bayes implícito por AUROC 0.56) — no una ECE.
+- El argumento del "techo" queda reescrito: la monotonía NO acota la ECE
+  (aplanar hacia la constante la lleva a 0); acota la NITIDEZ (Brier →
+  q(1−q)) y el error duro (≈0.26 el mejor vs 0.445 el plano). E9 hereda la
+  misma métrica: su "0.445 → 0.10–0.12" es la caída del error duro del
+  oráculo day-self con el ranking recuperado (AUROC 0.84) — una ganancia
+  de discriminación, no de calibración. Apéndice E8, limitaciones y
+  conclusión corregidos con esta lectura.
+- Mi explicación anterior ("constante en la media del score ≈0.002
+  explica el plateau") era incorrecta: esa constante (binfit1) tiene
+  hardGap 0.5548/Brier 0.55; el par 0.4452/0.246 pertenece a mapas
+  todo-≥0.5 (binfit2 in-sample y la temp plana).
+
+Restos menores también cerrados: "always contains unknown" en contribución 1
+(→ semántica híbrida); "four/seven" de la conclusión (→ five + lista sin
+numeral inconsistente); Tabla 6 ahora tiene a2 (UNSW) y a5 (CIC); Tabla 1 con
+bootstrap CIs en caption (UNSW VX [0.9828,0.9841] vs XGB [0.9812,0.9825] —
+margen al borde de la significancia); Tabla 2/3 con % de abstención exactos
+(2 decimales, de results/e2/e2.json) y daggers en folds degenerados (n=1, n=5).
+
+## 21. E7-azure — segundo vendedor: Microsoft-Decision-1 ✅ (2026-10-22)
+
+Acceso restaurado al recurso Azure (la suspensión de 2026-10-20 quedó atrás):
+la ruta correcta NO es `openai.azure.com/openai/v1/decisions` (otro esquema,
+input str + questions array), sino la **System One nativa vía AI Foundry**:
+
+    POST https://holaaaaaa.services.ai.azure.com/providers/microsoft/v1/systemone
+    header: api-key: <token>
+    {"model":"decision-1", "state":{...}, "questions":{gate/family/severity}}
+
+(idéntico payload a Jev → parseo y métricas reutilizados sin cambios;
+`scripts/e7_vendor_api.py --vendor azure`). Deployment `decision-1` →
+modelo `Microsoft-Decision-1` (preview, chat=false, API propia de decisiones).
+
+Corrida completa (misma muestra seed-42: 1,000 benignos + 1,021 ataques,
+2021 filas, concurrency 8, ~30 min):
+
+| primitiva | Jev | MS-Decision-1 | VX-One |
+|---|---|---|---|
+| Gate AUROC | 0.568 | **0.544** | 0.981 |
+| Gate FPR@TPR95 | 0.932 | 0.872 | 0.157 |
+| Gate ECE15 | 0.265 | **0.118** | 0.097 |
+| Choice macro-F1 | 0.069 | 0.066 | 0.534 |
+| Choice acc | — | 0.323 | 0.711 |
+| Severity MAE | 0.809 | 0.969 | 0.333 |
+| Latencia p50/p95 | 208/591 ms | 757/20,448 ms | ~1 ms |
+| tokens | 2.2M | 1.24M | — |
+
+**La réplica es el hallazgo**: DOS vendedores independientes de la tríada
+zero-shot a nivel de azar en gate y degenerados en choice/severity sobre
+flujos UNSW. Única diferencia: la ECE de MS es mejor (0.118) — sin señal no
+hay nada que calibrar. La limitación "single-point stress test" se actualiza
+a "réplica de dos vendedores en un dominio". Resultados:
+`results/e7_vendors/vendor_azure_main.json` (+ npz). Nota esquema: la ruta
+`/decisions` de openai.azure.com usa input-string + questions-array con
+choices[{value,description}]/levels[{label,description}] — documentado en
+`scripts/e7_azure_decision.py` por si se necesita.
+
+## 22. E9b — outlier exposure: la honestidad es enseñable ✅ (2026-10-22, noche)
+
+El ítem opcional del informe resultó la contribución constructiva del ciclo.
+Diseño (Hendrycks OE 2019): en cada fold LOAO, la familia excluida VUELVE al
+train como pool de outliers — la choice head recibe target uniforme sobre los
+candidatos conocidos en esas filas (λ=0.5 fijo, fuera del weighting Kendall;
+todo lo demás congelado). Escenario: labels retrasadas de la familia nueva
+(day-1/week-1) — exactamente lo que un operador tiene tras el primer día.
+Implementación: `src/models/train.py` (oe dict, aditivo; EMBER intacta),
+`modal/app.py train_vx(outlier_family=, oe_weight=)` + entrypoint `oe_loao`.
+
+| fold (UNSW) | gate AUROC ref→oe | abst@.5 ref→oe | knownF1 ref→oe |
+|---|---|---|---|
+| analysis | 0.9992→0.9989 | 0.941→0.922 | 0.520→0.514 |
+| backdoor | 0.9989→0.9982 | 0.911→0.976 | 0.524→0.524 |
+| dos | 0.9941→0.9940 | 0.710→0.908 | 0.509→0.496 |
+| exploitation | 0.9550→0.9740 | 0.320→0.916 | 0.521→0.516 |
+| fuzzing | 0.8519→0.8646 | 0.357→0.939 | 0.512→0.496 |
+| generic | 0.9957→0.9508 | 0.426→0.978 | 0.397→0.392 |
+| recon | 0.9523→0.9519 | 0.250→0.965 | 0.448→0.441 |
+| shellcode | 0.9688→0.9645 | 0.479→0.974 | 0.498→0.498 |
+| worms | 0.9871→0.9904 | 0.227→0.977 | 0.499→0.484 |
+| **media** | ~igual | **0.513→0.950** | **−0.008** |
+
+**CIC estratificado (la patología saturada) — reparación completa**:
+
+| fold | gate AUROC ref→oe | abst@.5 ref→oe | absorb→normal @.5 | knownF1 Δ |
+|---|---|---|---|---|
+| dos_ddos | 0.8524→0.9986 | 0.003→1.000 | 0.931→0.000 | −0.042 |
+| recon | 0.4259→0.9909 | 0.000→0.999 | 0.996→0.000 | −0.125 |
+| bruteforce | 0.9674→0.9964 | 0.000→0.998 | 0.707→0.002 | −0.029 |
+| webattack | 0.9792→0.9987 | 0.003→1.000 | 0.927→0.000 | +0.064 |
+| botnet | 0.7499→0.9878 | 0.000→1.000 | 1.000→0.000 | −0.132 |
+| infiltration (n=5) | 0.5329→0.8120 | 0.000→0.600 | 1.000→0.400 | −0.049 |
+| exploitation | 0.9703→0.9976 | 0.000→1.000 | 1.000→0.000 | +0.085 |
+| **media** | **+0.186 (todos ↑)** | **0.00→0.94** | **→0.00** | **−0.033** |
+
+Lectura: (1) la honestidad es ENSEÑABLE con labels retrasadas + OE — no es
+propiedad de un umbral; (2) en el régimen saturado OE repara TAMBIÉN la gate
+(el encoder, empujado a un no-man's-land para la familia expuesta, deja de
+absorberla como normal: recon 0.43→0.99, botnet 0.75→0.99); (3) el coste de
+atribución conocida es medible y acotado (−0.008 UNSW, −0.033 CIC, peor fold
+−0.132 botnet). Pareja con E9: "freshness compra discriminación, OE compra
+honestidad (y en saturado, detección); ninguno compra calibración".
+Pareja con E7: los vendors NO pueden hacer esto zero-shot; requiere el
+re-entrenamiento con cabezas tipadas que el paper propone.
+Resultados: `results/e9b_oe/e9b_oe.{json,md}`, npz en `results/outputs_oe/`.
+
+## 23. E7-var — varianza de llamadas vendor (N=5) ✅ Decision-1 (2026-10-23)
+
+`scripts/e7_variance.py` → `results/e7_vendors/variance_azure.json`.
+5 repeats × 2,041 filas (10,205 llamadas, 2.8 h, concurrency 6, 0 fallos):
+
+| métrica | mean ± σ (5 repeats) |
+|---|---|
+| Gate AUROC | 0.540 ± 0.002 |
+| Gate ECE15 | 0.124 ± 0.008 |
+| Choice macro-F1 | 0.066 ± 0.001 |
+| Severity MAE | 0.960 ± 0.001 |
+| σ fila-nivel del noul | 0.022 |
+| Desacuerdo argmax choice | 13.1% filas |
+
+Veredicto: el "gate a nivel de azar" es estructural (replicado 5×, σ
+minúsculos); la choice fluctúa fila-a-fila (13%) pero la degeneración de
+macro-F1 no se mueve. Jev: N=5 inviable por el rate-limit del tier free
+(~250 req/día/IP; requeriría la fleet multi-nodo) — queda como único paso
+abierto de E7, documentado en el paper.
+
+## 24. E9b-bis — sensibilidad λ + pool sintético; E1-bis — baselines 3 semillas ✅ (2026-10-23)
+
+**λ sweep UNSW (27 corridas L4)** (`results/e9b_oe/e9b_lambda_sweep.json`):
+abst@0.5 media ref 0.513 → λ0.2 **0.916** → λ0.5 0.950 → λ1.0 0.956
+(knownF1 0.490/0.485/0.481). Sin cuchillo-hiperparámetro: λ=0.2 ya captura
+casi todo el beneficio.
+
+**Pool sintético (ruido gaussiano φ, λ=0.5, 20k filas)**: abst 0.452 (ref
+0.513) — apenas se mueve. **El mecanismo requiere exponer la distribución
+real de la familia nueva**, no presión de regularización genérica.
+
+**Baselines 3 semillas (Tabla 1)** (`results/e1e3/baseline_seed_variance.json`,
+24 corridas Modal cpu=32: unsw/cic-strat/cic-time/ember × {xgb,rf,mlp} ×
+s43/s44): σ gate AUROC ≤0.0013 (UNSW/EMBER), **0.017–0.027 by-day CIC**
+(xgb 0.637±0.027), 0.00 (cic strat). Con 3 semillas: MLP UNSW media
+0.9835±0.0013 EMPATA a VX 0.9834 (single seed dentro del rango MLP) →
+el E1 in-distribución es empate, no victoria; la ventaja por-day
+(0.711 vs 0.637±0.027) es ~3σ. Abstract/Tabla 1/§e1 actualizados.

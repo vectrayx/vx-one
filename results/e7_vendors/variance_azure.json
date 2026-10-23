@@ -1,0 +1,84 @@
+{
+ "vendor": "azure",
+ "model": "decision-1",
+ "repeats": 5,
+ "n_rows": 2041,
+ "sample": {
+  "seed": 42,
+  "stratified": true
+ },
+ "row_level": {
+  "mean_row_std_noul": 0.02223,
+  "choice_argmax_disagreement_rate": 0.1308,
+  "mean_row_std_severity": 0.03031
+ },
+ "per_repeat": [
+  {
+   "repeat": 0,
+   "auroc": 0.5378,
+   "ece15": 0.1292,
+   "macro_f1": 0.0663,
+   "sev_mae": 0.9592,
+   "n_calls_ok": 2041
+  },
+  {
+   "repeat": 1,
+   "auroc": 0.5414,
+   "ece15": 0.1151,
+   "macro_f1": 0.0662,
+   "sev_mae": 0.9589,
+   "n_calls_ok": 2041
+  },
+  {
+   "repeat": 2,
+   "auroc": 0.5393,
+   "ece15": 0.1207,
+   "macro_f1": 0.0652,
+   "sev_mae": 0.9606,
+   "n_calls_ok": 2041
+  },
+  {
+   "repeat": 3,
+   "auroc": 0.541,
+   "ece15": 0.12,
+   "macro_f1": 0.0654,
+   "sev_mae": 0.9617,
+   "n_calls_ok": 2041
+  },
+  {
+   "repeat": 4,
+   "auroc": 0.5405,
+   "ece15": 0.1347,
+   "macro_f1": 0.0678,
+   "sev_mae": 0.9597,
+   "n_calls_ok": 2041
+  }
+ ],
+ "metrics_agg": {
+  "auroc": {
+   "mean": 0.54,
+   "stdev": 0.0015,
+   "min": 0.5378,
+   "max": 0.5414
+  },
+  "ece15": {
+   "mean": 0.1239,
+   "stdev": 0.0079,
+   "min": 0.1151,
+   "max": 0.1347
+  },
+  "macro_f1": {
+   "mean": 0.0662,
+   "stdev": 0.001,
+   "min": 0.0652,
+   "max": 0.0678
+  },
+  "sev_mae": {
+   "mean": 0.96,
+   "stdev": 0.0011,
+   "min": 0.9589,
+   "max": 0.9617
+  }
+ },
+ "wall_s": 10163.0
+}

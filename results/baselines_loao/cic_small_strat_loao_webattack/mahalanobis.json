@@ -1,0 +1,7 @@
+{
+ "run_id": "cic_small_strat_loao_webattack",
+ "variant": "mahalanobis",
+ "auroc_excl": 0.2298,
+ "fpr95_excl": 0.9881,
+ "n_excl_test": 327
+}

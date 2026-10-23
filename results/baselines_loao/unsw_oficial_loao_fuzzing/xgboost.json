@@ -1,0 +1,22 @@
+{
+  "run_id": "unsw_oficial_loao_fuzzing",
+  "model": "xgboost",
+  "candidates": [
+    "normal",
+    "dos",
+    "recon",
+    "exploitation",
+    "shellcode",
+    "backdoor",
+    "analysis",
+    "generic",
+    "worms"
+  ],
+  "temperatures": {
+    "noul": 1.3671580649100035,
+    "choice": 1.2565040571637405,
+    "score": 1.1909970018134182,
+    "ddos": null
+  },
+  "fit_s": 175.0
+}

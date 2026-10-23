@@ -1,0 +1,84 @@
+{
+ "2017-07-03": {
+  "n_alerts_day": 9425,
+  "n_alerts_total": 9425,
+  "tuple_presence_rate": 1.0,
+  "attack_flows": 0,
+  "attack_flows_with_attacker_ip": 0,
+  "coverage_attack_overall": NaN,
+  "coverage_attack_with_attacker_ip": null,
+  "top_attack_src_ips": []
+ },
+ "2017-07-04": {
+  "n_alerts_day": 2644,
+  "n_alerts_total": 2644,
+  "tuple_presence_rate": 1.0,
+  "attack_flows": 13832,
+  "attack_flows_with_attacker_ip": 13832,
+  "coverage_attack_overall": 0.0205,
+  "coverage_attack_with_attacker_ip": 0.0205,
+  "top_attack_src_ips": [
+   [
+    "172.16.0.1",
+    13832
+   ]
+  ]
+ },
+ "2017-07-05": {
+  "n_alerts_day": 2799,
+  "n_alerts_total": 2799,
+  "tuple_presence_rate": 1.0,
+  "attack_flows": 251722,
+  "attack_flows_with_attacker_ip": 251722,
+  "coverage_attack_overall": 0.0219,
+  "coverage_attack_with_attacker_ip": 0.0219,
+  "top_attack_src_ips": [
+   [
+    "172.16.0.1",
+    251722
+   ]
+  ]
+ },
+ "2017-07-06": {
+  "n_alerts_day": 26652,
+  "n_alerts_total": 26652,
+  "tuple_presence_rate": 1.0,
+  "attack_flows": 2216,
+  "attack_flows_with_attacker_ip": 2180,
+  "coverage_attack_overall": 0.0208,
+  "coverage_attack_with_attacker_ip": 0.005,
+  "top_attack_src_ips": [
+   [
+    "172.16.0.1",
+    2180
+   ],
+   [
+    "192.168.10.8",
+    36
+   ]
+  ]
+ },
+ "2017-07-07": {
+  "n_alerts_day": 2745,
+  "n_alerts_total": 12170,
+  "tuple_presence_rate": 1.0,
+  "attack_flows": 288785,
+  "attack_flows_with_attacker_ip": 286829,
+  "coverage_attack_overall": 0.0023,
+  "coverage_attack_with_attacker_ip": 0.0023,
+  "top_attack_src_ips": [
+   [
+    "172.16.0.1",
+    286826
+   ],
+   [
+    "205.174.165.73",
+    701
+   ],
+   [
+    "192.168.10.15",
+    366
+   ]
+  ]
+ }
+}

@@ -1,0 +1,226 @@
+[
+ {
+  "tag": "static (temp-val serving)",
+  "npz": "/home/jsantillana/projects/paper-fix-glm/results/outputs_seed/cic_small_time.npz",
+  "auroc_raw": 0.56,
+  "rows": [
+   {
+    "variant": "raw",
+    "auroc_raw": 0.56,
+    "ece15": 0.5531,
+    "brier": 0.539,
+    "n_unique_conf": 31223
+   },
+   {
+    "variant": "constant prior (1 level)",
+    "auroc_raw": 0.56,
+    "ece15": 0.5548,
+    "brier": 0.5353,
+    "n_unique_conf": 1
+   },
+   {
+    "variant": "iso_day(oracle)",
+    "auroc_raw": 0.56,
+    "ece15": 0.2603,
+    "brier": 0.1775,
+    "n_unique_conf": 24
+   },
+   {
+    "variant": "binfit4",
+    "auroc_raw": 0.56,
+    "ece15": 0.1596,
+    "brier": 0.1935,
+    "n_unique_conf": 4
+   },
+   {
+    "variant": "binfit16",
+    "auroc_raw": 0.56,
+    "ece15": 0.1083,
+    "brier": 0.1312,
+    "n_unique_conf": 16
+   },
+   {
+    "variant": "binfit64",
+    "auroc_raw": 0.56,
+    "ece15": 0.0936,
+    "brier": 0.1233,
+    "n_unique_conf": 56
+   },
+   {
+    "variant": "binfit256",
+    "auroc_raw": 0.56,
+    "ece15": 0.0733,
+    "brier": 0.1209,
+    "n_unique_conf": 199
+   }
+  ]
+ },
+ {
+  "tag": "e9 1-pass",
+  "npz": "/home/jsantillana/projects/paper-fix-glm/results/e9_retrain/cic_small_time_friday.npz",
+  "auroc_raw": 0.8,
+  "rows": [
+   {
+    "variant": "raw",
+    "auroc_raw": 0.8,
+    "ece15": 0.5538,
+    "brier": 0.554,
+    "n_unique_conf": 3555
+   },
+   {
+    "variant": "constant prior (1 level)",
+    "auroc_raw": 0.8,
+    "ece15": 0.5548,
+    "brier": 0.5513,
+    "n_unique_conf": 1
+   },
+   {
+    "variant": "iso_day(oracle)",
+    "auroc_raw": 0.8,
+    "ece15": 0.1955,
+    "brier": 0.1422,
+    "n_unique_conf": 53
+   },
+   {
+    "variant": "binfit4",
+    "auroc_raw": 0.8,
+    "ece15": 0.2004,
+    "brier": 0.145,
+    "n_unique_conf": 4
+   },
+   {
+    "variant": "binfit16",
+    "auroc_raw": 0.8,
+    "ece15": 0.2004,
+    "brier": 0.1403,
+    "n_unique_conf": 16
+   },
+   {
+    "variant": "binfit64",
+    "auroc_raw": 0.8,
+    "ece15": 0.1501,
+    "brier": 0.137,
+    "n_unique_conf": 59
+   },
+   {
+    "variant": "binfit256",
+    "auroc_raw": 0.8,
+    "ece15": 0.1356,
+    "brier": 0.1344,
+    "n_unique_conf": 206
+   }
+  ]
+ },
+ {
+  "tag": "e9 2-pass",
+  "npz": "/home/jsantillana/projects/paper-fix-glm/results/e9_retrain/cic_small_time_fridayep2.npz",
+  "auroc_raw": 0.8392,
+  "rows": [
+   {
+    "variant": "raw",
+    "auroc_raw": 0.8392,
+    "ece15": 0.5538,
+    "brier": 0.5543,
+    "n_unique_conf": 3244
+   },
+   {
+    "variant": "constant prior (1 level)",
+    "auroc_raw": 0.8392,
+    "ece15": 0.5548,
+    "brier": 0.5518,
+    "n_unique_conf": 1
+   },
+   {
+    "variant": "iso_day(oracle)",
+    "auroc_raw": 0.8392,
+    "ece15": 0.1622,
+    "brier": 0.1215,
+    "n_unique_conf": 30
+   },
+   {
+    "variant": "binfit4",
+    "auroc_raw": 0.8392,
+    "ece15": 0.1971,
+    "brier": 0.137,
+    "n_unique_conf": 4
+   },
+   {
+    "variant": "binfit16",
+    "auroc_raw": 0.8392,
+    "ece15": 0.17,
+    "brier": 0.1261,
+    "n_unique_conf": 16
+   },
+   {
+    "variant": "binfit64",
+    "auroc_raw": 0.8392,
+    "ece15": 0.1485,
+    "brier": 0.1175,
+    "n_unique_conf": 57
+   },
+   {
+    "variant": "binfit256",
+    "auroc_raw": 0.8392,
+    "ece15": 0.1283,
+    "brier": 0.1125,
+    "n_unique_conf": 201
+   }
+  ]
+ },
+ {
+  "tag": "e9 4-pass",
+  "npz": "/home/jsantillana/projects/paper-fix-glm/results/e9_retrain/cic_small_time_fridayep4.npz",
+  "auroc_raw": 0.76,
+  "rows": [
+   {
+    "variant": "raw",
+    "auroc_raw": 0.76,
+    "ece15": 0.5539,
+    "brier": 0.5545,
+    "n_unique_conf": 3752
+   },
+   {
+    "variant": "constant prior (1 level)",
+    "auroc_raw": 0.76,
+    "ece15": 0.5548,
+    "brier": 0.5519,
+    "n_unique_conf": 1
+   },
+   {
+    "variant": "iso_day(oracle)",
+    "auroc_raw": 0.76,
+    "ece15": 0.212,
+    "brier": 0.1525,
+    "n_unique_conf": 28
+   },
+   {
+    "variant": "binfit4",
+    "auroc_raw": 0.76,
+    "ece15": 0.2169,
+    "brier": 0.1597,
+    "n_unique_conf": 4
+   },
+   {
+    "variant": "binfit16",
+    "auroc_raw": 0.76,
+    "ece15": 0.1967,
+    "brier": 0.1508,
+    "n_unique_conf": 16
+   },
+   {
+    "variant": "binfit64",
+    "auroc_raw": 0.76,
+    "ece15": 0.1976,
+    "brier": 0.1445,
+    "n_unique_conf": 60
+   },
+   {
+    "variant": "binfit256",
+    "auroc_raw": 0.76,
+    "ece15": 0.1581,
+    "brier": 0.1417,
+    "n_unique_conf": 198
+   }
+  ]
+ }
+]

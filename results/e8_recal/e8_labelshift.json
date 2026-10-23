@@ -1,0 +1,226 @@
+{
+ "protocol": {
+  "npz": "/home/jsantillana/projects/paper-fix-glm/results/outputs_seed/cic_small_time.npz",
+  "day1": "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX",
+  "day2": "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX",
+  "q1": 0.5573,
+  "q2_true": 0.5548,
+  "base_maps": "day1-only labels (temp/platt/iso)"
+ },
+ "prior_estimates": {
+  "temp(day1)": {
+   "bbse_hard": -0.3023,
+   "bbse_soft": -0.0003,
+   "em": 0.0
+  },
+  "platt(day1)": {
+   "bbse_hard": 0.0045,
+   "bbse_soft": 0.006,
+   "em": 0.0147
+  },
+  "iso(day1)": {
+   "bbse_hard": 0.0406,
+   "bbse_soft": 0.004,
+   "em": 0.0006
+  }
+ },
+ "days": {
+  "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX": {
+   "q_true": 0.5573,
+   "rows": [
+    {
+     "variant": "static_temp(val)",
+     "auroc": 0.9765,
+     "ece15": 0.0641,
+     "brier": 0.0347,
+     "prev_mean_pred": 0.1172
+    },
+    {
+     "variant": "const@q1(oracle)",
+     "auroc": 0.5,
+     "ece15": 0.0,
+     "brier": 0.2467,
+     "prev_mean_pred": 0.5573
+    }
+   ]
+  },
+  "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX": {
+   "q_true": 0.5548,
+   "rows": [
+    {
+     "variant": "temp(day1) sin correcci\u00f3n",
+     "auroc": 0.56,
+     "ece15": 0.5057,
+     "brier": 0.5037,
+     "prev_mean_pred": 0.0512
+    },
+    {
+     "variant": "temp(day1) prior-corregido[bbse_hard] (q\u0302=0.000)",
+     "auroc": 0.56,
+     "ece15": 0.5548,
+     "brier": 0.5548,
+     "prev_mean_pred": 0.0
+    },
+    {
+     "variant": "const@q\u03022[bbse_hard] (q\u0302=0.000)",
+     "auroc": 0.5,
+     "ece15": 0.5548,
+     "brier": 0.5548,
+     "prev_mean_pred": 0.0
+    },
+    {
+     "variant": "temp(day1) prior-corregido[bbse_soft] (q\u0302=0.000)",
+     "auroc": 0.56,
+     "ece15": 0.5548,
+     "brier": 0.5548,
+     "prev_mean_pred": 0.0
+    },
+    {
+     "variant": "const@q\u03022[bbse_soft] (q\u0302=0.000)",
+     "auroc": 0.5,
+     "ece15": 0.5548,
+     "brier": 0.5548,
+     "prev_mean_pred": 0.0
+    },
+    {
+     "variant": "temp(day1) prior-corregido[em] (q\u0302=0.000)",
+     "auroc": 0.56,
+     "ece15": 0.5548,
+     "brier": 0.5548,
+     "prev_mean_pred": 0.0
+    },
+    {
+     "variant": "const@q\u03022[em] (q\u0302=0.000)",
+     "auroc": 0.5,
+     "ece15": 0.5548,
+     "brier": 0.5548,
+     "prev_mean_pred": 0.0
+    },
+    {
+     "variant": "platt(day1) sin correcci\u00f3n",
+     "auroc": 0.56,
+     "ece15": 0.5223,
+     "brier": 0.5239,
+     "prev_mean_pred": 0.0655
+    },
+    {
+     "variant": "platt(day1) prior-corregido[bbse_hard] (q\u0302=0.004)",
+     "auroc": 0.56,
+     "ece15": 0.5529,
+     "brier": 0.5532,
+     "prev_mean_pred": 0.0107
+    },
+    {
+     "variant": "const@q\u03022[bbse_hard] (q\u0302=0.004)",
+     "auroc": 0.5,
+     "ece15": 0.5503,
+     "brier": 0.5499,
+     "prev_mean_pred": 0.0045
+    },
+    {
+     "variant": "platt(day1) prior-corregido[bbse_soft] (q\u0302=0.006)",
+     "auroc": 0.56,
+     "ece15": 0.5525,
+     "brier": 0.553,
+     "prev_mean_pred": 0.0114
+    },
+    {
+     "variant": "const@q\u03022[bbse_soft] (q\u0302=0.006)",
+     "auroc": 0.5,
+     "ece15": 0.5488,
+     "brier": 0.5482,
+     "prev_mean_pred": 0.006
+    },
+    {
+     "variant": "platt(day1) prior-corregido[em] (q\u0302=0.015)",
+     "auroc": 0.56,
+     "ece15": 0.5508,
+     "brier": 0.5521,
+     "prev_mean_pred": 0.014
+    },
+    {
+     "variant": "const@q\u03022[em] (q\u0302=0.015)",
+     "auroc": 0.5,
+     "ece15": 0.5401,
+     "brier": 0.5387,
+     "prev_mean_pred": 0.0147
+    },
+    {
+     "variant": "iso(day1) sin correcci\u00f3n",
+     "auroc": 0.5065,
+     "ece15": 0.5543,
+     "brier": 0.5552,
+     "prev_mean_pred": 0.0443
+    },
+    {
+     "variant": "iso(day1) prior-corregido[bbse_hard] (q\u0302=0.041)",
+     "auroc": 0.5065,
+     "ece15": 0.5451,
+     "brier": 0.5484,
+     "prev_mean_pred": 0.0123
+    },
+    {
+     "variant": "const@q\u03022[bbse_hard] (q\u0302=0.041)",
+     "auroc": 0.5,
+     "ece15": 0.5142,
+     "brier": 0.5114,
+     "prev_mean_pred": 0.0406
+    },
+    {
+     "variant": "iso(day1) prior-corregido[bbse_soft] (q\u0302=0.004)",
+     "auroc": 0.5065,
+     "ece15": 0.5527,
+     "brier": 0.553,
+     "prev_mean_pred": 0.0021
+    },
+    {
+     "variant": "const@q\u03022[bbse_soft] (q\u0302=0.004)",
+     "auroc": 0.5,
+     "ece15": 0.5508,
+     "brier": 0.5503,
+     "prev_mean_pred": 0.004
+    },
+    {
+     "variant": "iso(day1) prior-corregido[em] (q\u0302=0.001)",
+     "auroc": 0.5065,
+     "ece15": 0.5543,
+     "brier": 0.5543,
+     "prev_mean_pred": 0.0005
+    },
+    {
+     "variant": "const@q\u03022[em] (q\u0302=0.001)",
+     "auroc": 0.5,
+     "ece15": 0.5542,
+     "brier": 0.5541,
+     "prev_mean_pred": 0.0006
+    },
+    {
+     "variant": "const@q2_true(oracle-prior)",
+     "auroc": 0.5,
+     "ece15": 0.0,
+     "brier": 0.247,
+     "prev_mean_pred": 0.5548
+    },
+    {
+     "variant": "static_temp(val) \u2014 serving actual",
+     "auroc": 0.56,
+     "ece15": 0.5057,
+     "brier": 0.5037,
+     "prev_mean_pred": 0.0512
+    },
+    {
+     "variant": "raw (sin calibrar)",
+     "auroc": 0.56,
+     "ece15": 0.5538,
+     "brier": 0.5537,
+     "prev_mean_pred": 0.0046
+    }
+   ]
+  }
+ },
+ "reference": {
+  "brier_min_const": 0.247,
+  "ece_min_const": 0.0,
+  "note": "constante en el prior verdadero: ECE\u21920 y Brier=q(1-q); el 'plateau 0.445' del binfit se debe a constante en MEDIA DEL SCORE CRUDO (p.mean()\u22480.0002), no del prior (Q2=0.555)."
+ }
+}

@@ -11,7 +11,7 @@ no de los números aspiracionales del draft antiguo.
 | `paper/main.tex` + `paper/refs.bib` | Paper final en formato **ACM (`acmart`, `sigconf`)**, en inglés, tag arXiv `cs.CL`. Compila con `pdflatex` + `bibtex` (x2). |
 | `docs/EXPERIMENTS.md` | Explicación en español de los experimentos E1–E7, con las tablas copiadas de `results/` y el mapa de código. Es la fuente de verdad numérica del paper. |
 | `docs/reference/` | Documentos legados congelados del repo original: draft antiguo (`VectrayX_One_Paper_Draft.md`), spec F0, lit review, spec F2, advisory Opus, nota de implementación, `data/SCHEMA.md`. **No editar** — solo referencia. |
-| `src/`, `tests/`, `modal/`, `scripts/` | Código completo, copiado del repo original (idéntico, salvo `__pycache__`; 60/60 tests verdes en el repo original). ⚠️ Los tests requieren `data/` (parquets), que no se copia: para correrlos aquí, enlazar `data/` del repo original (`ln -s ../paper/data data`). |
+| `src/`, `tests/`, `modal/`, `scripts/` | Código completo, copiado del repo original (idéntico, salvo `__pycache__`). ⚠️ Los tests requieren `data/` (parquets), que no se copia: para correrlos aquí, enlazar `data/` del repo original (`ln -s ../paper/data data`). |
 | `results/` | Solo agregados JSON/MD por experimento (los `.npz` pesados y logs quedaron atrás). |
 
 ## Decisiones editoriales tomadas (por qué este paper no es una copia del draft)
@@ -45,7 +45,7 @@ no de los números aspiracionales del draft antiguo.
 
 - [x] Experimentos E1–E6 ejecutados (ver `docs/EXPERIMENTS.md`).
 - [x] **Paper `paper/main.tex` completo (ACM sigconf, con Apéndice A formal desde el advisory Opus) + `paper/refs.bib` (39 entradas; las 12 fuentes System One/productos con URLs verificadas 2026-10-16).**
-- [x] **PDF compilado localmente**: `paper/main.pdf` (9 páginas, ACM sigconf, 0 citas/referencias sin resolver). Para recompilar:
+- [x] **PDF compilado localmente**: `paper/main.pdf` (14 páginas, ACM sigconf, 0 citas/referencias sin resolver). Para recompilar:
   ```bash
   pdflatex -interaction=nonstopmode paper/main.tex   # desde la raíz del repo
   BIBINPUTS=paper: BSTINPUTS=paper: bibtex main
@@ -96,3 +96,18 @@ no de los números aspiracionales del draft antiguo.
   otro paper), `botacin2024ember`→`joyce2025ember` (KDD 2025, Joyce et al. —
   no Botacin), SecureBERT = SecureComm 2022 (Aghaei/Niu/Shadid/Al-Shaer) y
   CORN = PAA 26(3):941–955, 2023, DOI 10.1007/s10044-023-01181-9.
+
+## Mejoras 2026-10-22 (informe de fallas externo → ciclo de medidas)
+
+Aplicado sobre el plan `VX-One informe de fallas y plan de mejora.md`; detalle en `docs/EXPERIMENTS.md` §§14–17:
+
+- **E8b — label shift explícito** (`scripts/e8_labelshift.py` → `results/e8_recal/e8_labelshift.*`): BBSE/EM no pueden estimar el prior del día nuevo desde un modelo confidente-equivocado (q̂ ≤ 0.04 vs 0.555); el "plateau 0.445" del apéndice E8 era la constante en la media del score crudo, no del prior. El techo desplegable es discriminación **y estimabilidad del prior**.
+- **E5c — Phase-2 por-día honesto** (`scripts/e5_phase2_byday.py` → `results/e5/byday_phase2.*`): con el artefacto por-día (que nunca vio las familias del viernes) el recall combinado del viernes cae de 0.996 a **0.339** (P 0.971); DoS/DDoS se recupera (0.77), PortScan no existe como candidato. La tabla 5 queda anclada como cota superior family-covered.
+- **E5d — Fase 1 con payload real** (`scripts/e5_original_match.py` → `results/e5_original/`): pcaps ORIGINALES de CICIDS2017 (md5 verificados) + Suricata 7.0.10 + ET Open 52,706 reglas: resuelve 0.2–2.2% del volumen diario de ataques (DDoS 0.45%, PortScan 0.06% el viernes; Heartbleed/Infiltration ~100%). **La zona gris sobrevive a payload completo** — no era artefacto de la reconstrucción. Corrida en Modal cuenta 2.
+- **E2d — LOAO baselines + OOD** (`src/baselines/run_tabular --exclude-family` + `scripts/e2_loao_ood.py` + `scripts/e2_loao_baselines_eval.py` → `results/e2_baselines/`): 9 folds UNSW (local) + 7 folds CIC (Modal cpu=32). Resultado honesto (corregido tras revisión): **empate en AUROC** — VX gana 4/9 folds UNSW, MLP 3 (medianas MLP 0.991 vs VX 0.987); en CIC XGBoost transfiere mejor en los folds débiles (botnet 0.905 vs 0.750; recon 0.830 vs 0.426) y los OOD clásicos colapsan. Todo integrado al paper (§e2, §e5, limitaciones, conclusión).
+- **E7 replicado con 2º vendedor (2026-10-22)**: acceso Azure restaurado →
+  Microsoft-Decision-1 (preview, deployment `decision-1` vía AI Foundry
+  `services.ai.azure.com/.../v1/systemone`, mismo payload System One que Jev)
+  sobre la MISMA muestra seed-42 de 2,021 filas: gate AUROC 0.544 (Jev 0.568),
+  choice macro-F1 0.066, severity MAE 0.969 — **dos vendedores independientes,
+  mismo veredicto zero-shot**. `results/e7_vendors/vendor_azure_main.json`.

@@ -164,7 +164,8 @@ def _probs_mlp(net, net_ddos, x: np.ndarray, ddos_mask, n_ddos_classes: int,
 def run_baselines(source: str, scheme: str, out_dir: Path,
                   exclude_family: str | None = None,
                   device: str = "cpu", mlp_epochs: int = 30,
-                  models: tuple[str, ...] = ("xgboost", "rf", "mlp")) -> None:
+                  models: tuple[str, ...] = ("xgboost", "rf", "mlp"),
+                  seed: int = 42) -> None:
     out_dir = Path(out_dir)
     run = build_run(source, "small", scheme, exclude_family=exclude_family)
     fam_part = f"_loao_{exclude_family}" if exclude_family else ""
@@ -263,7 +264,7 @@ def run_baselines(source: str, scheme: str, out_dir: Path,
                 task = "binary" if head == "noul" else "multiclass"
                 x_fit = tr["x"] if rows is None else tr["x"][rows]
                 fitter = fit_xgboost if name == "xgboost" else fit_rf
-                fits[head] = fitter(x_fit, y, w, task)
+                fits[head] = fitter(x_fit, y, w, task, seed=seed)
             fits["_cols"] = {h: (c, _n) for h, (_y, _w, c, _n, _r) in specs.items()
                              if c is not None}
             if ddos:
@@ -271,7 +272,8 @@ def run_baselines(source: str, scheme: str, out_dir: Path,
                 w_d = omega_ddos[tr["y_ddos"]]
                 w_d = w_d * (len(w_d) / w_d.sum())
                 fitter = fit_xgboost if name == "xgboost" else fit_rf
-                fits["ddos"] = fitter(tr["x"][m], y_d_fit, w_d, "multiclass")
+                fits["ddos"] = fitter(tr["x"][m], y_d_fit, w_d, "multiclass",
+                                      seed=seed)
                 fits["ddos_classes"] = list(run.ddos_candidates)
                 fits["_ddos_mask"] = va["ddos_mask"]
                 if len(cols_d) != len(run.ddos_candidates):
@@ -300,7 +302,7 @@ def run_baselines(source: str, scheme: str, out_dir: Path,
         net = train_mlp(tr["x"], tr["y_bin"], y_mlp_fit, om_c,
                         tr["y_sev"], va["x"], va["y_bin"], yf_va_c,
                         va["y_sev"], device=device, epochs=mlp_epochs,
-                        log=print)
+                        seed=seed, log=print)
         net_ddos = None
         if ddos:
             m = tr["ddos_mask"]
@@ -311,7 +313,7 @@ def run_baselines(source: str, scheme: str, out_dir: Path,
                                  va["y_bin"][va["ddos_mask"]],
                                  y_d_va, None,
                                  device=device, epochs=mlp_epochs, width=128,
-                                 log=print)
+                                 seed=seed, log=print)
         fit_s = time.time() - t0
         va_ddos = va["ddos_mask"] if ddos else None
         te_ddos = te["ddos_mask"] if ddos else None

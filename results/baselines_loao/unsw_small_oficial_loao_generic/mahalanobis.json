@@ -1,0 +1,8 @@
+{
+ "run_id": "unsw_small_oficial_loao_generic",
+ "variant": "mahalanobis",
+ "auroc_excl": 0.8316,
+ "fpr95_excl": 0.2414,
+ "n_excl_test": 18871,
+ "fit_s": 24.3
+}

@@ -1,0 +1,7 @@
+{
+ "run_id": "cic_small_strat_loao_infiltration",
+ "variant": "logreg",
+ "auroc_excl": 0.1626,
+ "fpr95_excl": 0.9993,
+ "n_excl_test": 5
+}

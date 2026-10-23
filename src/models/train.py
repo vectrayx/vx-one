@@ -23,6 +23,7 @@ from pathlib import Path
 import numpy as np
 import pyarrow.parquet as pq
 import torch
+import torch.nn as nn
 from sklearn.metrics import f1_score, roc_auc_score
 
 from .calibration import (fit_choice_temperature, fit_corn_temperature,
@@ -192,8 +193,15 @@ def train_run(run: RunData, out_path: str | Path, device: str = "cpu",
               batch_size: int | None = None, log=print,
               ckpt_path: str | Path | None = None,
               ckpt_every_steps: int = 2000, resume: bool = False,
-              ablation: str | None = None) -> dict:
+              ablation: str | None = None,
+              oe: dict | None = None) -> dict:
     """Entrena una corrida y escribe el artefacto §8.2. Devuelve el resumen.
+
+    oe (opcional, E9b): {"x": tensor [Noe, d+1] ya φ-transformado,
+     "txt": dict[str, tensor]|None, "weight": float} — outlier exposure
+     (Hendrycks et al. 2019) sobre la choice head: las filas del pool
+     reciben target uniforme sobre los candidatos conocidos, con peso fijo
+     fuera del weighting de Kendall. Solo UNSW/CIC (no EMBER).
 
     Ablations E6 (§7): `ablation` en {a1, a2_*, a3, a4, a5, a6} — un solo
     cambio por corrida sobre la referencia Small: a1 sin rama textual (vocab a
@@ -342,12 +350,34 @@ def train_run(run: RunData, out_path: str | Path, device: str = "cpu",
             order = np.random.default_rng(seed + epoch).permutation(n_train)
             txt_tr = run.train_txt or {}
             label_tr = run.train_labels
+            oe_x = oe["x"] if oe else None
+            oe_txt_t = oe.get("txt") if oe else None
+            oe_perm = (np.random.default_rng(seed + 1000 + epoch)
+                       .permutation(oe_x.shape[0]) if oe_x is not None else None)
+            oe_cursor = [0]
+
+            def _next_oe(k: int):
+                """k índices del pool OE, cíclicos con orden por-epoch."""
+                if oe_x is None:
+                    return None
+                cur = oe_cursor[0]
+                take = oe_perm[(cur + np.arange(k)) % len(oe_perm)]
+                oe_cursor[0] = (cur + k) % len(oe_perm)
+                return take
 
             def _gen():
                 for s in range(0, n_train, bs):
                     idx = torch.tensor(order[s:s + bs])
                     u_b = run.train[idx].to(device)
                     txt_b = {k: v[idx].to(device) for k, v in txt_tr.items()} or None
+                    oe_b = None
+                    if oe_x is not None:
+                        take = _next_oe(len(idx))
+                        u_oe = oe_x[take].to(device)
+                        txt_oe = ({k: v[take].to(device)
+                                   for k, v in oe_txt_t.items()}
+                                  if oe_txt_t else None)
+                        oe_b = (u_oe, txt_oe)
                     yield u_b, txt_b, _BatchLabels(
                         label_tr.y_fam[idx].to(device),
                         label_tr.y_bin[idx].to(device),
@@ -356,13 +386,20 @@ def train_run(run: RunData, out_path: str | Path, device: str = "cpu",
                         label_tr.ddos_mask[idx].to(device)
                         if label_tr.ddos_mask is not None else None,
                         label_tr.y_ddos[idx].to(device)
-                        if label_tr.y_ddos is not None else None)
+                        if label_tr.y_ddos is not None else None), oe_b
             batches = _gen()
-        for u_b, txt_b, lab_b in batches:
+        for u_b, txt_b, lab_b, oe_b in batches:
             with torch.autocast(device_type=device.split(":")[0], dtype=amp_dtype,
                                 enabled=amp_dtype is not None and device.startswith("cuda")):
                 losses, active = _batch_losses(net, run, u_b, txt_b, lab_b)
                 total, _lambdas = kendall(losses, active)
+                if oe_b is not None and "choice" in losses:
+                    u_oe, txt_oe = oe_b
+                    out_oe = net(u_oe, txt_oe)
+                    logp_oe = nn.functional.log_softmax(out_oe["choice"], dim=1)
+                    # KL(uniform ‖ p): constante −log(1/K) + −mean_k log p_k
+                    oe_loss = -logp_oe.mean(dim=1).mean()
+                    total = total + oe["weight"] * oe_loss
             opt.zero_grad(set_to_none=True)
             if amp_mode == "fp16":
                 scaler.scale(total).backward()

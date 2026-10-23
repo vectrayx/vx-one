@@ -113,12 +113,14 @@ _XGB_PARAMS = {
 
 
 def fit_xgboost(x_tr: np.ndarray, y_tr: np.ndarray,
-                w_tr: np.ndarray | None, task: str) -> object:
+                w_tr: np.ndarray | None, task: str,
+                seed: int = SEED) -> object:
     """task: 'binary' | 'multiclass' (num_class se deriva de y). El val se
     reserva para calibración — sin early stopping interno (§5.3)."""
     import xgboost as xgb
 
     params = dict(_XGB_PARAMS)
+    params["random_state"] = seed
     if task == "binary":
         params["objective"] = "binary:logistic"
     else:
@@ -130,11 +132,12 @@ def fit_xgboost(x_tr: np.ndarray, y_tr: np.ndarray,
 
 
 def fit_rf(x_tr: np.ndarray, y_tr: np.ndarray,
-           w_tr: np.ndarray | None, task: str = "multiclass") -> object:
+           w_tr: np.ndarray | None, task: str = "multiclass",
+           seed: int = SEED) -> object:
     from sklearn.ensemble import RandomForestClassifier
 
     model = RandomForestClassifier(
-        n_estimators=300, min_samples_leaf=1, n_jobs=-1, random_state=SEED)
+        n_estimators=300, min_samples_leaf=1, n_jobs=-1, random_state=seed)
     model.fit(x_tr, y_tr, sample_weight=w_tr)
     return model
 
