@@ -34,8 +34,8 @@ sys.path.insert(0, str(REPO))
 import src.e5.cascade as e5  # noqa: E402
 
 # Overrides de rutas (el repo original vive en projects/paper)
-e5.ENH = Path("${HOME}/projects/paper/data/raw/cicids2017/enhanced_flows/CICIDS_Flow.parquet")
-e5.PROCESSED = Path("${HOME}/projects/paper/data/processed/cicids2017/cicids2017.parquet")
+e5.ENH = Path("/home/jsantillana/projects/paper/data/raw/cicids2017/enhanced_flows/CICIDS_Flow.parquet")
+e5.PROCESSED = Path("/home/jsantillana/projects/paper/data/processed/cicids2017/cicids2017.parquet")
 e5.NPZ = str(REPO / "results/outputs_seed/cic_small_strat.npz")
 e5.OUT_DIR = REPO / "results/e5"   # eve_*.json.gz descargados del volumen
 

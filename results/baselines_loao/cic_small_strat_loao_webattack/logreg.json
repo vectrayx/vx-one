@@ -1,0 +1,7 @@
+{
+ "run_id": "cic_small_strat_loao_webattack",
+ "variant": "logreg",
+ "auroc_excl": 0.7571,
+ "fpr95_excl": 0.2677,
+ "n_excl_test": 327
+}

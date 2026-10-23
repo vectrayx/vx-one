@@ -1,0 +1,367 @@
+%% refs.bib — VX-One paper
+%% Todas las entradas provienen del lit review verificado
+%% (docs/reference/Literature_Review_VectrayX_One.md) y del advisory Opus §4
+%% (19 citas verificadas una a una). Los ⚠ de autores incompletos y venues se resolvieron 2026-10-20.
+
+%% ---------- System One / productos (fuentes primarias verificadas 2026-10-16) ----------
+@misc{typesafejev,
+  author = {{TypeSafe AI}},
+  title  = {Jev: A System One Model for Decisions Inside Software},
+  year   = {2026},
+  howpublished = {\url{https://typesafe.ai}},
+  note   = {Accessed 2026-10-16}
+}
+
+@misc{jevdocs,
+  author = {{TypeSafe AI}},
+  title  = {Jev Documentation},
+  year   = {2026},
+  howpublished = {\url{https://docs.typesafe.ai/introduction}},
+  note   = {Accessed 2026-10-16}
+}
+
+@misc{msdecision1,
+  author       = {{Microsoft}},
+  title        = {Microsoft-Decision-1: Our Model for Fast Decision-Making},
+  year         = {2026},
+  howpublished = {\url{https://commandline.microsoft.com/microsoft-decision-1-model-foundry/}},
+  note         = {Announcement, 2026-10-09; accessed 2026-10-16}
+}
+
+@misc{mslearn-decision1,
+  author = {{Microsoft Learn}},
+  title  = {Deploy and Use Microsoft-Decision-1 in Microsoft Foundry},
+  year   = {2026},
+  howpublished = {\url{https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision}},
+  note   = {Accessed 2026-10-16}
+}
+
+%% ---------- Fundamentos ML ----------
+@inproceedings{gu2018nat,
+  author    = {Gu, Jiatao and Bradbury, James and Xiong, Caiming and Li, Victor O. K. and Socher, Richard},
+  title     = {Non-Autoregressive Neural Machine Translation},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2018}
+}
+
+@inproceedings{platt1999,
+  author    = {Platt, John C.},
+  title     = {Probabilistic Outputs for Support Vector Machines and Comparisons to Regularized Likelihood Methods},
+  booktitle = {Advances in Large Margin Classifiers},
+  publisher = {MIT Press},
+  year      = {1999}
+}
+
+@inproceedings{zadrozny2002,
+  author    = {Zadrozny, Bianca and Elkan, Charles},
+  title     = {Transforming Classifier Scores into Accurate Multiclass Probability Estimates},
+  booktitle = {ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD)},
+  year      = {2002}
+}
+
+@inproceedings{niculescu2005,
+  author    = {Niculescu-Mizil, Alexandru and Caruana, Rich},
+  title     = {Predicting Good Probabilities with Supervised Learning},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2005}
+}
+
+@inproceedings{guo2017calibration,
+  author    = {Guo, Chuan and Pleiss, Geoff and Sun, Yu and Weinberger, Kilian Q.},
+  title     = {On Calibration of Modern Neural Networks},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2017}
+}
+
+@book{vovk2005,
+  author    = {Vovk, Vladimir and Gammerman, Alexander and Shafer, Glenn},
+  title     = {Algorithmic Learning in a Random World},
+  publisher = {Springer},
+  year      = {2005}
+}
+
+@article{angelopoulos2021,
+  author  = {Angelopoulos, Anastasios N. and Bates, Stephen},
+  title   = {A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification},
+  journal = {arXiv preprint arXiv:2107.07511},
+  year    = {2021}
+}
+
+@inproceedings{papadopoulos2002,
+  author    = {Papadopoulos, Harris and Proedrou, Kostas and Vovk, Vladimir and Gammerman, Alexander},
+  title     = {Inductive Confidence Machines for Regression},
+  booktitle = {European Conference on Machine Learning (ECML)},
+  pages     = {245--256},
+  year      = {2002}
+}
+
+@inproceedings{tibshirani2019,
+  author    = {Tibshirani, Ryan J. and Barber, Rina Foygel and Cand{\`e}s, Emmanuel and Ramdas, Aaditya},
+  title     = {Conformal Prediction Under Covariate Shift},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2019}
+}
+
+@article{barber2023,
+  author  = {Barber, Rina Foygel and Cand{\`e}s, Emmanuel and Ramdas, Aaditya and Tibshirani, Ryan J.},
+  title   = {Conformal Prediction Beyond Exchangeability},
+  journal = {The Annals of Statistics},
+  volume  = {51},
+  number  = {2},
+  pages   = {1392--1423},
+  year    = {2023}
+}
+
+@article{chow1970,
+  author  = {Chow, C. K.},
+  title   = {On Optimum Recognition Error and Reject Tradeoff},
+  journal = {IEEE Transactions on Information Theory},
+  volume  = {16},
+  number  = {1},
+  pages   = {41--46},
+  year    = {1970}
+}
+
+@inproceedings{cortes2016rejection,
+  author    = {Cortes, Corinna and DeSalvo, Giulia and Mohri, Mehryar},
+  title     = {Learning with Rejection},
+  booktitle = {Algorithmic Learning Theory (ALT)},
+  year      = {2016}
+}
+
+@inproceedings{geifman2017,
+  author    = {Geifman, Yonatan and El-Yaniv, Ran},
+  title     = {Selective Classification for Deep Neural Networks},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2017}
+}
+
+@article{elyaniv2010,
+  author  = {El-Yaniv, Ran and Wiener, Yair},
+  title   = {On the Foundations of Noise-Free Selective Classification},
+  journal = {Journal of Machine Learning Research},
+  volume  = {11},
+  year    = {2010}
+}
+
+@inproceedings{elkan2001,
+  author    = {Elkan, Charles},
+  title     = {The Foundations of Cost-Sensitive Learning},
+  booktitle = {International Joint Conference on Artificial Intelligence (IJCAI)},
+  year      = {2001}
+}
+
+@inproceedings{hendrycks2017,
+  author    = {Hendrycks, Dan and Gimpel, Kevin},
+  title     = {A Baseline for Detecting Misclassified and Out-of-Distribution Examples in Neural Networks},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2017}
+}
+
+@inproceedings{hendrycks2019oe,
+  author    = {Hendrycks, Dan and Mazeika, Mantas and Dietterich, Thomas G.},
+  title     = {Deep Anomaly Detection with Outlier Exposure},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2019}
+}
+
+@inproceedings{kendall2018multitask,
+  author    = {Kendall, Alex and Gal, Yarin and Cipolla, Roberto},
+  title     = {Multi-Task Learning Using Uncertainty to Weigh Losses for Scene Geometry and Semantics},
+  booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2018}
+}
+
+@inproceedings{kleinberg2017,
+  author    = {Kleinberg, Jon and Mullainathan, Sendhil and Raghavan, Manish},
+  title     = {Inherent Trade-Offs in the Fair Determination of Risk Scores},
+  booktitle = {Innovations in Theoretical Computer Science (ITCS)},
+  year      = {2017}
+}
+
+@inproceedings{kumar2019,
+  author    = {Kumar, Ananya and Liang, Percy and Ma, Tengyu},
+  title     = {Verified Uncertainty Calibration},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2019}
+}
+
+@inproceedings{vaicenavicius2019,
+  author    = {Vaicenavicius, Jukka and Widmann, Daniel and Andersson, Carl and Lindsten, Fredrik and Roll, Jacob and Sch{\"o}n, Thomas B.},
+  title     = {Evaluating Model Calibration in Classification},
+  booktitle = {International Conference on Artificial Intelligence and Statistics (AISTATS)},
+  pages     = {2330--2339},
+  year      = {2019},
+  note      = {PMLR 89}
+}
+
+@article{shi2023corn,
+  author  = {Shi, Xintong and Cao, Wenzhi and Raschka, Sebastian},
+  title   = {Deep Neural Networks for Rank-Consistent Ordinal Regression Based on Conditional Probabilities},
+  journal = {Pattern Analysis and Applications},
+  volume  = {26},
+  number  = {3},
+  pages   = {941--955},
+  year    = {2023},
+  doi     = {10.1007/s10044-023-01181-9}
+}
+
+%% ---------- Determinista / NIDS / datasets ----------
+@inproceedings{roesch1999snort,
+  author    = {Roesch, Martin},
+  title     = {Snort --- Lightweight Intrusion Detection for Networks},
+  booktitle = {13th USENIX Conference on System Administration (LISA)},
+  year      = {1999}
+}
+
+@misc{suricata,
+  author       = {{Open Information Security Foundation}},
+  title        = {Suricata: Open Source Intrusion Detection Engine},
+  year         = {2026},
+  howpublished = {\url{https://suricata.io}}
+}
+
+@article{paxson1999bro,
+  author  = {Paxson, Vern},
+  title   = {Bro: A System for Detecting Network Intruders in Real-Time},
+  journal = {Computer Networks},
+  volume  = {31},
+  number  = {23--24},
+  pages   = {1391--1399},
+  year    = {1999}
+}
+
+@misc{yara,
+  author       = {{VirusTotal}},
+  title        = {YARA: The Pattern Matching Swiss Knife for Malware Researchers},
+  year         = {2026},
+  howpublished = {\url{https://virustotal.github.io/yara/}}
+}
+
+@inproceedings{mirsky2018kitsune,
+  author    = {Mirsky, Yisroel and Doitshman, Tomer and Elovici, Yuval and Shmatikov, Vitaly},
+  title     = {Kitsune: An Ensemble of Autoencoders for Online Network Intrusion Detection},
+  booktitle = {Network and Distributed System Security Symposium (NDSS)},
+  year      = {2018}
+}
+
+@article{mchugh2000,
+  author  = {McHugh, John},
+  title   = {Testing Intrusion Detection Systems: A Critique of the 1998 and 1999 {DARPA} Off-line Intrusion Detection System Evaluations as Performed by Lincoln Laboratory},
+  journal = {ACM Transactions on Information and System Security},
+  volume  = {3},
+  number  = {4},
+  year    = {2000}
+}
+
+@inproceedings{mahoney2003,
+  author    = {Mahoney, Matthew V. and Chan, Philip K.},
+  title     = {An Analysis of the 1999 {DARPA}/Lincoln Laboratory Evaluation Data for Network Anomaly Detection},
+  booktitle = {Recent Advances in Intrusion Detection (RAID)},
+  year      = {2003}
+}
+
+%% Verificado 2026-10-20 (SPW 2021, pp. 7–12; antes "Engels, G. and others" — error: el primer autor es Engelen).
+@inproceedings{engelen2021,
+  author    = {Engelen, Gints and Rimmer, Vera and Joosen, Wouter},
+  title     = {Troubleshooting an Intrusion Detection Dataset: the {CICIDS2017} Case Study},
+  booktitle = {2021 IEEE Security and Privacy Workshops (SPW)},
+  pages     = {7--12},
+  year      = {2021},
+  doi       = {10.1109/SPW53761.2021.00009}
+}
+
+@inproceedings{lanvin2022errors,
+  author    = {Lanvin, Maxime and Gimenez, Pierre-Fran{\c{c}}ois and Han, Yufei and Majorczyk, Fr{\'e}d{\'e}ric and M{\'e}, Ludovic and Totel, Eric},
+  title     = {Errors in the {CICIDS2017} Dataset and the Significant Differences in Detection Performances It Makes},
+  booktitle = {17th International Conference on Risks and Security of Internet and Systems (CRiSIS)},
+  year      = {2022},
+  doi       = {10.1007/978-3-031-31108-6\_2}
+}
+
+@inproceedings{moustafa2015unsw,
+  author    = {Moustafa, Nour and Slay, Jill},
+  title     = {{UNSW-NB15}: A Comprehensive Data Set for Network Intrusion Detection Systems},
+  booktitle = {Military Communications and Information Systems Conference (MilCIS)},
+  year      = {2015}
+}
+
+@inproceedings{sharafaldin2018cicids,
+  author    = {Sharafaldin, Iman and Lashkari, Arash Habibi and Ghorbani, Ali A.},
+  title     = {Toward Generating a New Intrusion Detection Dataset and Intrusion Traffic Characterization},
+  booktitle = {International Conference on Information Systems Security and Privacy (ICISSP)},
+  year      = {2018}
+}
+
+%% ---------- Malware / sécurité des binaires ----------
+@article{anderson2018ember,
+  author  = {Anderson, Hyrum S. and Roth, Phil},
+  title   = {{EMBER}: An Open Dataset for Training Static {PE} Malware Machine Learning Models},
+  journal = {arXiv preprint arXiv:1804.04737},
+  year    = {2018}
+}
+
+%% Verificado 2026-10-20 (KDD 2025 V.2, pp. 5516–5526; antes "Botacin, M. and others" — error de primera autoría).
+@inproceedings{joyce2025ember,
+  author    = {Joyce, Robert J. and Miller, Gideon and Roth, Phil and Zak, Richard and Zaresky-Williams, Elliott and Anderson, Hyrum and Raff, Edward and Holt, James},
+  title     = {{EMBER2024} --- A Benchmark Dataset for Holistic Evaluation of Malware Classifiers},
+  booktitle = {Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD), Vol.~2},
+  pages     = {5516--5526},
+  year      = {2025},
+  doi       = {10.1145/3711896.3737431}
+}
+
+%% ---------- LLMs en ciberseguridad ----------
+%% Verificado 2026-10-20 (SecureComm 2022/Springer; antes "Aghaei, E. and others").
+@inproceedings{aghaei2022securebert,
+  author    = {Aghaei, Ehsan and Niu, Xi and Shadid, Waseem and Al-Shaer, Ehab},
+  title     = {{SecureBERT}: A Domain-Specific Language Model for Cybersecurity},
+  booktitle = {18th EAI International Conference on Security and Privacy in Communication Networks (SecureComm)},
+  publisher = {Springer},
+  year      = {2022},
+  doi       = {10.1007/978-3-031-25538-0\_3}
+}
+
+@inproceedings{greshake2023injection,
+  author    = {Greshake, Kai and Abdelnabi, Sahar and Mishra, Shailesh and Endres, Christine and Holz, Thorsten and Fritz, Mario},
+  title     = {Not What You've Signed Up For: Compromising Real-World {LLM}-Integrated Applications with Indirect Prompt Injection},
+  booktitle = {AISec @ ACM CCS},
+  year      = {2023}
+}
+
+%% ---------- Otros ----------
+@inproceedings{violajones2001,
+  author    = {Viola, Paul and Jones, Michael},
+  title     = {Rapid Object Detection Using a Boosted Cascade of Simple Features},
+  booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2001}
+}
+
+@inproceedings{chen2016xgboost,
+  author    = {Chen, Tianqi and Guestrin, Carlos},
+  title     = {{XGBoost}: A Scalable Tree Boosting System},
+  booktitle = {ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD)},
+  year      = {2016}
+}
+
+%% Verificadas 2026-10-21 (añadidas tras la revisión externa)
+@inproceedings{ovadia2019trust,
+  author    = {Ovadia, Yaniv and Fertig, Emily and Ren, Jie and Nado, Zachary and Sculley, D. and Nowozin, Sebastian and Dillon, Joshua V. and Lakshminarayanan, Balaji and Snoek, Jasper},
+  title     = {Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty under Dataset Shift},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2019}
+}
+
+@inproceedings{sommer2011contextual,
+  author    = {Sommer, Robin and Paxson, Vern},
+  title     = {Outside the Closed World: On Using Machine Learning for Network Feature Anomaly Detection},
+  booktitle = {IEEE Symposium on Security and Privacy},
+  year      = {2011}
+}
+
+@inproceedings{arp2022donts,
+  author    = {Arp, Daniel and Quiring, Erwin and Pendlebury, Feargus and Warnecke, Alexander and Pierazzi, Fabio and Wressnegger, Christian and Cavallaro, Lorenzo and Holz, Thorsten},
+  title     = {Dos and Don'ts of Machine Learning in Computer Security},
+  booktitle = {31st USENIX Security Symposium},
+  year      = {2022}
+}

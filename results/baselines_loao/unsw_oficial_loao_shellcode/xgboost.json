@@ -1,0 +1,22 @@
+{
+  "run_id": "unsw_oficial_loao_shellcode",
+  "model": "xgboost",
+  "candidates": [
+    "normal",
+    "dos",
+    "recon",
+    "exploitation",
+    "backdoor",
+    "analysis",
+    "fuzzing",
+    "generic",
+    "worms"
+  ],
+  "temperatures": {
+    "noul": 1.1609841990385021,
+    "choice": 1.1696809452147225,
+    "score": 1.0922836688483648,
+    "ddos": null
+  },
+  "fit_s": 203.3
+}

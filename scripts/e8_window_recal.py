@@ -43,7 +43,7 @@ sys.path.insert(0, str(REPO)); sys.path.insert(0, str(REPO / "scripts"))
 import e7_vendor_api as e7
 
 NPZ = REPO / "results/outputs_seed/cic_small_time.npz"
-PARQUET = Path("${HOME}/projects/paper/data/processed/cicids2017/cicids2017.parquet")
+PARQUET = Path("/home/jsantillana/projects/paper/data/processed/cicids2017/cicids2017.parquet")
 OUT = REPO / "results/e8_recal"
 
 

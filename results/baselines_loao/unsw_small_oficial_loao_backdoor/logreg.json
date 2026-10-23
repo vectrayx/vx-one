@@ -1,0 +1,8 @@
+{
+ "run_id": "unsw_small_oficial_loao_backdoor",
+ "variant": "logreg",
+ "auroc_excl": 0.9556,
+ "fpr95_excl": 0.1765,
+ "n_excl_test": 583,
+ "fit_s": 30.1
+}

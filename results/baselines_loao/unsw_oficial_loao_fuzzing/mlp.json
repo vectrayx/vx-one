@@ -1,0 +1,22 @@
+{
+  "run_id": "unsw_oficial_loao_fuzzing",
+  "model": "mlp",
+  "candidates": [
+    "normal",
+    "dos",
+    "recon",
+    "exploitation",
+    "shellcode",
+    "backdoor",
+    "analysis",
+    "generic",
+    "worms"
+  ],
+  "temperatures": {
+    "noul": 1.0271507297870413,
+    "choice": 1.058034011194953,
+    "score": 1.0607163764546623,
+    "ddos": null
+  },
+  "fit_s": 58.6
+}

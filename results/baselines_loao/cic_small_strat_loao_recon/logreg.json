@@ -1,0 +1,7 @@
+{
+ "run_id": "cic_small_strat_loao_recon",
+ "variant": "logreg",
+ "auroc_excl": 0.5513,
+ "fpr95_excl": 0.8643,
+ "n_excl_test": 23840
+}

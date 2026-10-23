@@ -1,0 +1,8 @@
+{
+ "run_id": "unsw_small_oficial_loao_worms",
+ "variant": "mahalanobis",
+ "auroc_excl": 0.8704,
+ "fpr95_excl": 0.517,
+ "n_excl_test": 44,
+ "fit_s": 22.5
+}

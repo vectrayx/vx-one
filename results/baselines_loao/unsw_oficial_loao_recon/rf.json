@@ -1,0 +1,22 @@
+{
+  "run_id": "unsw_oficial_loao_recon",
+  "model": "rf",
+  "candidates": [
+    "normal",
+    "dos",
+    "exploitation",
+    "shellcode",
+    "backdoor",
+    "analysis",
+    "fuzzing",
+    "generic",
+    "worms"
+  ],
+  "temperatures": {
+    "noul": 0.9240660451548897,
+    "choice": 2.1765319183828673,
+    "score": 1.4060137285728938,
+    "ddos": null
+  },
+  "fit_s": 69.8
+}

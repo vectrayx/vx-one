@@ -1,0 +1,7 @@
+{
+ "run_id": "cic_small_strat_loao_botnet",
+ "variant": "mahalanobis",
+ "auroc_excl": 0.3188,
+ "fpr95_excl": 0.9633,
+ "n_excl_test": 295
+}

@@ -1,0 +1,88 @@
+{
+ "vendor": "opencode",
+ "model": "jev-1.13-free",
+ "repeats": 5,
+ "n_rows": 451,
+ "n_calls": 1563,
+ "coverage": {
+  "2": 54,
+  "3": 150,
+  "4": 153,
+  "1": 18,
+  "5": 75,
+  "0": 1
+ },
+ "coverage_note": "4 slices sin nodo \u2192 ~3.4 de 5 repeats por fila",
+ "row_level": {
+  "mean_row_std_noul": 0.00719,
+  "choice_argmax_disagreement_rate": 0.0106
+ },
+ "per_repeat": [
+  {
+   "repeat": 0,
+   "n": 303,
+   "auroc": 0.6146,
+   "ece15": 0.3196,
+   "macro_f1": 0.0723,
+   "sev_mae": 0.8977
+  },
+  {
+   "repeat": 1,
+   "n": 306,
+   "auroc": 0.6059,
+   "ece15": 0.309,
+   "macro_f1": 0.0807,
+   "sev_mae": 0.9374
+  },
+  {
+   "repeat": 2,
+   "n": 321,
+   "auroc": 0.5789,
+   "ece15": 0.3008,
+   "macro_f1": 0.0737,
+   "sev_mae": 0.9042
+  },
+  {
+   "repeat": 3,
+   "n": 323,
+   "auroc": 0.5785,
+   "ece15": 0.3179,
+   "macro_f1": 0.0876,
+   "sev_mae": 0.9594
+  },
+  {
+   "repeat": 4,
+   "n": 310,
+   "auroc": 0.6069,
+   "ece15": 0.2828,
+   "macro_f1": 0.0748,
+   "sev_mae": 0.9223
+  }
+ ],
+ "metrics_agg": {
+  "auroc": {
+   "mean": 0.597,
+   "stdev": 0.017,
+   "min": 0.5785,
+   "max": 0.6146
+  },
+  "ece15": {
+   "mean": 0.306,
+   "stdev": 0.015,
+   "min": 0.2828,
+   "max": 0.3196
+  },
+  "macro_f1": {
+   "mean": 0.0778,
+   "stdev": 0.0063,
+   "min": 0.0723,
+   "max": 0.0876
+  },
+  "sev_mae": {
+   "mean": 0.9242,
+   "stdev": 0.0251,
+   "min": 0.8977,
+   "max": 0.9594
+  }
+ }
+}

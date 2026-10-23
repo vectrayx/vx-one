@@ -40,7 +40,7 @@ print("[arrow] pool =", pa.default_memory_pool().backend_name, flush=True)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.models.data import ember_shards
 
-OLD = Path("${HOME}/projects/paper/results/outputs")
+OLD = Path("/home/jsantillana/projects/paper/results/outputs")
 OUT = Path("results/e4_conformal")
 OUT.mkdir(parents=True, exist_ok=True)
 

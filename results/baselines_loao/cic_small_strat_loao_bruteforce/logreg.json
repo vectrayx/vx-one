@@ -1,0 +1,7 @@
+{
+ "run_id": "cic_small_strat_loao_bruteforce",
+ "variant": "logreg",
+ "auroc_excl": 0.6147,
+ "fpr95_excl": 0.9607,
+ "n_excl_test": 2076
+}

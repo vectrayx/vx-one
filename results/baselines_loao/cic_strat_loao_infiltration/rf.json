@@ -1,0 +1,20 @@
+{
+  "run_id": "cic_strat_loao_infiltration",
+  "model": "rf",
+  "candidates": [
+    "normal",
+    "dos_ddos",
+    "recon",
+    "bruteforce",
+    "webattack",
+    "botnet",
+    "exploitation"
+  ],
+  "temperatures": {
+    "noul": 1.5236313432521422,
+    "choice": 1.6667254281876893,
+    "score": 1.4655268152281806,
+    "ddos": 0.6981670623971952
+  },
+  "fit_s": 252.5
+}

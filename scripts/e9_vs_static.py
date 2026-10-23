@@ -27,7 +27,7 @@ from e8_window_recal import temp_scale_binary, temp_scale_multi, sigmoid, soft_p
 import e7_vendor_api as e7  # noqa: E402
 
 REPO = Path(__file__).resolve().parent.parent
-PARQUET = Path("${HOME}/projects/paper/data/processed/cicids2017/cicids2017.parquet")
+PARQUET = Path("/home/jsantillana/projects/paper/data/processed/cicids2017/cicids2017.parquet")
 DDOS_DAY = "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX"
 OUT = REPO / "results/e9_retrain"
 N_CLASSES = 6  # candidate set congelado del artifact

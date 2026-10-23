@@ -1,0 +1,119 @@
+{
+ "2017-07-03": {
+  "bin": "Monday-WorkingHours",
+  "n_alerts_total": 9425,
+  "n_alerts_day": 9425,
+  "n_flows": 529450,
+  "n_attack": 0,
+  "attack_resolved": 0.0,
+  "benign_flagged": 0.0478,
+  "precision": 0.0,
+  "recall": 0.0,
+  "per_class": {
+   "normal": {
+    "n": 529450,
+    "resolved": 0.0478
+   }
+  }
+ },
+ "2017-07-04": {
+  "bin": "Tuesday-WorkingHours",
+  "n_alerts_total": 2644,
+  "n_alerts_day": 2644,
+  "n_flows": 445641,
+  "n_attack": 13832,
+  "attack_resolved": 0.0205,
+  "benign_flagged": 0.02379,
+  "precision": 0.0269,
+  "recall": 0.0205,
+  "per_class": {
+   "bruteforce": {
+    "n": 13832,
+    "resolved": 0.0205
+   },
+   "normal": {
+    "n": 431809,
+    "resolved": 0.0238
+   }
+  }
+ },
+ "2017-07-05": {
+  "bin": "Wednesday-workingHours",
+  "n_alerts_total": 2799,
+  "n_alerts_day": 2799,
+  "n_flows": 691390,
+  "n_attack": 251722,
+  "attack_resolved": 0.0219,
+  "benign_flagged": 0.02364,
+  "precision": 0.3463,
+  "recall": 0.0219,
+  "per_class": {
+   "dos_ddos": {
+    "n": 251711,
+    "resolved": 0.0218
+   },
+   "exploitation": {
+    "n": 11,
+    "resolved": 1.0
+   },
+   "normal": {
+    "n": 439668,
+    "resolved": 0.0236
+   }
+  }
+ },
+ "2017-07-06": {
+  "bin": "Thursday-WorkingHours",
+  "n_alerts_total": 26652,
+  "n_alerts_day": 26652,
+  "n_flows": 458483,
+  "n_attack": 2216,
+  "attack_resolved": 0.0208,
+  "benign_flagged": 0.02225,
+  "precision": 0.0045,
+  "recall": 0.0208,
+  "per_class": {
+   "infiltration": {
+    "n": 36,
+    "resolved": 0.9722
+   },
+   "normal": {
+    "n": 456267,
+    "resolved": 0.0222
+   },
+   "webattack": {
+    "n": 2180,
+    "resolved": 0.005
+   }
+  }
+ },
+ "2017-07-07": {
+  "bin": "Friday-WorkingHours",
+  "n_alerts_total": 12170,
+  "n_alerts_day": 2745,
+  "n_flows": 702713,
+  "n_attack": 288785,
+  "attack_resolved": 0.0023,
+  "benign_flagged": 0.02151,
+  "precision": 0.0702,
+  "recall": 0.0023,
+  "per_class": {
+   "botnet": {
+    "n": 1956,
+    "resolved": 0.0
+   },
+   "dos_ddos": {
+    "n": 128025,
+    "resolved": 0.0045
+   },
+   "normal": {
+    "n": 413928,
+    "resolved": 0.0215
+   },
+   "recon": {
+    "n": 158804,
+    "resolved": 0.0006
+   }
+  }
+ }
+}

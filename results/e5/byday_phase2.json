@@ -1,0 +1,83 @@
+{
+ "note": "Phase-2 honesta: logits del modelo por-d\u00eda (cic_small_time.npz, te=viernes en orden de captura); d\u00eda DDos usa solo sus filas test del split time.",
+ "days": {
+  "2017-07-06": {
+   "n_flows": 458483,
+   "n_attack": 2216,
+   "f1": {
+    "precision": 0.0586,
+    "recall": 0.0135,
+    "f1": 0.022,
+    "accuracy": 0.9942
+   },
+   "f2_byday": {
+    "f2_recall_per_family": {
+     "infiltration": null,
+     "webattack": null
+    },
+    "f2_fpr_benign": 0.0,
+    "f2_acc": 0.0,
+    "combined_est": {
+     "precision": 0.0586,
+     "recall": 0.0135,
+     "f1": 0.022,
+     "accuracy": 0.9942
+    }
+   },
+   "f2_strat": {
+    "f2_recall_per_family": {
+     "infiltration": null,
+     "webattack": 0.9938837920489296
+    },
+    "f2_fpr_benign": 0.0028,
+    "f2_acc": 0.007595561752062275,
+    "combined_est": {
+     "precision": 0.5492,
+     "recall": 0.9779,
+     "f1": 0.7033,
+     "accuracy": 0.996
+    }
+   }
+  },
+  "2017-07-07": {
+   "n_flows": 702713,
+   "n_attack": 288785,
+   "f1": {
+    "precision": 0.0665,
+    "recall": 0.0001,
+    "f1": 0.0001,
+    "accuracy": 0.5887
+   },
+   "f2_byday": {
+    "f2_recall_per_family": {
+     "botnet": null,
+     "dos_ddos": 0.7654218354224849,
+     "recon": null
+    },
+    "f2_fpr_benign": 0.0064,
+    "f2_acc": 0.14295403803943366,
+    "combined_est": {
+     "precision": 0.9707,
+     "recall": 0.3394,
+     "f1": 0.503,
+     "accuracy": 0.7243
+    }
+   },
+   "f2_strat": {
+    "f2_recall_per_family": {
+     "botnet": 0.41694915254237286,
+     "dos_ddos": 0.9996877114453755,
+     "recon": 0.9998322147651006
+    },
+    "f2_fpr_benign": 0.0007,
+    "f2_acc": 0.4108234533509541,
+    "combined_est": {
+     "precision": 0.998,
+     "recall": 0.9958,
+     "f1": 0.9969,
+     "accuracy": 0.9974
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,8 @@
+{
+ "run_id": "unsw_small_oficial_loao_analysis",
+ "variant": "logreg",
+ "auroc_excl": 0.9296,
+ "fpr95_excl": 0.4079,
+ "n_excl_test": 677,
+ "fit_s": 29.9
+}

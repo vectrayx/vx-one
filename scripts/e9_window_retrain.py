@@ -54,7 +54,7 @@ from src.models.losses import choice_loss, corn_loss, noul_loss  # noqa: E402
 import e7_vendor_api as e7                            # noqa: E402
 from e8_window_recal import temp_scale_binary, temp_scale_multi, sigmoid, soft_pred, ece_bin, ece_multi  # noqa: E402
 
-PARQUET = Path("${HOME}/projects/paper/data/processed/cicids2017/cicids2017.parquet")
+PARQUET = Path("/home/jsantillana/projects/paper/data/processed/cicids2017/cicids2017.parquet")
 ARTIFACT = REPO / "results/artifacts/cic_small_time.pt"
 OUT = REPO / "results/e9_retrain"
 DDOS_DAY = "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX"

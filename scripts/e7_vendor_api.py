@@ -45,9 +45,9 @@ sys.path[:0] = [str(REPO), str(REPO / "src")]
 
 from src.features.build_canonical import UNSW_FEATURE_COLUMNS  # noqa: E402
 
-PARQUET = Path("${HOME}/projects/paper/data/processed/unsw_nb15/unsw_nb15.parquet")
-NPZ = Path("${HOME}/projects/paper/results/outputs/unsw_small_oficial.npz")
-META = Path("${HOME}/projects/paper/results/outputs/unsw_small_oficial.json")
+PARQUET = Path("/home/jsantillana/projects/paper/data/processed/unsw_nb15/unsw_nb15.parquet")
+NPZ = Path("/home/jsantillana/projects/paper/results/outputs/unsw_small_oficial.npz")
+META = Path("/home/jsantillana/projects/paper/results/outputs/unsw_small_oficial.json")
 OUT = REPO / "results/e7_vendors"
 SEED = 42
 
@@ -117,7 +117,29 @@ def build_questions(candidates: list[str], with_unknown: bool = False) -> dict:
 VENDORS = {
     "typesafe": {"base": "https://api.typesafe.ai", "env": "TYPESAFE_API_KEY"},
     "opencode": {"base": "https://opencode.ai/zen", "env": "OPENCODE_API_KEY"},
+    # Azure AI Foundry (2026-10-22): ruta System One nativa del resource
+    # `holaaaaaa`; el deployment `decision-1` sirve Microsoft-Decision-1.
+    # Descubrimiento: la ruta openai.azure.com/openai/v1/decisions exige otro
+    # esquema (input str + questions array); la ruta foundry
+    # services.ai.azure.com/providers/microsoft/v1/systemone acepta el MISMO
+    # payload {state, questions} que Jev → parseo idéntico.
+    "azure": {"base": "https://holaaaaaa.services.ai.azure.com/providers/microsoft",
+              "env": "AZURE_DECISION_API_KEY",
+              "cred_file": Path("/home/jsantillana/projects/servers/azure-ml.txt"),
+              "header": "api-key"},
 }
+
+
+def _key_for(vendor: str) -> str:
+    spec = VENDORS[vendor]
+    key = os.environ.get(spec["env"])
+    if key:
+        return key
+    cf = spec.get("cred_file")
+    if cf and cf.exists():
+        lines = [l.strip() for l in cf.read_text().splitlines() if l.strip()]
+        return lines[1]  # línea 2 = token
+    raise AssertionError(f"sin credencial para {vendor}")
 
 
 def ask_one(vendor: str, model: str, state: dict, questions: dict,
@@ -125,11 +147,13 @@ def ask_one(vendor: str, model: str, state: dict, questions: dict,
     base = VENDORS[vendor]["base"]
     body = json.dumps({"model": model, "state": state, "questions": questions},
                       separators=(",", ":")).encode()
+    hdr = {"Content-Type": "application/json", "User-Agent": "vxone-e7/0.1"}
+    if VENDORS[vendor].get("header") == "api-key":
+        hdr["api-key"] = api_key
+    else:
+        hdr["Authorization"] = f"Bearer {api_key}"
     req = urllib.request.Request(
-        f"{base}/v1/systemone", data=body, method="POST",
-        headers={"Authorization": f"Bearer {api_key}",
-                 "Content-Type": "application/json",
-                 "User-Agent": "vxone-e7/0.1"})  # WAF bloquea Python-urllib
+        f"{base}/v1/systemone", data=body, method="POST", headers=hdr)
     delay = 2.0
     for i in range(tries):
         t0 = time.perf_counter()
@@ -188,9 +212,9 @@ def macro_f1(y_true: np.ndarray, y_pred: np.ndarray, n_classes: int) -> float:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--vendor", choices=["typesafe", "opencode"], default="opencode")
+    ap.add_argument("--vendor", choices=["typesafe", "opencode", "azure"], default="opencode")
     ap.add_argument("--model", default=None,
-                 help="default: jev-1.13.0 (typesafe) / jev-1.13-free (opencode)")
+                 help="default: jev-1.13.0 (typesafe) / jev-1.13-free (opencode) / decision-1 (azure)")
     ap.add_argument("--n-normal", type=int, default=1000)
     ap.add_argument("--n-attack", type=int, default=1000)
     ap.add_argument("--with-unknown", action="store_true",
@@ -272,10 +296,9 @@ def main() -> None:
         return
 
     if args.model is None:
-        args.model = "jev-1.13.0" if args.vendor == "typesafe" else "jev-1.13-free"
-    env = VENDORS[args.vendor]["env"]
-    api_key = os.environ.get(env)
-    assert api_key, f"{env} no definido"
+        args.model = {"typesafe": "jev-1.13.0", "opencode": "jev-1.13-free",
+                      "azure": "decision-1"}[args.vendor]
+    api_key = _key_for(args.vendor)
 
     def work(k: int):
         s = build_state(rows[k])
@@ -326,7 +349,11 @@ def main() -> None:
         "latency_ms": {"p50": float(np.percentile(lats, 50)) * 1000,
                        "p95": float(np.percentile(lats, 95)) * 1000},
         "cost": {"input_tokens_total": int(sum(tokens)),
-                 "usd": sum(tokens) * PRICE_PER_MTOK / 1e6},
+                 "usd": (sum(tokens) * PRICE_PER_MTOK / 1e6
+                         if args.vendor != "azure" else None),
+                 "note": ("precio Azure de Microsoft-Decision-1 no publicado; "
+                          "coste medido en tokens" if args.vendor == "azure"
+                          else "a la tarifa publicada del vendor")},
         "notes": {"candidates": cand, "with_unknown": args.with_unknown,
                   "thresholds": {"noul": Tn, "score": Ts},
                   "alignment": "te npz filas == parquet test en orden natural (verificado)"},

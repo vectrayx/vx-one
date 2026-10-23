@@ -1,15 +1,15 @@
-"""VX-One training loop (spec F2 §6.3-§6.5, D11).
+"""Loop de entrenamiento VX-One (spec F2 §6.3-§6.5, D11).
 
-Frozen hyperparameters:
-- AdamW β=(0.9,0.999), eps=1e-8; weight decay 1e-2 ONLY in weight matrices
-Linear 2D (excludes LN, biases, embeddings, corn_b and s_q).
-- Schedule: linear warmup 5% + cosine up to 0; standard clip 1.0.
-- Early stopping: patience 4 over M_val = average head metrics
-active (AUROC noul, macro-F1 choice without abstention, 1−MAE(ŝ,y)/3 score,
-macro-F1 ddos ​​in subset).
-- AMP: bf16 on L4, fp16 on T4, off on CPU.
-- Upon completion: the best epoch is restored, each head is calibrated in val
-(§5, NLL) and the self-contained artifact is written (§8.2).
+Hiperparámetros congelados:
+- AdamW β=(0.9,0.999), eps=1e-8; weight decay 1e-2 SOLO en matrices de peso
+  Linear 2D (excluye LN, biases, embeddings, corn_b y s_q).
+- Schedule: warmup lineal 5% + coseno hasta 0; clip de norma 1.0.
+- Early stopping: patience 4 sobre M_val = media de métricas de cabezas
+  activas (AUROC noul, macro-F1 choice sin abstención, 1−MAE(ŝ,y)/3 score,
+  macro-F1 ddos en subconjunto).
+- AMP: bf16 en L4, fp16 en T4, off en CPU.
+- Al terminar: se restaura el mejor epoch, se calibra cada cabeza en val
+  (§5, NLL) y se escribe el artefacto self-contained (§8.2).
 """
 
 from __future__ import annotations
@@ -23,6 +23,7 @@ from pathlib import Path
 import numpy as np
 import pyarrow.parquet as pq
 import torch
+import torch.nn as nn
 from sklearn.metrics import f1_score, roc_auc_score
 
 from .calibration import (fit_choice_temperature, fit_corn_temperature,
@@ -33,7 +34,7 @@ from .losses import (KendallMultiTask, choice_loss, corn_expected, corn_loss,
                      corn_pmf, noul_loss)
 from .network import VXOneNet
 
-# Frozen table §6.3: {scale: {source: (batch_size, epochs)}}; lr by scale.
+# Tabla congelada §6.3: {escala: {fuente: (batch_size, epochs)}}; lr por escala.
 TRAIN_TABLE: dict[str, dict[str, tuple[int, int]]] = {
     "nano":  {"unsw": (256, 40),  "cic": (1024, 25), "ember": (2048, 12)},
     "small": {"unsw": (512, 30),  "cic": (2048, 20), "ember": (4096, 10)},
@@ -59,8 +60,8 @@ def pick_amp(device: str, amp: str = "auto") -> str:
 
 
 def _param_groups(net: VXOneNet) -> list[dict]:
-    """wd only in 2D Linear weight matrices (D11): LN/biases/embeddings out
-(corn_b and s_q are 1D/0D and are excluded by the dims rule)."""
+    """wd solo en matrices de peso Linear 2D (D11): LN/biases/embeddings fuera
+    (corn_b y s_q son 1D/0D y quedan excluidos por la regla de dims)."""
     decay = [p for n, p in net.named_parameters() if p.dim() == 2 and not n.startswith("emb.")]
     no_decay = [p for n, p in net.named_parameters() if not (p.dim() == 2 and not n.startswith("emb."))]
     return [{"params": decay, "weight_decay": WEIGHT_DECAY},
@@ -82,7 +83,7 @@ def _make_optimizer(net: VXOneNet, lr: float,
 
 
 class _BatchLabels:
-    """Light view of batch labels (slices or shards)."""
+    """Vista ligera de labels de un batch (slices o shards)."""
 
     def __init__(self, y_fam: torch.Tensor, y_bin: torch.Tensor,
                  y_sev: torch.Tensor | None = None,
@@ -93,11 +94,11 @@ class _BatchLabels:
 
 
 def _batch_losses(net: VXOneNet, run: RunData, u, txt, lab: _BatchLabels):
-    """Loss per head + activity masks (§3.6). The ω-tensors live
-on CPU (run is serializable); They are moved to the batch device here."""
+    """Loss por cabeza + máscaras de actividad (§3.6). Los tensores ω viven
+    en CPU (run es serializable); se mueven al device del batch aquí."""
     out = net(u, txt)
     dev = u.device
-    fm = lab.y_fam >= 0  # sentinel -1 (A5-EMBER): outside the CE of choice
+    fm = lab.y_fam >= 0  # sentinela -1 (A5-EMBER): fuera del CE de choice
     losses = {
         "noul": noul_loss(out["noul"], lab.y_bin),
         "choice": choice_loss(out["choice"][fm], lab.y_fam[fm], run.omega.to(dev))
@@ -116,7 +117,7 @@ on CPU (run is serializable); They are moved to the batch device here."""
         else:
             active["ddos"] = False
     head = run.meta.get("a2_head")
-    if head:  # A2: single active head (loss + M_val)
+    if head:  # A2: una sola cabeza activa (loss + M_val)
         losses = {head: losses[head]}
         active = {q: q == head for q in active}
     return losses, active
@@ -124,7 +125,7 @@ on CPU (run is serializable); They are moved to the batch device here."""
 
 @torch.no_grad()
 def _forward_numpy(net: VXOneNet, u: torch.Tensor, txt, lab, device: str) -> dict[str, np.ndarray]:
-    """Forward in batches → numpy arrays for metrics/calibration (UNSW/CIC)."""
+    """Forward en batches → arrays numpy para métricas/calibración (UNSW/CIC)."""
     outs: dict[str, list[np.ndarray]] = {}
     for i in range(0, u.shape[0], EVAL_BS):
         ub = u[i:i + EVAL_BS].to(device)
@@ -150,7 +151,7 @@ def _forward_numpy(net: VXOneNet, u: torch.Tensor, txt, lab, device: str) -> dic
 
 @torch.no_grad()
 def _eval_ember(net: VXOneNet, run: RunData, batcher, subset: str, device: str) -> dict[str, np.ndarray]:
-    """Forward in streaming (val/test EMBER) → numpy arrays."""
+    """Forward en streaming (val/test EMBER) → arrays numpy."""
     acc: dict[str, list[np.ndarray]] = {}
     y_bin_l, y_fam_l = [], []
     for u_v, y_fam_v, y_bin_v in batcher.eval_batches(subset, EVAL_BS):
@@ -165,8 +166,8 @@ def _eval_ember(net: VXOneNet, run: RunData, batcher, subset: str, device: str) 
 
 
 def _m_val(o: dict[str, np.ndarray], names: tuple[str, ...]) -> tuple[dict[str, float], float]:
-    """M_val = average of active head metrics (§6.4). The rows with
-y_fam = -1 (outside the candidate set, D12) do not participate in Choice."""
+    """M_val = media de métricas de cabezas activas (§6.4). Las filas con
+    y_fam = -1 (fuera del candidate set, D12) no participan en Choice."""
     p_mal = 1.0 / (1.0 + np.exp(-o["noul_logits"]))  # AUROC invariante a T
     fam_mask = o["y_fam"] >= 0
     fam_pred = np.argmax(o["choice_logits"], axis=1)
@@ -192,25 +193,32 @@ def train_run(run: RunData, out_path: str | Path, device: str = "cpu",
               batch_size: int | None = None, log=print,
               ckpt_path: str | Path | None = None,
               ckpt_every_steps: int = 2000, resume: bool = False,
-              ablation: str | None = None) -> dict:
-    """Train a run and write the artifact §8.2. Returns the summary.
+              ablation: str | None = None,
+              oe: dict | None = None) -> dict:
+    """Entrena una corrida y escribe el artefacto §8.2. Devuelve el resumen.
 
-Ablations E6 (§7): `ablation` in {a1, a2_*, a3, a4, a5, a6} — a single
-change by run on the reference Small: a1 without textual branch (vocab a
-None), a2 without multi-task (a2_noul / a2_choice / a2_score: one model per
-head, the merge of the three dumps is the run a2), a3 without calibration
-(T forced to 1), a4 ω≡1 (posterior with the
-train tilt), a5 unknown off (τ_abs→1 in abstention; EMBER: the
-candidate set is already passed without unknown), a6 dropout 0.
+    oe (opcional, E9b): {"x": tensor [Noe, d+1] ya φ-transformado,
+     "txt": dict[str, tensor]|None, "weight": float} — outlier exposure
+     (Hendrycks et al. 2019) sobre la choice head: las filas del pool
+     reciben target uniforme sobre los candidatos conocidos, con peso fijo
+     fuera del weighting de Kendall. Solo UNSW/CIC (no EMBER).
 
-Recovery checkpointing (OOM/kill): every `ckpt_every_steps` steps and
-At the close of each epoch, `ckpt_path` is written ATOMICALLY with
-net+opt+sched+scaler+early-stop counters+rng. `resume=True` resume
-from that checkpoint RESTARTING the current epoch (the permutation is
-deterministic seed+epoch) — maximum loss <1 epoch; the runs that
-They finish well, they delete the checkpoint. Exact determinism (fresh rng,
-fixed seed) applies to the paper's single-shot reports; the summary is
-a crash-recovery mechanism."""
+    Ablations E6 (§7): `ablation` en {a1, a2_*, a3, a4, a5, a6} — un solo
+    cambio por corrida sobre la referencia Small: a1 sin rama textual (vocab a
+    None), a2 sin multi-task (a2_noul / a2_choice / a2_score: un modelo por
+    cabeza, el merge de los tres dumps es la corrida a2), a3 sin calibración
+    (T forzada a 1), a4 ω≡1 (posterior con el
+    tilt del train), a5 unknown off (τ_abs→1 en abstención; EMBER: el
+    candidate set ya se pasa sin unknown), a6 dropout 0.
+
+    Checkpointing de recuperación (OOM/kill): cada `ckpt_every_steps` pasos y
+    al cierre de cada epoch se escribe ATÓMICAMENTE `ckpt_path` con
+    net+opt+sched+scaler+contadores de early-stop+rng. `resume=True` retoma
+    desde ese checkpoint REINICIANDO el epoch en curso (la permutación es
+    determinista seed+epoch) — pérdida máxima <1 epoch; las corridas que
+    terminan bien borran el checkpoint. El determinismo exacto (rng fresco,
+    seed fijo) se aplica a los reportes single-shot del paper; el resume es
+    un mecanismo de crash-recovery."""
     torch.manual_seed(seed)
     src = {"unsw": "unsw", "cic": "cic", "ember2024_v1": "ember"}[run.source]
     bs_def, ep_def = TRAIN_TABLE[run.scale][src]
@@ -220,7 +228,7 @@ a crash-recovery mechanism."""
     amp_mode = pick_amp(device, amp)
 
     # ── ablations E6 ──────────────────────────────────────────────────
-    if ablation == "a1":   # without textual branch: the net does not see embeddings
+    if ablation == "a1":   # sin rama textual: el net no ve embeddings
         run.vocab = None
         for part in ("train_txt", "val_txt", "test_txt"):
             setattr(run, part, None)
@@ -229,16 +237,16 @@ a crash-recovery mechanism."""
         if run.omega_ddos is not None:
             run.omega_ddos = torch.ones_like(run.omega_ddos)
     elif ablation == "a5" and run.source == "ember2024_v1":
-        # 10-way without unknown: the class leaves the candidate set; their ranks
-        # (benign + without family + tail) are left out of the CE of choice via
-        # imap sentinel -1 and _batch_losses mask
+        # 10-way sin unknown: la clase sale del candidate set; sus filas
+        # (benignos + sin familia + cola) quedan fuera del CE de choice vía
+        # el sentinela -1 del imap y la máscara de _batch_losses
         from .losses import class_weights
 
         unk = run.candidates.index("unknown")
         counts = run.meta.get("train_counts", {})
         run.candidates = [c for c in run.candidates if c != "unknown"]
         run.omega = torch.tensor(class_weights([counts[c] for c in run.candidates]))
-        # network is built from run.heads (dataclass frozen): replace it
+        # la red se construye desde run.heads (dataclass frozen): reemplazarlo
         import dataclasses
         run.heads = dataclasses.replace(run.heads,
                                         n_candidates=len(run.candidates))
@@ -253,10 +261,10 @@ a crash-recovery mechanism."""
         import src.models.network as _net_mod
         _net_mod.DROPOUT = 0.0
     elif ablation in ("a2_noul", "a2_choice", "a2_score"):
-        # A2 without multi-task (§7): ONE model per head with the same
-        # total budget — heads contribute <1% of params, width
-        # no adjustment required. Only the chosen head receives loss and M_val;
-        # the rest are left without a gradient and the combined dump excludes them.
+        # A2 sin multi-task (§7): UN modelo por cabeza con el mismo
+        # presupuesto total — las cabezas aportan <1% de params, la anchura
+        # no requiere ajuste. Solo la cabeza elegida recibe pérdida y M_val;
+        # las demás quedan sin gradiente y el dump combinado las excluye.
         run.meta["a2_head"] = ablation.removeprefix("a2_")
 
     log(f"[train] {run.source}/{run.scale}/{run.split_scheme} bs={bs} epochs={n_epochs} "
@@ -286,10 +294,10 @@ a crash-recovery mechanism."""
     amp_dtype = {"bf16": torch.bfloat16, "fp16": torch.float16}.get(amp_mode)
     params = [p for g in opt.param_groups for p in g["params"]]
 
-    # ── recovery checkpointing (atomic tmp→replace) ───────────
+    # ── checkpointing de recuperación (atomic tmp→replace) ───────────
     def _save_ckpt(epoch_done: int, best_m: float, best_epoch: int,
                    bad: int, best_state) -> None:
-        """epoch_done = number of COMPLETE epochs (summarizes and replays the current one)."""
+        """epoch_done = nº de epochs COMPLETOS (resume re-playea el actual)."""
         if not ckpt_path:
             return
         tmp = f"{ckpt_path}.tmp"
@@ -312,13 +320,13 @@ a crash-recovery mechanism."""
         ck = torch.load(ckpt_path, map_location="cpu", weights_only=False)
         net.load_state_dict(ck["net"])
         opt.load_state_dict(ck["opt"])
-        for st in opt.state.values():  # AdamW: states to device of the params
+        for st in opt.state.values():  # AdamW: estados a device de los params
             for k, v in st.items():
                 if torch.is_tensor(v):
                     st[k] = v.to(device)
-        # fresh sched: the current epoch is REPLAYED in full (permutation
-        # deterministic seed+epoch), so last_epoch realigns with
-        # e*steps_per_epoch and cosine ends in total_steps as single-shot.
+        # sched fresco: el epoch en curso se REPLAYEA completo (permutación
+        # determinista seed+epoch), así last_epoch vuelve a alinear con
+        # e*steps_per_epoch y el coseno termina en total_steps como single-shot.
         _, sched = _make_optimizer(net, lr, total_steps)
         if amp_mode == "fp16" and ck.get("scaler"):
             scaler.load_state_dict(ck["scaler"])
@@ -342,12 +350,34 @@ a crash-recovery mechanism."""
             order = np.random.default_rng(seed + epoch).permutation(n_train)
             txt_tr = run.train_txt or {}
             label_tr = run.train_labels
+            oe_x = oe["x"] if oe else None
+            oe_txt_t = oe.get("txt") if oe else None
+            oe_perm = (np.random.default_rng(seed + 1000 + epoch)
+                       .permutation(oe_x.shape[0]) if oe_x is not None else None)
+            oe_cursor = [0]
+
+            def _next_oe(k: int):
+                """k índices del pool OE, cíclicos con orden por-epoch."""
+                if oe_x is None:
+                    return None
+                cur = oe_cursor[0]
+                take = oe_perm[(cur + np.arange(k)) % len(oe_perm)]
+                oe_cursor[0] = (cur + k) % len(oe_perm)
+                return take
 
             def _gen():
                 for s in range(0, n_train, bs):
                     idx = torch.tensor(order[s:s + bs])
                     u_b = run.train[idx].to(device)
                     txt_b = {k: v[idx].to(device) for k, v in txt_tr.items()} or None
+                    oe_b = None
+                    if oe_x is not None:
+                        take = _next_oe(len(idx))
+                        u_oe = oe_x[take].to(device)
+                        txt_oe = ({k: v[take].to(device)
+                                   for k, v in oe_txt_t.items()}
+                                  if oe_txt_t else None)
+                        oe_b = (u_oe, txt_oe)
                     yield u_b, txt_b, _BatchLabels(
                         label_tr.y_fam[idx].to(device),
                         label_tr.y_bin[idx].to(device),
@@ -356,13 +386,20 @@ a crash-recovery mechanism."""
                         label_tr.ddos_mask[idx].to(device)
                         if label_tr.ddos_mask is not None else None,
                         label_tr.y_ddos[idx].to(device)
-                        if label_tr.y_ddos is not None else None)
+                        if label_tr.y_ddos is not None else None), oe_b
             batches = _gen()
-        for u_b, txt_b, lab_b in batches:
+        for u_b, txt_b, lab_b, oe_b in batches:
             with torch.autocast(device_type=device.split(":")[0], dtype=amp_dtype,
                                 enabled=amp_dtype is not None and device.startswith("cuda")):
                 losses, active = _batch_losses(net, run, u_b, txt_b, lab_b)
                 total, _lambdas = kendall(losses, active)
+                if oe_b is not None and "choice" in losses:
+                    u_oe, txt_oe = oe_b
+                    out_oe = net(u_oe, txt_oe)
+                    logp_oe = nn.functional.log_softmax(out_oe["choice"], dim=1)
+                    # KL(uniform ‖ p): constante −log(1/K) + −mean_k log p_k
+                    oe_loss = -logp_oe.mean(dim=1).mean()
+                    total = total + oe["weight"] * oe_loss
             opt.zero_grad(set_to_none=True)
             if amp_mode == "fp16":
                 scaler.scale(total).backward()
@@ -376,8 +413,8 @@ a crash-recovery mechanism."""
                 opt.step()
             sched.step()
             step += 1
-            # checkpoint per step (every N): the current epoch is replayed at
-            # resume, so epoch_done = epoch (NOT epoch+1)
+            # checkpoint por paso (cada N): el epoch en curso se replayea al
+            # retomar, así que epoch_done = epoch (NO epoch+1)
             if ckpt_path and ckpt_every_steps and step % ckpt_every_steps == 0:
                 _save_ckpt(epoch, best_m, best_epoch, bad, best_state)
 
@@ -406,17 +443,17 @@ a crash-recovery mechanism."""
         log(f"[train] epoch {epoch + 1}/{n_epochs} M_val={mv:.4f} "
             + " ".join(f"{k}={v:.3f}" for k, v in active_m.items())
             + f" bad={bad}{marker}")
-        if ckpt_path:  # end of epoch: epoch_done = epoch+1 (cheap, safe)
+        if ckpt_path:  # fin de epoch: epoch_done = epoch+1 (barato, seguro)
             _save_ckpt(epoch + 1, best_m, best_epoch, bad, best_state)
         if bad >= PATIENCE:
             log(f"[train] early stop (patience {PATIENCE}) en epoch {epoch + 1}")
             break
 
-    # ── restore better epoch + calibration in val (§5) ──────────────
+    # ── restaurar mejor epoch + calibración en val (§5) ──────────────
     net.load_state_dict(best_state)
     o = val_outputs()
 
-    if ablation == "a3":  # without calibration: T=1 on all heads
+    if ablation == "a3":  # sin calibración: T=1 en todas las cabezas
         temperatures = {"noul": 1.0}
         if "corn_logits" in o:
             temperatures["score"] = 1.0
@@ -432,7 +469,7 @@ a crash-recovery mechanism."""
         if "y_ddos" in o:
             temperatures["ddos"] = fit_choice_temperature(
                 torch.tensor(o["ddos_logits"]), torch.tensor(o["y_ddos"]), run.omega_ddos)
-        # Choice: only rows within the candidate set (y_fam ≥ 0, D12)
+        # Choice: solo filas dentro del candidate set (y_fam ≥ 0, D12)
         fam_mask = o["y_fam"] >= 0
         temperatures["choice"] = fit_choice_temperature(
             torch.tensor(o["choice_logits"][fam_mask]),
@@ -442,8 +479,8 @@ a crash-recovery mechanism."""
     if ablation:
         run_id += f"_abl_{ablation}"
     # A5 (unknown off): τ_abs→1 ⇒ nadie abtiene (UNSW/CIC) o modo abstain
-    # pure after removing class (EMBER); the candidate set without unknown already
-    # left train_run in run.candidates.
+    # puro tras quitar la clase (EMBER); el candidate set sin unknown ya lo
+    # dejó train_run en run.candidates.
     tau = 1.0 if ablation == "a5" else TAU_ABS
     save_artifact(out_path, net, run_meta={
         "source_key": SOURCE_KEY[src],
@@ -468,7 +505,7 @@ a crash-recovery mechanism."""
         },
     }, temperatures=temperatures, d_num=len(run.feature_stage.impute_median))
     log(f"[train] artefacto → {out_path} (best_epoch={best_epoch} M_val={best_m:.4f})")
-    if ckpt_path:  # full run: recovery ckpt no longer needed
+    if ckpt_path:  # corrida completa: el ckpt de recuperación ya no hace falta
         Path(ckpt_path).unlink(missing_ok=True)
     return {"run_id": run_id, "best_epoch": best_epoch, "m_val": best_m,
             "temperatures": temperatures, "wall_time_s": time.time() - t0}

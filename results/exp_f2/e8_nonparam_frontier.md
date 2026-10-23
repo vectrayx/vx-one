@@ -1,0 +1,27 @@
+| day | variant | AUROC(raw) | AUROC(recalc) | ECE15 | Brier | FPR@95 | levels |
+|---|---|---|---|---|---|---|---|
+| Friday-WorkingHours-Afte | temp_val | 0.9931 | 0.9931 | 0.1273 | 0.1254 | 0.0263 | 79855 |
+| Friday-WorkingHours-Afte | iso_val | 0.9931 | 0.9934 | 0.0869 | 0.0562 | 0.0144 | 97 |
+| Friday-WorkingHours-Afte | iso_day(oracle) | 0.9931 | 0.9938 | 0.0164 | 0.0179 | 0.0215 | 41 |
+| Friday-WorkingHours-Afte | binfit1 | 0.9931 | 0.5 | 0.5573 | 0.2704 | 0.0 | 1 |
+| Friday-WorkingHours-Afte | binfit2 | 0.9931 | 0.9311 | 0.0746 | 0.0657 | 0.0195 | 2 |
+| Friday-WorkingHours-Afte | binfit4 | 0.9931 | 0.9672 | 0.0744 | 0.057 | 0.0195 | 4 |
+| Friday-WorkingHours-Afte | binfit8 | 0.9931 | 0.9853 | 0.0677 | 0.0396 | 0.0195 | 8 |
+| Friday-WorkingHours-Afte | binfit16 | 0.9931 | 0.9925 | 0.0261 | 0.0233 | 0.0195 | 14 |
+| Friday-WorkingHours-Afte | binfit32 | 0.9931 | 0.9937 | 0.0259 | 0.0215 | 0.025 | 20 |
+| Friday-WorkingHours-Afte | binfit64 | 0.9931 | 0.9948 | 0.0208 | 0.0192 | 0.0234 | 30 |
+| Friday-WorkingHours-Afte | binfit128 | 0.9931 | 0.9953 | 0.018 | 0.0178 | 0.0237 | 46 |
+| Friday-WorkingHours-Afte | binfit256 | 0.9931 | 0.9959 | 0.0167 | 0.017 | 0.0183 | 56 |
+| Friday-WorkingHours-Afte | temp_val | 0.56 | 0.56 | 0.5531 | 0.539 | 0.5768 | 31223 |
+| Friday-WorkingHours-Afte | iso_val | 0.56 | 0.5892 | 0.5486 | 0.5412 | 0.5137 | 64 |
+| Friday-WorkingHours-Afte | iso_day1lb(delayed) | 0.56 | 0.5065 | 0.5521 | 0.5552 | 0.2696 | 148 |
+| Friday-WorkingHours-Afte | iso_day(oracle) | 0.56 | 0.7079 | 0.2603 | 0.1775 | 0.0001 | 24 |
+| Friday-WorkingHours-Afte | binfit1 | 0.56 | 0.5 | 0.5548 | 0.5497 | 0.0 | 1 |
+| Friday-WorkingHours-Afte | binfit2 | 0.56 | 0.5316 | 0.4452 | 0.246 | 0.4649 | 2 |
+| Friday-WorkingHours-Afte | binfit4 | 0.56 | 0.755 | 0.1596 | 0.1935 | 0.5733 | 4 |
+| Friday-WorkingHours-Afte | binfit8 | 0.56 | 0.814 | 0.1962 | 0.1683 | 0.5247 | 8 |
+| Friday-WorkingHours-Afte | binfit16 | 0.56 | 0.8889 | 0.1083 | 0.1312 | 0.3883 | 16 |
+| Friday-WorkingHours-Afte | binfit32 | 0.56 | 0.8974 | 0.1438 | 0.1254 | 0.3646 | 29 |
+| Friday-WorkingHours-Afte | binfit64 | 0.56 | 0.9007 | 0.0936 | 0.1233 | 0.3643 | 56 |
+| Friday-WorkingHours-Afte | binfit128 | 0.56 | 0.9025 | 0.0687 | 0.1222 | 0.3627 | 107 |
+| Friday-WorkingHours-Afte | binfit256 | 0.56 | 0.9043 | 0.0733 | 0.1209 | 0.3612 | 199 |
