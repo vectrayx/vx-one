@@ -18,3 +18,6 @@ results/outputs*/
 *.blg
 *.out
 *.synctex.gz
+
+# a7 LOAO typed reference dumps (regenerate with modal volume get)
+results/e6_a7/loao_typed/

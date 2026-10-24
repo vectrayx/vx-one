@@ -1,0 +1,34 @@
+{
+  "artifact": "/vol/artifacts/cic_small_strat_loao_dos_ddos_abl_a7_s43.pt",
+  "source": "cic",
+  "scale": "small",
+  "split_scheme": "strat",
+  "exclude": "dos_ddos",
+  "temperatures": {
+    "noul": 1.1121777318474475,
+    "score": 0.6362854449001185,
+    "choice": 1.1107533078660485
+  },
+  "m_val": 0.963776864560964,
+  "best_epoch": 11,
+  "candidates": [
+    "normal",
+    "recon",
+    "bruteforce",
+    "webattack",
+    "botnet",
+    "infiltration",
+    "exploitation"
+  ],
+  "omega": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "mode": "abstain",
+  "tau_abs": 0.5
+}

@@ -1,0 +1,47 @@
+{
+  "artifact": "/vol/artifacts/cic_small_strat_loao_infiltration_abl_a7.pt",
+  "source": "cic",
+  "scale": "small",
+  "split_scheme": "strat",
+  "exclude": "infiltration",
+  "temperatures": {
+    "noul": 1.0106122183773687,
+    "score": 1.0633349821597933,
+    "ddos": 0.9558080382717576,
+    "choice": 1.0101151261628654
+  },
+  "m_val": 0.9860008369527166,
+  "best_epoch": 19,
+  "candidates": [
+    "normal",
+    "dos_ddos",
+    "recon",
+    "bruteforce",
+    "webattack",
+    "botnet",
+    "exploitation"
+  ],
+  "omega": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "mode": "abstain",
+  "tau_abs": 0.5,
+  "omega_ddos": [
+    0.3488540053367615,
+    0.7150029540061951,
+    0.5205590128898621,
+    2.415584087371826
+  ],
+  "ddos_candidates": [
+    "normal",
+    "tcp_flood",
+    "http_dos",
+    "slowloris"
+  ]
+}

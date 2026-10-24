@@ -1,0 +1,38 @@
+{
+  "artifact": "/vol/artifacts/unsw_small_oficial_loao_shellcode_abl_a7.pt",
+  "source": "unsw",
+  "scale": "small",
+  "split_scheme": "oficial",
+  "exclude": "shellcode",
+  "temperatures": {
+    "noul": 1.1509226345261665,
+    "score": 0.7729513869456908,
+    "choice": 1.039648806194182
+  },
+  "m_val": 0.8184320382152791,
+  "best_epoch": 6,
+  "candidates": [
+    "normal",
+    "dos",
+    "recon",
+    "exploitation",
+    "backdoor",
+    "analysis",
+    "fuzzing",
+    "generic",
+    "worms"
+  ],
+  "omega": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "mode": "abstain",
+  "tau_abs": 0.5
+}

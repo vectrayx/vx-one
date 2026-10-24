@@ -105,8 +105,9 @@ score como primitivas separadas) o del multi-task sharing? Ablación a7:
   Salidas: `results/e6_a7/a7.json` y `a7.md`.
 - **Documentación.** `docs/EXPERIMENTS.md` §26 (protocolo, tabla, alcance y
   comando de reproducción); `README.repro.md` con la sección de la ablación.
-- **Repo público.** `public-sync` → `origin/main` `570a839`: código a7 en
-  inglés, script, resultados JSON/MD, paper y zip actualizados.
+- **Repo público.** `public-sync` → `origin/main`: código a7 en inglés, los
+  dos scripts (`a7_derived_gate_eval.py`, `a7_loao_eval.py`), resultados
+  in-distribution y LOAO, paper y zip actualizados.
 
 Resultados (semilla 42 en Tabla 6; medias±sd de 3 semillas en el texto):
 
@@ -115,13 +116,23 @@ Resultados (semilla 42 en Tabla 6; medias±sd de 3 semillas en el texto):
 | UNSW | 0.9829±0.0014 vs 0.9837±0.0002 | −0.0008±0.0013 (1/3) | 0.4615±0.0121 vs 0.4560±0.0011 | +0.0055±0.0109 (2/3) | 0.0435 vs 0.0544 |
 | CIC strat | 0.9999±0.0000 vs 0.9999±0.0000 | −0.0000 (2/3) | 0.8981±0.0348 vs 0.8312±0.0902 | +0.0669±0.0995 (2/3) | 0.0004 vs 0.0007 |
 
-**Veredicto honesto:** nulo en detección. El gate dedicado no compra AUROC ni
-FPR@95; la diferencia de atribución en CIC está dentro de la inestabilidad de
-semillas ya documentada (typed 0.727–0.884). Lo que compra el typing es el
-contrato: BCE binaria sin tilt, temperatura propia y semántica `unknown`
-explícita. El paper lo declara así en §E6 (nuevo párrafo a7), en línea con
-§E2 ("not raw AUROC superiority"). Esto acota el claim de novedad y responde
-la objeción causal del revisor.
+**Veredicto in-distribution:** nulo en detección. El gate dedicado no compra
+AUROC ni FPR@95; la diferencia de atribución en CIC está dentro de la
+inestabilidad de semillas ya documentada (typed 0.727–0.884). Lo que compra el
+typing es el contrato: BCE binaria sin tilt, temperatura propia y semántica
+`unknown` explícita. Esto acota el claim de novedad y responde la objeción
+causal del revisor.
+
+**Extensión LOAO (16 folds, seed 42; semillas 43/44 en tres folds CIC).**
+`scripts/a7_loao_eval.py` + `results/e6_a7/loao.json`/`loao.md` y
+`loao_seeds.json`/`loao_seeds.md`. UNSW: empate (mediana ΔAUROC −0.0009, 2/9,
+Wilcoxon p=0.30). CIC: patrón no uniforme; el gate derivado pierde de forma
+consistente en `dos_ddos` (0.60–0.63 en 3 semillas vs 0.85) y `botnet`
+(0.57–0.59 vs 0.75), gana ligeramente en `recon`/`webattack`, y en
+`exploitation` el seed 42 daba 0.42 vs 0.97 pero 43/44 dan 0.94/0.87: el
+colapso era de una semilla. El test de 7 folds no tiene potencia (p=0.30).
+Lectura: el typing importa en open-set solo donde la absorción benigna domina;
+sin la regla de semillas habríamos reportado un −0.55 que no replica.
 
 ## Estado del paper
 

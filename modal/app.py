@@ -224,6 +224,31 @@ def loao(source: str = "unsw", scale: str = "small"):
 
 
 @app.local_entrypoint()
+def loao_a7(source: str = "unsw", scale: str = "small", seed: int = 42):
+    """A7 under LOAO: does a derived gate transfer to unseen families?
+
+    Same folds and seed as the typed LOAO reference, so each fold is a paired
+    comparison of the dedicated gate vs the gate derived from the family
+    softmax. One job per fold; a failing fold does not cancel the rest.
+    """
+    fams = ([f for f in ("dos", "recon", "exploitation", "shellcode",
+                         "backdoor", "analysis", "fuzzing", "generic",
+                         "worms")] if source == "unsw"
+            else [f for f in ("dos_ddos", "recon", "bruteforce", "webattack",
+                              "botnet", "infiltration", "exploitation")])
+    scheme = "oficial" if source == "unsw" else "strat"
+    handles = [train_vx.spawn(source=source, scale=scale, scheme=scheme,
+                              exclude_family=f, ablation="a7", seed=seed)
+               for f in fams]
+    for f, h in zip(fams, handles):
+        try:
+            r = h.get()
+            print(f"[loao-a7] {source}/{f}: M_val={r['m_val']:.4f}")
+        except Exception as e:
+            print(f"[loao-a7] {source}/{f}: FALLÓ {e!r}")
+
+
+@app.local_entrypoint()
 def ablation_seeds(kinds: str = "a2,a6", seeds: str = "43,44"):
     """E6-bis (ítem 3 del informe): re-corre las ablaciones indicadas con
     semillas adicionales para medir σ (el ref tiene seed 42). Cada par

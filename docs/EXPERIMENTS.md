@@ -1157,12 +1157,37 @@ typing es el **contrato**: BCE binaria sin tilt, temperatura propia y semántica
 `unknown` explícita; es una propiedad de auditabilidad, no de ranking. El
 paper lo declara así en §E6 y en §E2 ("not raw AUROC superiority").
 
+**Extensión LOAO (mismas particiones y seed 42; semillas 43/44 en tres folds
+CIC).** Se reentrenó a7 en los 9 folds de UNSW y los 7 de CIC, con la misma
+partición que la referencia tipada. Detección one-vs-normal sobre la familia
+excluida (`scripts/a7_loao_eval.py`, salidas `results/e6_a7/loao.json` y
+`loao.md`; chequeo de semillas en `loao_seeds.json`/`loao_seeds.md`):
+
+| dataset | folds | ΔAUROC mediana | a7 mejor | Wilcoxon |
+|---|---|---|---|---|
+| UNSW | 9 | −0.0009 | 2/9 | p=0.30 |
+| CIC strat | 7 | −0.0252 | 3/7 | p=0.30 |
+
+En UNSW el empate se mantiene. En CIC el patrón no es uniforme: el gate
+derivado pierde de forma **consistente** en `dos_ddos` (0.60–0.63 en tres
+semillas vs 0.85 tipado) y `botnet` (0.57–0.59 vs 0.75), justo los folds donde
+el choice head absorbe la familia nueva en `normal`; gana ligeramente en
+`recon` (+0.013) y `webattack` (+0.013); y en `exploitation` el seed 42 daba
+0.421 vs 0.970, pero las semillas 43/44 dan 0.943/0.871: **el colapso
+catastrófico era de una semilla, no del diseño**. El test de signos de 7
+folds no tiene potencia (p=0.30), así que se reporta el patrón por fold, no
+una media ganadora.
+
+**Lectura conjunta.** El typing no compra ranking in-distribution; bajo LOAO
+sí importa donde la absorción benigna domina (`dos_ddos`, `botnet`), pero no
+de forma universal. La lección metodológica es la regla de semillas: sin las
+semillas 43/44 habríamos reportado un colapso de −0.55 que no replica.
+
 **Alcance / lo que NO prueba.** La a7 elimina solo la cabeza de gate; conserva
 el score CORN tipado y el candidate set con `normal`. El gate derivado no es
 universal: depende de que exista una clase `normal` (en EMBER con `unknown`
-entrenado y en LOAO la semántica del gate dedicado es distinta). No se corrió
-a7 bajo LOAO ni sobre el pool OE de E9b; esa es la extensión natural si se
-quiere probar si el gate dedicado importa en open-set.
+entrenado la semántica es distinta). No se corrió a7 sobre el pool OE de E9b;
+esa sigue siendo la extensión natural.
 
 **Reproducir.**
 ```bash
@@ -1177,4 +1202,9 @@ done
 modal volume get paper-results outputs/unsw_small_oficial_abl_a7.npz results/e6_a7/
 python scripts/a7_derived_gate_eval.py --a7 results/e6_a7 \
   --typed results/outputs_seed --out results/e6_a7
+# extensión LOAO (9 folds UNSW + 7 CIC, seed 42)
+modal run modal/app.py::loao_a7 --source unsw
+modal run modal/app.py::loao_a7 --source cic
+python scripts/a7_loao_eval.py --a7 results/e6_a7/loao \
+  --typed results/e6_a7/loao_typed --out results/e6_a7
 ```
