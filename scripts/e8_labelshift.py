@@ -22,7 +22,7 @@ Protocolo (misma convención frozen de e8_window_recal/e8_nonparam):
 
 Salida: results/e8_recal/e8_labelshift.{json,md}
 
-Ejecución: /home/jsantillana/projects/paper/.venv/bin/python -m scripts.e8_labelshift
+Ejecución: python -m scripts.e8_labelshift
 (necesita solo numpy+scipy+sklearn; no GPU, no parquet, no entrenamiento)
 """
 

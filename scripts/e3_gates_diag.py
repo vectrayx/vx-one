@@ -25,7 +25,7 @@ RUNS = [
     "unsw_small_oficial", "cic_small_strat", "cic_small_time",
     "ember_small_temporal",
 ]
-OLD = Path("/home/jsantillana/projects/paper/results/outputs")
+OLD = Path(__file__).resolve().parents[1] / "results/outputs"
 OUT = Path("results/e3_diag")
 OUT.mkdir(parents=True, exist_ok=True)
 BINS = 15

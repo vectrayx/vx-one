@@ -25,7 +25,7 @@ Protocolo congelado:
 
 Salida: results/e9_retrain/{e9_retrain.json, cic_small_time_friday.npz}
 Uso (CPU local, ~10–40 min según hardware):
-    /tmp/opencode/venv/bin/python scripts/e9_window_retrain.py
+    python scripts/e9_window_retrain.py
 Opciones: --epochs 1 --lr-scale 0.15 --bs (por defecto el del artifact) --calib val|valday
 """
 from __future__ import annotations
@@ -54,7 +54,7 @@ from src.models.losses import choice_loss, corn_loss, noul_loss  # noqa: E402
 import e7_vendor_api as e7                            # noqa: E402
 from e8_window_recal import temp_scale_binary, temp_scale_multi, sigmoid, soft_pred, ece_bin, ece_multi  # noqa: E402
 
-PARQUET = Path("/home/jsantillana/projects/paper/data/processed/cicids2017/cicids2017.parquet")
+PARQUET = REPO / "data/processed/cicids2017/cicids2017.parquet"
 ARTIFACT = REPO / "results/artifacts/cic_small_time.pt"
 OUT = REPO / "results/e9_retrain"
 DDOS_DAY = "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX"

@@ -1,6 +1,6 @@
 {
  "protocol": {
-  "npz": "/home/jsantillana/projects/paper-fix-glm/results/outputs_seed/cic_small_time.npz",
+  "npz": "results/outputs_seed/cic_small_time.npz",
   "day1": "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX",
   "day2": "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX",
   "q1": 0.5573,

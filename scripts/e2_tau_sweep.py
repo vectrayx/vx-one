@@ -132,7 +132,7 @@ def sweep_one(name: str, npz_path: str) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--outputs", default="/home/jsantillana/projects/paper/results/outputs")
+    ap.add_argument("--outputs", default="results/outputs")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     out = args.out or os.path.join(

@@ -1,7 +1,7 @@
 [
  {
   "tag": "static (temp-val serving)",
-  "npz": "/home/jsantillana/projects/paper-fix-glm/results/outputs_seed/cic_small_time.npz",
+  "npz": "results/outputs_seed/cic_small_time.npz",
   "auroc_raw": 0.56,
   "rows": [
    {
@@ -57,7 +57,7 @@
  },
  {
   "tag": "e9 1-pass",
-  "npz": "/home/jsantillana/projects/paper-fix-glm/results/e9_retrain/cic_small_time_friday.npz",
+  "npz": "results/e9_retrain/cic_small_time_friday.npz",
   "auroc_raw": 0.8,
   "rows": [
    {
@@ -113,7 +113,7 @@
  },
  {
   "tag": "e9 2-pass",
-  "npz": "/home/jsantillana/projects/paper-fix-glm/results/e9_retrain/cic_small_time_fridayep2.npz",
+  "npz": "results/e9_retrain/cic_small_time_fridayep2.npz",
   "auroc_raw": 0.8392,
   "rows": [
    {
@@ -169,7 +169,7 @@
  },
  {
   "tag": "e9 4-pass",
-  "npz": "/home/jsantillana/projects/paper-fix-glm/results/e9_retrain/cic_small_time_fridayep4.npz",
+  "npz": "results/e9_retrain/cic_small_time_fridayep4.npz",
   "auroc_raw": 0.76,
   "rows": [
    {

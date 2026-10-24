@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """E7-azure — vendor Microsoft-Decision-1 vía Azure OpenAI (ruta /decisions).
 
-Descubierto por sondeo (2026-10-22, resource `holaaaaaa`, eastus2):
+Requires caller-supplied ``AZURE_DECISION_ENDPOINT`` and
+``AZURE_DECISION_API_KEY`` environment variables:
   POST {endpoint}/decisions
-  headers: api-key: <token de ../servers/azure-ml.txt línea 2>
+  headers: api-key: <caller-supplied value>
   body: {
     "model": "decision-1",            # nombre del DEPLOYMENT del resource
     "input": "<json del state como string>",
@@ -54,10 +55,9 @@ sys.path[:0] = [str(REPO), str(REPO / "src")]
 
 from src.features.build_canonical import UNSW_FEATURE_COLUMNS  # noqa: E402
 
-PARQUET = Path("/home/jsantillana/projects/paper/data/processed/unsw_nb15/unsw_nb15.parquet")
-NPZ = Path("/home/jsantillana/projects/paper/results/outputs/unsw_small_oficial.npz")
-META = Path("/home/jsantillana/projects/paper/results/outputs/unsw_small_oficial.json")
-CRED = Path("/home/jsantillana/projects/servers/azure-ml.txt")
+PARQUET = REPO / "data/processed/unsw_nb15/unsw_nb15.parquet"
+NPZ = REPO / "results/outputs/unsw_small_oficial.npz"
+META = REPO / "results/outputs/unsw_small_oficial.json"
 OUT = REPO / "results/e7_vendors/azure"
 SEED = 42
 DEPLOYMENT = "decision-1"
@@ -83,8 +83,9 @@ SEV_LEVELS = [
 
 
 def creds() -> tuple[str, str]:
-    lines = [l.strip() for l in CRED.read_text().splitlines() if l.strip()]
-    return lines[0], lines[1]  # endpoint, api-key
+    """Read caller-supplied Azure settings; never read a credential file."""
+    return (os.environ["AZURE_DECISION_ENDPOINT"],
+            os.environ["AZURE_DECISION_API_KEY"])
 
 
 def build_state(row: dict) -> str:
@@ -148,7 +149,7 @@ def probe() -> None:
         if "model_not_found" in body:
             print("[probe] → el deployment 'decision-1' existe pero el resource no "
                   "tiene acceso al modelo Microsoft-Decision-1 aún. En el portal: "
-                  "AI Foundry → holaaaaaa → Deployments → 'decision-1': revisar "
+                  "AI Foundry deployment 'decision-1': review "
                   "provisioning state; y Models → Microsoft-Decision-1 → Request "
                   "access (preview) / región con capacidad. Reintentar --probe.")
 

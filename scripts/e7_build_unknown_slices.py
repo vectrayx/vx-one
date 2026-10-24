@@ -7,8 +7,8 @@ run principal pero questions family con opción `unknown`).
 - meta line k=-1 con questions con unknown (e7_vendor_api.build_questions).
 - slices: rest[i::N] entre los archivos de salida slice_00..NN.jsonl.
 
-Uso: /tmp/opencode/venv/bin/python scripts/e7_build_unknown_slices.py [--out DIR] [--n 13]
-Salida: /tmp/opencode/slices_unknown/slice_XX.jsonl
+Uso: python scripts/e7_build_unknown_slices.py [--out DIR] [--n 13]
+Salida: results/e7_slices/slice_XX.jsonl
 """
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ sys.path.insert(0, str(REPO / "scripts"))
 import e7_vendor_api as e7        # noqa: E402
 
 ap = argparse.ArgumentParser()
-ap.add_argument("--out", default="/tmp/opencode/slices_unknown")
+ap.add_argument("--out", default="results/e7_slices")
 ap.add_argument("--n", type=int, default=13)
 args = ap.parse_args()
 

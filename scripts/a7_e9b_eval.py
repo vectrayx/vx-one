@@ -159,14 +159,17 @@ def write_markdown(payload: dict, path: Path) -> None:
 
 
 def selftest() -> int:
-    """Pairing logic must yield zero deltas when both sides are the same run."""
-    stem = "unsw_small_oficial_loao_dos"
-    pair = _load_pair(REPO / "results/outputs_oe" / f"{stem}_oe0.5.npz",
-                      REPO / "results/e9b_oe/meta/oe_json" / f"{stem}_oe0.5.json")
-    if pair is None:
-        print("[selftest] missing typed dos OE pair")
-        return 1
-    m = _metrics(*pair)
+    """Pairing logic must yield zero deltas on a self-contained toy run."""
+    npz = {
+        "te_noul_logits": np.array([2.0, 1.0, -2.0, -1.0, 0.5, -0.5]),
+        "te_choice_logits": np.array([[0.0, 2.0], [0.0, 1.0],
+                                       [2.0, 0.0], [1.0, 0.0],
+                                       [0.0, 1.0], [1.0, 0.0]]),
+        "te_y_fam": np.array([-1, -1, 0, 0, 1, 1]),
+    }
+    meta = {"temperatures": {"noul": 1.0, "choice": 1.0, "score": 1.0},
+            "omega": [1.0, 1.0], "candidates": ["normal", "attack"]}
+    m = _metrics(npz, meta)
     rec = {"a7": m, "typed": m}
     d = {k: round(rec["a7"][k] - rec["typed"][k], 6) for k in DIRECTION}
     ok = all(abs(v) < 1e-9 for v in d.values())

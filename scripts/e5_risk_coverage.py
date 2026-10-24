@@ -17,7 +17,7 @@ Tres bloques por día, cada uno con su exactitud declarada:
      clase binaria con f1_c exacto y f2_c(τ) exacto en test.
 
 Salida: results/e5_rc/{e5b_risk_coverage_<day>.json, e5b.md, e5b_curves.npz}
-Uso: /tmp/opencode/venv/bin/python scripts/e5_risk_coverage.py [--days ...]
+Uso: python scripts/e5_risk_coverage.py [--days ...]
 """
 from __future__ import annotations
 
@@ -33,9 +33,9 @@ sys.path.insert(0, str(REPO))
 
 import src.e5.cascade as e5  # noqa: E402
 
-# Overrides de rutas (el repo original vive en projects/paper)
-e5.ENH = Path("/home/jsantillana/projects/paper/data/raw/cicids2017/enhanced_flows/CICIDS_Flow.parquet")
-e5.PROCESSED = Path("/home/jsantillana/projects/paper/data/processed/cicids2017/cicids2017.parquet")
+# Portable data locations (not included in the public repository).
+e5.ENH = REPO / "data/raw/cicids2017/enhanced_flows/CICIDS_Flow.parquet"
+e5.PROCESSED = REPO / "data/processed/cicids2017/cicids2017.parquet"
 e5.NPZ = str(REPO / "results/outputs_seed/cic_small_strat.npz")
 e5.OUT_DIR = REPO / "results/e5"   # eve_*.json.gz descargados del volumen
 

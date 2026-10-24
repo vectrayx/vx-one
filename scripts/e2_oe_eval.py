@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
-REF = Path("/home/jsantillana/projects/paper/results/outputs")
+REF = ROOT / "results/outputs"
 OE = ROOT / "results/outputs_oe"
 OUT = ROOT / "results/e9b_oe"
 FAMS = ["analysis", "backdoor", "dos", "exploitation", "fuzzing",

@@ -45,9 +45,9 @@ sys.path[:0] = [str(REPO), str(REPO / "src")]
 
 from src.features.build_canonical import UNSW_FEATURE_COLUMNS  # noqa: E402
 
-PARQUET = Path("/home/jsantillana/projects/paper/data/processed/unsw_nb15/unsw_nb15.parquet")
-NPZ = Path("/home/jsantillana/projects/paper/results/outputs/unsw_small_oficial.npz")
-META = Path("/home/jsantillana/projects/paper/results/outputs/unsw_small_oficial.json")
+PARQUET = REPO / "data/processed/unsw_nb15/unsw_nb15.parquet"
+NPZ = REPO / "results/outputs/unsw_small_oficial.npz"
+META = REPO / "results/outputs/unsw_small_oficial.json"
 OUT = REPO / "results/e7_vendors"
 SEED = 42
 
@@ -117,16 +117,9 @@ def build_questions(candidates: list[str], with_unknown: bool = False) -> dict:
 VENDORS = {
     "typesafe": {"base": "https://api.typesafe.ai", "env": "TYPESAFE_API_KEY"},
     "opencode": {"base": "https://opencode.ai/zen", "env": "OPENCODE_API_KEY"},
-    # Azure AI Foundry (2026-10-22): ruta System One nativa del resource
-    # `holaaaaaa`; el deployment `decision-1` sirve Microsoft-Decision-1.
-    # Descubrimiento: la ruta openai.azure.com/openai/v1/decisions exige otro
-    # esquema (input str + questions array); la ruta foundry
-    # services.ai.azure.com/providers/microsoft/v1/systemone acepta el MISMO
-    # payload {state, questions} que Jev → parseo idéntico.
-    "azure": {"base": "https://holaaaaaa.services.ai.azure.com/providers/microsoft",
-              "env": "AZURE_DECISION_API_KEY",
-              "cred_file": Path("/home/jsantillana/projects/servers/azure-ml.txt"),
-              "header": "api-key"},
+    # The caller supplies its own compatible Azure endpoint and key.
+    "azure": {"base_env": "AZURE_DECISION_BASE_URL",
+               "env": "AZURE_DECISION_API_KEY", "header": "api-key"},
 }
 
 
@@ -135,16 +128,12 @@ def _key_for(vendor: str) -> str:
     key = os.environ.get(spec["env"])
     if key:
         return key
-    cf = spec.get("cred_file")
-    if cf and cf.exists():
-        lines = [l.strip() for l in cf.read_text().splitlines() if l.strip()]
-        return lines[1]  # línea 2 = token
     raise AssertionError(f"sin credencial para {vendor}")
 
 
 def ask_one(vendor: str, model: str, state: dict, questions: dict,
             api_key: str, tries: int = 8) -> tuple[dict, float, dict]:
-    base = VENDORS[vendor]["base"]
+    base = VENDORS[vendor].get("base") or os.environ[VENDORS[vendor]["base_env"]]
     body = json.dumps({"model": model, "state": state, "questions": questions},
                       separators=(",", ":")).encode()
     hdr = {"Content-Type": "application/json", "User-Agent": "vxone-e7/0.1"}

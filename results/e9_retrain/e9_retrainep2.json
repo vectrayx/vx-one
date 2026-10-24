@@ -14,7 +14,7 @@
     "T_choice": 1.3081
    }
   },
-  "artifact": "/home/jsantillana/projects/paper-fix-glm/results/artifacts/cic_small_time.pt",
+  "artifact": "results/artifacts/cic_small_time.pt",
   "seed": 42
  },
  "per_day": {

@@ -28,7 +28,8 @@ import sys
 import numpy as np
 import pyarrow.parquet as pq
 
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+REPO = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO))
 
 from src.e5.cascade import (DAY_FILES, ENH, PROCESSED, load_alerts, load_day,
                             match_f1, prf, OUT_DIR)
@@ -148,7 +149,7 @@ def load_f2_strat(day: str):
     """Fase-2 strat (in-distribución) vía src.e5.cascade, NPZ absoluto si hace falta."""
     import src.e5.cascade as casc  # noqa: PLC0415
     if not pathlib.Path(casc.NPZ).exists():
-        alt = pathlib.Path("/home/jsantillana/projects/paper") / casc.NPZ
+        alt = REPO / casc.NPZ
         if alt.exists():
             casc.NPZ = str(alt)
         else:

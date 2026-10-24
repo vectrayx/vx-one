@@ -1,7 +1,7 @@
 # paper-fix-glm — Paper VX-One reconstruido desde los resultados medidos
 
 Repo de trabajo que reconstruye el paper de **VX-One** (VectrayX-One) a partir de
-los **resultados realmente medidos** del repo original (`~/projects/paper`),
+los **resultados realmente medidos** de la ejecución de investigación,
 no de los números aspiracionales del draft antiguo.
 
 ## Qué hay aquí
@@ -61,7 +61,7 @@ no de los números aspiracionales del draft antiguo.
   pdflatex -interaction=nonstopmode paper/main.tex
   pdflatex -interaction=nonstopmode paper/main.tex   # los artefactos quedan en la raíz
   ```
-  Los paquetes ACM que la TeX Live 2024 de Fedora no traía (`acmart`, `libertine`, `newtx`, `ec`, `cm-super`, etc.) están instalados en `~/texmf` (TEXMFHOME), fetched del histórico TL2024 — no hace falta repetir nada.
+  Instala los paquetes ACM habituales (`acmart`, `libertine`, `newtx`, `ec`, `cm-super`, etc.) mediante tu distribución TeX Live antes de compilar.
 - [x] E7 (baseline comercial): corrida completa 2,021/2,021 filas por el passthrough
       System One del Zen de OpenCode (`jev-1.13-free`, mismo modelo que el SKU
       comercial, coste $0). Veredicto: vendor gate AUROC 0.568 / FPR@95 0.932 /
