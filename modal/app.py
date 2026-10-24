@@ -81,8 +81,12 @@ def _boot() -> None:
 def train_vx(source: str, scale: str, scheme: str,
              exclude_family: str | None = None,
              ckpt_every_steps: int = 2000, resume: bool = True,
-             ablation: str | None = None, seed: int = 42) -> dict:
+             ablation: str | None = None, seed: int = 42,
+             outlier_family: str | None = None,
+             oe_weight: float = 0.5,
+             oe_pool: str = "family") -> dict:
     _boot()
+    import numpy as np
     import torch
     from src.models import build_run, train_run
 
@@ -91,12 +95,59 @@ def train_vx(source: str, scale: str, scheme: str,
     fam = f"_loao_{exclude_family}" if exclude_family else ""
     abl = f"_abl_{ablation}" if ablation else ""
     sd = f"_s{seed}" if seed != 42 else ""
-    rid = f"{source}_{scale}_{scheme}{fam}{abl}{sd}"
+    oe_tag = (f"_oe{oe_weight}" if outlier_family else "") + (
+        "" if oe_pool == "family" else "noise")
+    rid = f"{source}_{scale}_{scheme}{fam}{abl}{sd}{oe_tag}"
     out = f"{RESULTS}/artifacts/{rid}.pt"
+
+    oe = None
+    if outlier_family and oe_pool == "noise":
+        # Synthetic pool: known train rows + Gaussian noise in phi space
+        # (sigma=1, clipped to +-8), uniform target over candidates.
+        g = torch.Generator().manual_seed(seed)
+        sub = torch.randperm(run.train.shape[0], generator=g)[:20000]
+        x_oe = run.train[sub].clone()
+        x_oe[:, :-1] += torch.randn(x_oe.shape[0], x_oe.shape[1] - 1,
+                                    generator=g)
+        x_oe[:, :-1] = x_oe[:, :-1].clamp(-8.0, 8.0)
+        txt_oe = ({k: v[sub].clone() for k, v in (run.train_txt or {}).items()}
+                  if run.train_txt else None)
+        oe = {"x": x_oe, "txt": txt_oe, "weight": oe_weight}
+        print(f"[modal] OE pool SINTETICO: {x_oe.shape[0]} filas ruidosas, "
+              f"lambda={oe_weight}")
+    elif outlier_family:
+        # OE pool = TRAIN rows of the excluded family (delayed labels), same
+        # phi and vocab as the run; the choice head gets a uniform target.
+        import pyarrow.parquet as pq
+        if source == "unsw":
+            pqt = "/repo/data/processed/unsw_nb15/unsw_nb15.parquet"
+            cols = ["x_num", "split", "label_family", "x_txt_proto",
+                    "x_txt_service", "x_txt_state"]
+            split_col = "split"
+        else:  # CIC: split_strat, text only protocol (vocab=None)
+            pqt = "/repo/data/processed/cicids2017/cicids2017.parquet"
+            cols = ["x_num", "split_strat", "label_family"]
+            split_col = "split_strat"
+        t = pq.read_table(pqt, columns=cols)
+        sp = np.asarray(t.column(split_col).to_pylist())
+        lf = np.asarray(t.column("label_family").to_pylist())
+        m = (sp == "train") & (lf == outlier_family)
+        x_raw = np.asarray([list(r) for r in t.column("x_num").to_pylist()],
+                           dtype=np.float64)[m]
+        u_oe, _ = run.feature_stage.transform(x_raw)
+        txt_oe = None
+        if run.vocab:
+            txt_oe = {k: torch.tensor(run.vocab[k].encode(
+                [str(v) for v in t.column(f"x_txt_{k}").to_pylist()]),
+                dtype=torch.int64)[m] for k in run.vocab}
+        oe = {"x": torch.tensor(u_oe), "txt": txt_oe, "weight": oe_weight}
+        print(f"[modal] OE pool: {u_oe.shape[0]} filas de {outlier_family}, "
+              f"lambda={oe_weight}")
+
     res = train_run(run, out, device=dev,
                     ckpt_path=f"{RESULTS}/ckpts/{rid}.ckpt.pt",
                     ckpt_every_steps=ckpt_every_steps, resume=resume,
-                    ablation=ablation, seed=seed)
+                    ablation=ablation, seed=seed, oe=oe)
     print(f"[modal] {rid}: M_val={res['m_val']:.4f} T={res['temperatures']}")
     # dump de logits val/test en el mismo job (E1-E3 se computan local)
     from src.eval.dump_outputs import dump_run
@@ -246,6 +297,34 @@ def loao_a7(source: str = "unsw", scale: str = "small", seed: int = 42):
             print(f"[loao-a7] {source}/{f}: M_val={r['m_val']:.4f}")
         except Exception as e:
             print(f"[loao-a7] {source}/{f}: FALLÓ {e!r}")
+
+
+@app.local_entrypoint()
+def oe_loao_a7(source: str = "unsw", oe_weight: float = 0.5,
+               scale: str = "small", seed: int = 42):
+    """A7 under outlier exposure: can a derived gate learn abstention?
+
+    Same OE protocol as E9b (the excluded family returns as an unlabeled
+    outlier pool with a uniform target on the choice head), but the gate is
+    derived as 1 - p(normal). This isolates whether teachable abstention
+    requires the dedicated binary gate.
+    """
+    fams = ([f for f in ("dos", "recon", "exploitation", "shellcode",
+                         "backdoor", "analysis", "fuzzing", "generic",
+                         "worms")] if source == "unsw"
+            else [f for f in ("dos_ddos", "recon", "bruteforce", "webattack",
+                              "botnet", "infiltration", "exploitation")])
+    scheme = "oficial" if source == "unsw" else "strat"
+    handles = [train_vx.spawn(source=source, scale=scale, scheme=scheme,
+                              exclude_family=f, ablation="a7", seed=seed,
+                              outlier_family=f, oe_weight=oe_weight)
+               for f in fams]
+    for f, h in zip(fams, handles):
+        try:
+            r = h.get()
+            print(f"[oe-loao-a7] {source}/{f}: M_val={r['m_val']:.4f}")
+        except Exception as e:
+            print(f"[oe-loao-a7] {source}/{f}: FALLÓ {e!r}")
 
 
 @app.local_entrypoint()

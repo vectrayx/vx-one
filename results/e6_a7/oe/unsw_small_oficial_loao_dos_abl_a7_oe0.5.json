@@ -1,0 +1,38 @@
+{
+  "artifact": "/vol/artifacts/unsw_small_oficial_loao_dos_abl_a7_oe0.5.pt",
+  "source": "unsw",
+  "scale": "small",
+  "split_scheme": "oficial",
+  "exclude": "dos",
+  "temperatures": {
+    "noul": 0.6446935511316851,
+    "score": 0.9454266890311946,
+    "choice": 0.7056354014139228
+  },
+  "m_val": 0.8539045481554649,
+  "best_epoch": 27,
+  "candidates": [
+    "normal",
+    "recon",
+    "exploitation",
+    "shellcode",
+    "backdoor",
+    "analysis",
+    "fuzzing",
+    "generic",
+    "worms"
+  ],
+  "omega": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "mode": "abstain",
+  "tau_abs": 0.5
+}

@@ -1186,8 +1186,9 @@ semillas 43/44 habríamos reportado un colapso de −0.55 que no replica.
 **Alcance / lo que NO prueba.** La a7 elimina solo la cabeza de gate; conserva
 el score CORN tipado y el candidate set con `normal`. El gate derivado no es
 universal: depende de que exista una clase `normal` (en EMBER con `unknown`
-entrenado la semántica es distinta). No se corrió a7 sobre el pool OE de E9b;
-esa sigue siendo la extensión natural.
+entrenado la semántica es distinta). La extensión OE está en §27: el gate
+derivado iguala la abstención (0.909 vs 0.879) pero pierde ranking de
+detección (AUROC 0.922 vs 0.965).
 
 **Reproducir.**
 ```bash
@@ -1207,4 +1208,45 @@ modal run modal/app.py::loao_a7 --source unsw
 modal run modal/app.py::loao_a7 --source cic
 python scripts/a7_loao_eval.py --a7 results/e6_a7/loao \
   --typed results/e6_a7/loao_typed --out results/e6_a7
+```
+
+
+## 27. E9b-a7 — gate derivado bajo outlier exposure (OE) ✅ (2026-10-23)
+
+**Pregunta.** E9b muestra que devolver la familia nueva como pool OE enseña
+abstención en UNSW (0.375→0.879) y detección en CIC. ¿Ese aprendizaje requiere
+el gate binario dedicado, o el gate derivado `1−p(normal)` del softmax de
+familia (a7) aprende lo mismo?
+
+**Protocolo.** 9 folds UNSW LOAO, seed 42, mismo pool OE (filas train de la
+familia excluida, target uniforme sobre candidatos, λ=0.5), mismo trunk y
+presupuesto; única diferencia: `--ablation a7`. Métricas E9b con
+`vx_calibrated` a τ=0.5 (`scripts/a7_e9b_eval.py`, `--selftest`).
+Artefactos: `results/e6_a7/oe_a7.{json,md}`, dumps en `results/e6_a7/oe/`.
+
+| métrica | a7+OE | typed+OE | Δ (a7−typed) | a7 mejor | Wilcoxon |
+|---|---|---|---|---|---|
+| abstención | 0.909 | 0.879 | +0.030 ± 0.058 | 5/9 | p=0.15 |
+| false-att | 0.075 | 0.092 | −0.017 ± 0.037 | 5/9 | p=0.25 |
+| absorción | 0.015 | 0.029 | −0.013 ± 0.041 | 4/9 | p=0.56 |
+| gate AUROC | 0.922 | 0.965 | −0.043 ± 0.036 | 1/9 | **p=0.012** |
+| F1 conocidos | 0.478 | 0.469 | +0.009 ± 0.016 | 6/9 | p=0.13 |
+| max-prob mediana | 0.304 | 0.318 | −0.014 ± 0.011 | 8/9 | **p=0.012** |
+
+**Lectura.** La abstención es una propiedad de la choice head, y el OE la
+enseña igual con gate derivado (de hecho, mediana de max-prob más baja en 8/9,
+p=0.012; sube en `dos` +0.109 y `fuzzing` +0.152). Lo que el gate dedicado
+compra es el **ranking de detección**: AUROC 0.965 vs 0.922, mejor en 8/9
+folds (p=0.012). Es la misma descomposición que LOAO: typing = primitiva
+binaria para detectar, no mecanismo para abstener. El claim de "abstención
+enseñable" de E9b sobrevive a la ablación; el claim de que el gate dedicado
+sea necesario para enseñarla, no.
+
+**Reproducir.**
+```bash
+modal run modal/app.py::oe_loao_a7 --source unsw --oe-weight 0.5
+# bajar npz/json (results/e6_a7/oe/) y evaluar
+python scripts/a7_e9b_eval.py --a7 results/e6_a7/oe \
+  --typed results/outputs_oe \
+  --typed-meta results/e9b_oe/meta/oe_json --out results/e6_a7
 ```

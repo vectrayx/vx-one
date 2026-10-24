@@ -145,11 +145,22 @@ colapso era de una semilla. El test de 7 folds no tiene potencia (p=0.30).
 Lectura: el typing importa en open-set solo donde la absorción benigna domina;
 sin la regla de semillas habríamos reportado un −0.55 que no replica.
 
+**Extensión OE (E9b-a7, 9 folds UNSW, seed 42).** Mismo pool OE que E9b
+(familia excluida como outliers, target uniforme, λ=0.5), única diferencia
+`--ablation a7`. `scripts/a7_e9b_eval.py` + `results/e6_a7/oe_a7.{json,md}`.
+El gate derivado **iguala la abstención** (0.909 vs 0.879, 5/9, p=0.15;
+mediana de max-prob más baja en 8/9, p=0.012) y el false-att (0.075 vs 0.092,
+p=0.25), pero **pierde ranking de detección** (gate AUROC 0.922 vs 0.965, 1/9,
+p=0.012). La abstención vive en la choice head y el OE la enseña sin gate
+dedicado; el gate dedicado compra detección. El claim de "abstención
+enseñable" de E9b sobrevive; el de que el gate dedicado sea necesario para
+enseñarla, no.
+
 ## Estado del paper
 
 - 14 páginas, 0 errores LaTeX, 0 citas rotas, abstract actualizado.
 - Todas las cifras del paper trazables a `results/` y `docs/EXPERIMENTS.md` §25.
-- Paquete arXiv regenerado tras los cambios (5 archivos, 903 KB).
+- Paquete arXiv regenerado tras los cambios (5 archivos, ~906 KB).
 - `pytest -q`: **60 passed** (174 s).
 - Self-tests: `scripts/e9b_oe_eval.py --selftest` reproduce E2 al cuarto
   decimal; `scripts/e1_paired_stats.py --selftest` reproduce la Tabla 1.

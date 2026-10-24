@@ -34,6 +34,8 @@ Key scripts:
   `vx_calibrated` contract; `--selftest` reproduces E2)
 - `scripts/a7_derived_gate_eval.py` (typing ablation: dedicated gate vs gate
   derived from a single family softmax; `--selftest` is synthetic)
+- `scripts/a7_e9b_eval.py` (same ablation under outlier exposure; pairs the
+  derived gate with the dedicated E9b run fold by fold)
 
 ## Typing ablation (a7)
 
@@ -75,8 +77,22 @@ python scripts/a7_loao_eval.py --a7 results/e6_a7/loao \
   --typed results/e6_a7/loao_typed --out results/e6_a7
 ```
 
-See `results/e6_a7/a7.md`, `loao.md`, `loao_seeds.md` and
-`docs/EXPERIMENTS.md` §26.
+Under outlier exposure (E9b protocol: the excluded family returns as an
+unlabeled pool, lambda=0.5), the derived gate matches the dedicated one on
+abstention (0.909 vs 0.879, p=0.15) and false attribution, but is
+significantly worse at detection ranking (gate AUROC 0.922 vs 0.965,
+p=0.012). Abstention lives in the choice head; the dedicated gate buys
+detection ranking. Reproduce with:
+
+```bash
+modal run modal/app.py::oe_loao_a7 --source unsw --oe-weight 0.5
+python scripts/a7_e9b_eval.py --a7 results/e6_a7/oe \
+  --typed results/outputs_oe \
+  --typed-meta results/e9b_oe/meta/oe_json --out results/e6_a7
+```
+
+See `results/e6_a7/a7.md`, `loao.md`, `loao_seeds.md`, `oe_a7.md` and
+`docs/EXPERIMENTS.md` §26--§27.
 
 Results aggregated in `results/`. No raw parquets are shipped.
 

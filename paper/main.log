@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2026.10.19)  23 OCT 2026 21:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2026.10.19)  23 OCT 2026 22:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1262,13 +1262,23 @@ oft-max and no
  []
 
 
-Underfull \hbox (badness 1902) in paragraph at lines 348--349
-\T1/LinuxLibertineT-TLF/m/n/9 (+20) CIC loses con-sis-tently on \T1/zi4/m/n/9 d
-os_ddos \T1/LinuxLibertineT-TLF/m/n/9 (+20) ($\OT1/LinuxLibertineT-TLF/m/n/9 (+
-20) 0\OML/nxlmi/m/it/9 :\OT1/LinuxLibertineT-TLF/m/n/9 (+20) 60$\T1/LinuxLibert
-ineT-TLF/m/n/9 (+20) --$\OT1/LinuxLibertineT-TLF/m/n/9 (+20) 0\OML/nxlmi/m/it/9
- :\OT1/LinuxLibertineT-TLF/m/n/9 (+20) 63$ \T1/LinuxLibertineT-TLF/m/n/9 (+20) 
-across three
+Underfull \hbox (badness 1460) in paragraph at lines 348--349
+\T1/LinuxLibertineT-TLF/m/n/9 (+20) is seed-unstable ($\OT1/LinuxLibertineT-TLF
+/m/n/9 (+20) 0\OML/nxlmi/m/it/9 :\OT1/LinuxLibertineT-TLF/m/n/9 (+20) 42\LMS/nt
+xsy/m/n/9 ù\OT1/LinuxLibertineT-TLF/m/n/9 (+20) 0\OML/nxlmi/m/it/9 :\OT1/LinuxL
+ibertineT-TLF/m/n/9 (+20) 94\LMS/ntxsy/m/n/9 ù\OT1/LinuxLibertineT-TLF/m/n/9 (+
+20) 0\OML/nxlmi/m/it/9 :\OT1/LinuxLibertineT-TLF/m/n/9 (+20) 87$ \T1/LinuxLiber
+tineT-TLF/m/n/9 (+20) vs. $\OT1/LinuxLibertineT-TLF/m/n/9 (+20) 0\OML/nxlmi/m/i
+t/9 :\OT1/LinuxLibertineT-TLF/m/n/9 (+20) 97$\T1/LinuxLibertineT-TLF/m/n/9 (+20
+) ) and the seven-fold
+ []
+
+
+Underfull \hbox (badness 1655) in paragraph at lines 348--349
+\T1/LinuxLibertineT-TLF/m/n/9 (+20) test is un-der-pow-ered ($\OML/nxlmi/m/it/9
+ p[]\OT1/LinuxLibertineT-TLF/m/n/9 (+20) 0\OML/nxlmi/m/it/9 :\OT1/LinuxLibertin
+eT-TLF/m/n/9 (+20) 30$\T1/LinuxLibertineT-TLF/m/n/9 (+20) ). The ded-i-cated ga
+te buys no
  []
 
 
@@ -1302,9 +1312,6 @@ Underfull \vbox (badness 4279) has occurred while \output is active []
 
 
 
-Underfull \vbox (badness 4713) has occurred while \output is active []
-
-
 
 
 Package fancyhdr Warning: \headheight is too small (13.0pt): 
@@ -1314,7 +1321,7 @@ Package fancyhdr Warning: \headheight is too small (13.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.02701pt}.
 
 [9.9]
-Underfull \vbox (badness 3049) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
@@ -1435,11 +1442,11 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 Here is how much of TeX's memory you used:
  21633 strings out of 475722
  352767 string characters out of 5783517
- 833405 words of memory out of 6000000
+ 833531 words of memory out of 6000000
  42667 multiletter control sequences out of 15000+600000
  794326 words of font info for 641 fonts, out of 8000000 for 9000
  175 hyphenation exceptions out of 8191
- 90i,13n,131p,4866b,634s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,12n,131p,4866b,636s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/jsantillana/texmf/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb>
 </home/jsantillana/texmf/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></
 home/jsantillana/texmf/fonts/type1/public/newtx/LibertineMathMI.pfb></home/jsan
@@ -1456,7 +1463,7 @@ home/jsantillana/texmf/fonts/type1/public/newtx/NewTXMI.pfb></home/jsantillana/
 texmf/fonts/type1/public/newtx/txexs.pfb></home/jsantillana/texmf/fonts/type1/p
 ublic/newtx/txmiaX.pfb></home/jsantillana/texmf/fonts/type1/public/newtx/txsym.
 pfb></home/jsantillana/texmf/fonts/type1/public/newtx/txsys.pfb>
-Output written on main.pdf (14 pages, 752227 bytes).
+Output written on main.pdf (14 pages, 752775 bytes).
 PDF statistics:
  602 PDF objects out of 1000 (max. 8388607)
  489 compressed objects within 5 object streams

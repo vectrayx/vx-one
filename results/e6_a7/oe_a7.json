@@ -1,0 +1,294 @@
+{
+ "folds": {
+  "analysis": {
+   "a7": {
+    "abst": 0.9202,
+    "false_att": 0.0783,
+    "normal_absorb": 0.0015,
+    "gate_auroc": 0.9623,
+    "known_macroF1": 0.5097,
+    "median_maxprob_excl": 0.3046
+   },
+   "typed": {
+    "abst": 0.9173,
+    "false_att": 0.0812,
+    "normal_absorb": 0.0015,
+    "gate_auroc": 0.9989,
+    "known_macroF1": 0.5058,
+    "median_maxprob_excl": 0.3161
+   },
+   "delta": {
+    "abst": 0.0029,
+    "false_att": -0.0029,
+    "normal_absorb": 0.0,
+    "gate_auroc": -0.0366,
+    "known_macroF1": 0.0039,
+    "median_maxprob_excl": -0.0115
+   }
+  },
+  "backdoor": {
+   "a7": {
+    "abst": 0.9691,
+    "false_att": 0.0309,
+    "normal_absorb": 0.0,
+    "gate_auroc": 0.9283,
+    "known_macroF1": 0.4963,
+    "median_maxprob_excl": 0.2626
+   },
+   "typed": {
+    "abst": 0.9811,
+    "false_att": 0.0189,
+    "normal_absorb": 0.0,
+    "gate_auroc": 0.9982,
+    "known_macroF1": 0.4986,
+    "median_maxprob_excl": 0.2854
+   },
+   "delta": {
+    "abst": -0.012,
+    "false_att": 0.012,
+    "normal_absorb": 0.0,
+    "gate_auroc": -0.0699,
+    "known_macroF1": -0.0023,
+    "median_maxprob_excl": -0.0228
+   }
+  },
+  "dos": {
+   "a7": {
+    "abst": 0.7192,
+    "false_att": 0.2742,
+    "normal_absorb": 0.0066,
+    "gate_auroc": 0.9523,
+    "known_macroF1": 0.5085,
+    "median_maxprob_excl": 0.4525
+   },
+   "typed": {
+    "abst": 0.6102,
+    "false_att": 0.384,
+    "normal_absorb": 0.0059,
+    "gate_auroc": 0.994,
+    "known_macroF1": 0.5019,
+    "median_maxprob_excl": 0.4793
+   },
+   "delta": {
+    "abst": 0.109,
+    "false_att": -0.1098,
+    "normal_absorb": 0.0007,
+    "gate_auroc": -0.0417,
+    "known_macroF1": 0.0066,
+    "median_maxprob_excl": -0.0268
+   }
+  },
+  "exploitation": {
+   "a7": {
+    "abst": 0.8971,
+    "false_att": 0.0754,
+    "normal_absorb": 0.0275,
+    "gate_auroc": 0.9411,
+    "known_macroF1": 0.5473,
+    "median_maxprob_excl": 0.3461
+   },
+   "typed": {
+    "abst": 0.8831,
+    "false_att": 0.0974,
+    "normal_absorb": 0.0195,
+    "gate_auroc": 0.974,
+    "known_macroF1": 0.506,
+    "median_maxprob_excl": 0.3464
+   },
+   "delta": {
+    "abst": 0.014,
+    "false_att": -0.022,
+    "normal_absorb": 0.008,
+    "gate_auroc": -0.0329,
+    "known_macroF1": 0.0413,
+    "median_maxprob_excl": -0.0003
+   }
+  },
+  "fuzzing": {
+   "a7": {
+    "abst": 0.8349,
+    "false_att": 0.0645,
+    "normal_absorb": 0.1006,
+    "gate_auroc": 0.8889,
+    "known_macroF1": 0.5098,
+    "median_maxprob_excl": 0.4299
+   },
+   "typed": {
+    "abst": 0.6831,
+    "false_att": 0.0935,
+    "normal_absorb": 0.2234,
+    "gate_auroc": 0.8646,
+    "known_macroF1": 0.4903,
+    "median_maxprob_excl": 0.447
+   },
+   "delta": {
+    "abst": 0.1518,
+    "false_att": -0.029,
+    "normal_absorb": -0.1228,
+    "gate_auroc": 0.0243,
+    "known_macroF1": 0.0195,
+    "median_maxprob_excl": -0.0171
+   }
+  },
+  "generic": {
+   "a7": {
+    "abst": 0.9726,
+    "false_att": 0.0273,
+    "normal_absorb": 0.0001,
+    "gate_auroc": 0.8715,
+    "known_macroF1": 0.3775,
+    "median_maxprob_excl": 0.2681
+   },
+   "typed": {
+    "abst": 0.9736,
+    "false_att": 0.0263,
+    "normal_absorb": 0.0002,
+    "gate_auroc": 0.9508,
+    "known_macroF1": 0.3833,
+    "median_maxprob_excl": 0.2656
+   },
+   "delta": {
+    "abst": -0.001,
+    "false_att": 0.001,
+    "normal_absorb": -0.0001,
+    "gate_auroc": -0.0793,
+    "known_macroF1": -0.0058,
+    "median_maxprob_excl": 0.0025
+   }
+  },
+  "recon": {
+   "a7": {
+    "abst": 0.9662,
+    "false_att": 0.0332,
+    "normal_absorb": 0.0006,
+    "gate_auroc": 0.9149,
+    "known_macroF1": 0.4168,
+    "median_maxprob_excl": 0.2653
+   },
+   "typed": {
+    "abst": 0.9539,
+    "false_att": 0.0446,
+    "normal_absorb": 0.0014,
+    "gate_auroc": 0.9519,
+    "known_macroF1": 0.4059,
+    "median_maxprob_excl": 0.2721
+   },
+   "delta": {
+    "abst": 0.0123,
+    "false_att": -0.0114,
+    "normal_absorb": -0.0008,
+    "gate_auroc": -0.037,
+    "known_macroF1": 0.0109,
+    "median_maxprob_excl": -0.0068
+   }
+  },
+  "shellcode": {
+   "a7": {
+    "abst": 0.9735,
+    "false_att": 0.0238,
+    "normal_absorb": 0.0026,
+    "gate_auroc": 0.9469,
+    "known_macroF1": 0.453,
+    "median_maxprob_excl": 0.2094
+   },
+   "typed": {
+    "abst": 0.9762,
+    "false_att": 0.0185,
+    "normal_absorb": 0.0053,
+    "gate_auroc": 0.9645,
+    "known_macroF1": 0.4617,
+    "median_maxprob_excl": 0.2221
+   },
+   "delta": {
+    "abst": -0.0027,
+    "false_att": 0.0053,
+    "normal_absorb": -0.0027,
+    "gate_auroc": -0.0176,
+    "known_macroF1": -0.0087,
+    "median_maxprob_excl": -0.0127
+   }
+  },
+  "worms": {
+   "a7": {
+    "abst": 0.9318,
+    "false_att": 0.0682,
+    "normal_absorb": 0.0,
+    "gate_auroc": 0.8936,
+    "known_macroF1": 0.4864,
+    "median_maxprob_excl": 0.2023
+   },
+   "typed": {
+    "abst": 0.9318,
+    "false_att": 0.0682,
+    "normal_absorb": 0.0,
+    "gate_auroc": 0.9904,
+    "known_macroF1": 0.4675,
+    "median_maxprob_excl": 0.2318
+   },
+   "delta": {
+    "abst": 0.0,
+    "false_att": 0.0,
+    "normal_absorb": 0.0,
+    "gate_auroc": -0.0968,
+    "known_macroF1": 0.0189,
+    "median_maxprob_excl": -0.0295
+   }
+  }
+ },
+ "summary": {
+  "abst": {
+   "a7_mean": 0.9094,
+   "typed_mean": 0.8789,
+   "delta_mean": 0.0305,
+   "delta_sd": 0.0582,
+   "a7_better": 5,
+   "n": 9,
+   "wilcoxon_p": 0.1484
+  },
+  "false_att": {
+   "a7_mean": 0.0751,
+   "typed_mean": 0.0925,
+   "delta_mean": -0.0174,
+   "delta_sd": 0.037,
+   "a7_better": 5,
+   "n": 9,
+   "wilcoxon_p": 0.25
+  },
+  "normal_absorb": {
+   "a7_mean": 0.0155,
+   "typed_mean": 0.0286,
+   "delta_mean": -0.0131,
+   "delta_sd": 0.0413,
+   "a7_better": 4,
+   "n": 9,
+   "wilcoxon_p": 0.5625
+  },
+  "gate_auroc": {
+   "a7_mean": 0.9222,
+   "typed_mean": 0.9653,
+   "delta_mean": -0.0431,
+   "delta_sd": 0.0359,
+   "a7_better": 1,
+   "n": 9,
+   "wilcoxon_p": 0.0117
+  },
+  "known_macroF1": {
+   "a7_mean": 0.4784,
+   "typed_mean": 0.469,
+   "delta_mean": 0.0094,
+   "delta_sd": 0.0156,
+   "a7_better": 6,
+   "n": 9,
+   "wilcoxon_p": 0.1289
+  },
+  "median_maxprob_excl": {
+   "a7_mean": 0.3045,
+   "typed_mean": 0.3184,
+   "delta_mean": -0.0139,
+   "delta_sd": 0.0112,
+   "a7_better": 8,
+   "n": 9,
+   "wilcoxon_p": 0.0117
+  }
+ }
+}
