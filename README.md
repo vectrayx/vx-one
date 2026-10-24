@@ -38,6 +38,9 @@ no de los números aspiracionales del draft antiguo.
    decimal), así que el *typing* compra contrato y auditabilidad, no ranking.
    Bajo LOAO el empate se rompe solo donde la absorción benigna domina
    (`dos_ddos`, `botnet` en CIC); `exploitation` es inestable entre semillas.
+   Bajo outlier exposure (E9b) el gate derivado iguala la abstención
+   (0.909 vs 0.879) pero pierde ranking de detección (AUROC 0.922 vs 0.965):
+   abstener vive en la choice head, detectar en el gate dedicado.
    Los claims del paper: (a) honestidad ante ataques desconocidos métricamente (LOAO + opción
    `unknown` + abstención), (b) medición de la zona gris de una cascada real
    (Suricata+ET deja ~99.9% del tráfico en zona gris sin payload), (c)
