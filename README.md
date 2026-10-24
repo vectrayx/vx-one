@@ -13,6 +13,7 @@ no de los números aspiracionales del draft antiguo.
 | `docs/reference/` | Documentos legados congelados del repo original: draft antiguo (`VectrayX_One_Paper_Draft.md`), spec F0, lit review, spec F2, advisory Opus, nota de implementación, `data/SCHEMA.md`. **No editar** — solo referencia. |
 | `src/`, `tests/`, `modal/`, `scripts/` | Código completo, copiado del repo original (idéntico, salvo `__pycache__`). ⚠️ Los tests requieren `data/` (parquets), que no se copia: para correrlos aquí, enlazar `data/` del repo original (`ln -s ../paper/data data`). |
 | `results/` | Solo agregados JSON/MD por experimento (los `.npz` pesados y logs quedaron atrás). |
+| `results/e6_a7/` + `scripts/a7_derived_gate_eval.py` | Ablación causal de *typing*: gate dedicado vs gate derivado de un softmax único de familia. Medias por semilla y deltas pareados por fila. |
 
 ## Decisiones editoriales tomadas (por qué este paper no es una copia del draft)
 
@@ -31,8 +32,11 @@ no de los números aspiracionales del draft antiguo.
    clásico (XGBoost, RF, MLP, Kitsune) / encoders / LLMs decoder-agénticos.
    XGBoost **gana** en CIC saturado y el paper lo dice.
 4. **La novedad radica en la evaluación, no en los heads.** Los heads son
-   estándar (sigmoide, softmax, CORN + temperature scaling). El claims del
-   paper: (a) honestidad ante ataques desconocidos métricamente (LOAO + opción
+   estándar (sigmoide, softmax, CORN + temperature scaling). La ablación a7 lo
+   mide: derivar el gate de un softmax único de familia empata al gate dedicado
+   en AUROC/FPR@95 (UNSW ΔAUROC −0.0008±0.0013; CIC idéntico al cuarto
+   decimal), así que el *typing* compra contrato y auditabilidad, no ranking.
+   Los claims del paper: (a) honestidad ante ataques desconocidos métricamente (LOAO + opción
    `unknown` + abstención), (b) medición de la zona gris de una cascada real
    (Suricata+ET deja ~99.9% del tráfico en zona gris sin payload), (c)
    comportamiento de la calibración bajo drift (ECE 0.04 → 0.40 en CIC temporal).

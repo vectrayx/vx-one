@@ -40,9 +40,13 @@ class HeadSpec:
     n_candidates: int          # choice_family (K)
     ddos_candidates: int = 0   # 0 = head ddos ausente
     has_score: bool = True     # False in EMBER (S6)
+    flat: bool = False         # A7: single K-way family softmax (derived gate)
+    normal_index: int = 0      # index of "normal" in the candidate set
 
     @property
     def names(self) -> tuple[str, ...]:
+        if self.flat:
+            return ("flat",)
         ns = ["noul", "choice"]
         if self.has_score:
             ns.append("score")
@@ -117,9 +121,16 @@ by the feature stage: the input of P0 is [u ; r] ∈ R^{d+1})."""
         # Trunk: block 1 d_in→w, blocks 2..L w→w with residual
         self.blocks = nn.ModuleList([_Block(d_in, w)] + [_Block(w, w) for _ in range(L - 1)])
 
-        # Cabezas (§2.3): Noul w+1; Choice wK+K; CORN w+3; ddos 4w+4
-        self.noul = nn.Linear(w, 1)
-        self.choice = nn.Linear(w, heads.n_candidates)
+        # Heads (§2.3): Noul w+1; Choice wK+K; CORN w+3; ddos 4w+4.
+        # A7 replaces the gate+choice pair with a single K-way family softmax;
+        # the gate is derived as 1 - p(normal).
+        self.flat = nn.Linear(w, heads.n_candidates) if heads.flat else None
+        if heads.flat:
+            # analytic de-tilt of the family tilt (applied at eval only)
+            self.register_buffer("flat_logw", torch.zeros(heads.n_candidates))
+        if not heads.flat:
+            self.noul = nn.Linear(w, 1)
+            self.choice = nn.Linear(w, heads.n_candidates)
         self.has_score = heads.has_score
         if heads.has_score:
             self.corn_u = nn.Linear(w, 1, bias=False)   # u^T h
@@ -140,9 +151,34 @@ by the feature stage: the input of P0 is [u ; r] ∈ R^{d+1})."""
             h = h + block(h) if i > 0 else block(h)
         return h
 
+    def _flat_forward(self, h: torch.Tensor) -> dict[str, torch.Tensor]:
+        """A7: single family softmax; the gate is derived as 1 - p(normal).
+
+        Eval applies the analytic de-tilt of the family tilt (omega), exactly
+        as the reference choice head does in ``vx_calibrated``. The derived
+        gate and the choice share the same distribution: this is the
+        "dedicated primitive vs marginalised primitive" contrast.
+        """
+        z = self.flat(h)
+        if not self.training:
+            z = z - self.flat_logw
+        p_fam = torch.softmax(z, dim=1)
+        n = self.heads.normal_index
+        p_att = (1.0 - p_fam[:, n]).clamp(1e-6, 1.0 - 1e-6)
+        out = {"flat": z, "choice": z,
+               "noul": torch.log(p_att) - torch.log1p(-p_att)}
+        if self.has_score:
+            out["corn_logits"] = (self.corn_u(h).squeeze(-1).unsqueeze(1)
+                                  + self.corn_b.unsqueeze(0))
+        if self.has_ddos:
+            out["ddos"] = self.ddos(h)
+        return out
+
     def forward(self, u_r: torch.Tensor, txt_slots: dict[str, torch.Tensor] | None = None) -> dict[str, torch.Tensor]:
         """u_r float32 [B, d+1]; txt_slots {campo: int64 [B]} (solo UNSW)."""
         h = self.trunk(u_r, txt_slots)
+        if self.heads.flat:
+            return self._flat_forward(h)
         out: dict[str, torch.Tensor] = {
             "noul": self.noul(h).squeeze(-1),          # logits [B]
             "choice": self.choice(h),                  # logits [B, K]

@@ -24,6 +24,7 @@ import numpy as np
 import pyarrow.parquet as pq
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from sklearn.metrics import f1_score, roc_auc_score
 
 from .calibration import (fit_choice_temperature, fit_corn_temperature,
@@ -98,6 +99,21 @@ def _batch_losses(net: VXOneNet, run: RunData, u, txt, lab: _BatchLabels):
     en CPU (run es serializable); se mueven al device del batch aquí."""
     out = net(u, txt)
     dev = u.device
+    if "flat" in out:  # A7: family CE (same omega tilt) + CORN + ddos; no gate
+        fm = lab.y_fam >= 0
+        losses = {}
+        if bool(fm.any()):
+            losses["choice"] = choice_loss(out["flat"][fm], lab.y_fam[fm],
+                                           run.meta["a7_omega_train"].to(dev))
+        if net.has_score:
+            losses["score"] = corn_loss(out["corn_logits"], lab.y_sev)
+        if net.has_ddos:
+            m = lab.ddos_mask
+            if bool(m.any()):
+                losses["ddos"] = choice_loss(out["ddos"][m], lab.y_ddos[m],
+                                             run.omega_ddos.to(dev))
+        active = {k: True for k in losses}
+        return losses, active
     fm = lab.y_fam >= 0  # sentinela -1 (A5-EMBER): fuera del CE de choice
     losses = {
         "noul": noul_loss(out["noul"], lab.y_bin),
@@ -203,7 +219,7 @@ def train_run(run: RunData, out_path: str | Path, device: str = "cpu",
      reciben target uniforme sobre los candidatos conocidos, con peso fijo
      fuera del weighting de Kendall. Solo UNSW/CIC (no EMBER).
 
-    Ablations E6 (§7): `ablation` en {a1, a2_*, a3, a4, a5, a6} — un solo
+    Ablations E6 (§7): `ablation` en {a1, a2_*, a3, a4, a5, a6, a7} — un solo
     cambio por corrida sobre la referencia Small: a1 sin rama textual (vocab a
     None), a2 sin multi-task (a2_noul / a2_choice / a2_score: un modelo por
     cabeza, el merge de los tres dumps es la corrida a2), a3 sin calibración
@@ -260,6 +276,13 @@ def train_run(run: RunData, out_path: str | Path, device: str = "cpu",
     elif ablation == "a6":  # dropout 0
         import src.models.network as _net_mod
         _net_mod.DROPOUT = 0.0
+    elif ablation == "a7":  # A7: single family softmax, derived gate
+        import dataclasses
+        run.heads = dataclasses.replace(run.heads, flat=True)
+        # Same per-family tilt as the reference, with analytic de-tilt inside
+        # the net; artifact omega=1 so vx_calibrated does not apply it twice.
+        run.meta["a7_omega_train"] = run.omega.clone()
+        run.omega = torch.ones_like(run.omega)
     elif ablation in ("a2_noul", "a2_choice", "a2_score"):
         # A2 sin multi-task (§7): UN modelo por cabeza con el mismo
         # presupuesto total — las cabezas aportan <1% de params, la anchura
@@ -275,7 +298,13 @@ def train_run(run: RunData, out_path: str | Path, device: str = "cpu",
                    d_num=len(run.feature_stage.impute_median),
                    vocab_sizes={k: v.size for k, v in (run.vocab or {}).items()})
     net.to(device)
-    kendall = KendallMultiTask(run.heads.names).to(device)
+    if run.heads.flat:
+        with torch.no_grad():
+            net.flat_logw.copy_(torch.log(run.meta["a7_omega_train"]))
+    flat_names = ("choice", "score", "ddos") if run.heads.ddos_candidates \
+        else ("choice", "score")
+    kendall = KendallMultiTask(flat_names if run.heads.flat
+                               else run.heads.names).to(device)
 
     ember = run.source == "ember2024_v1"
     if ember:
@@ -429,7 +458,9 @@ def train_run(run: RunData, out_path: str | Path, device: str = "cpu",
     t0 = time.time()
     for epoch in range(start_epoch, n_epochs):
         run_epoch(epoch)
-        names = run.heads.names
+        names = (("noul", "choice", "score")
+                 + (("ddos",) if run.heads.ddos_candidates else ())
+                 if run.heads.flat else run.heads.names)
         if run.meta.get("a2_head"):  # A2: early-stop solo sobre su cabeza
             names = (run.meta["a2_head"],)
         active_m, mv = _m_val(val_outputs(), names)

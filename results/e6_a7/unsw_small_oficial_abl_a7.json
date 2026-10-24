@@ -1,0 +1,40 @@
+{
+  "artifact": "/vol/artifacts/unsw_small_oficial_abl_a7.pt",
+  "source": "unsw",
+  "scale": "small",
+  "split_scheme": "oficial",
+  "exclude": null,
+  "temperatures": {
+    "noul": 1.1836535621912212,
+    "score": 0.8864436767970465,
+    "choice": 1.103631187959054
+  },
+  "m_val": 0.8243768620360549,
+  "best_epoch": 10,
+  "candidates": [
+    "normal",
+    "dos",
+    "recon",
+    "exploitation",
+    "shellcode",
+    "backdoor",
+    "analysis",
+    "fuzzing",
+    "generic",
+    "worms"
+  ],
+  "omega": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "mode": "abstain",
+  "tau_abs": 0.5
+}
