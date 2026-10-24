@@ -78,11 +78,12 @@ python scripts/a7_loao_eval.py --a7 results/e6_a7/loao \
 ```
 
 Under outlier exposure (E9b protocol: the excluded family returns as an
-unlabeled pool, lambda=0.5), the derived gate matches the dedicated one on
-abstention (0.909 vs 0.879, p=0.15) and false attribution, but is
-significantly worse at detection ranking (gate AUROC 0.922 vs 0.965,
-p=0.012). Abstention lives in the choice head; the dedicated gate buys
-detection ranking. Reproduce with:
+unlabeled pool, lambda=0.5), seed-42 fold comparisons show no clear
+abstention difference (0.909 vs 0.879, unadjusted p=0.15), while the derived
+gate ranks lower on 8/9 folds (AUROC 0.922 vs 0.965, unadjusted p=0.012).
+This is descriptive evidence, not equivalence or a multi-seed/family-wise
+claim: OE acts through Choice, while the dedicated gate can help ranking.
+Reproduce with:
 
 ```bash
 modal run modal/app.py::oe_loao_a7 --source unsw --oe-weight 0.5

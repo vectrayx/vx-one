@@ -1109,7 +1109,7 @@ Corregido en §E7.
 
 **Paper**: abstract, Tabla 1, §E1, §E2 (sweep + LOAO), §E9b y apéndice
 actualizados; añadidas Proposición 5 (label shift es un vector) y el
-protocolo estadístico pre-declarado; cita CRC 2024 (ICLR).
+protocolo estadístico retrospectivo y completamente especificado; cita CRC 2024 (ICLR).
 
 ## 26. E6-a7 — ablación causal de typing: gate derivado vs gate dedicado ✅ (2026-10-23)
 
@@ -1118,8 +1118,9 @@ del multi-task sharing y no del *typing* (gate/choice/score como primitivas
 separadas). La a7 aísla esa pregunta para el gate: mismo trunk, misma CE de
 familia ponderada por ω, mismo de-tilt analítico `z − log ω`, misma cabeza
 CORN de score, mismo presupuesto y early stopping; la única diferencia es que
-**no hay cabeza de gate** y el gate se deriva como `1 − p(normal)` de la
-distribución de choice.
+**no hay cabeza de gate**: se marginaliza `1 − p(normal)` después del de-tilt,
+se recorta y se calibra con una temperatura binaria propia. Choice conserva
+su temperatura; comparten logits de familia, no la probabilidad final calibrada.
 
 **Implementación.**
 - `src/models/network.py`: `HeadSpec.flat` + `normal_index`; `_flat_forward`
@@ -1159,22 +1160,24 @@ paper lo declara así en §E6 y en §E2 ("not raw AUROC superiority").
 
 **Extensión LOAO (mismas particiones y seed 42; semillas 43/44 en tres folds
 CIC).** Se reentrenó a7 en los 9 folds de UNSW y los 7 de CIC, con la misma
-partición que la referencia tipada. Detección one-vs-normal sobre la familia
+partición que la referencia tipada; el contraste por fold usa typed seed 42, y
+las semillas 43/44 son sólo un chequeo de estabilidad de a7. Detección one-vs-normal sobre la familia
 excluida (`scripts/a7_loao_eval.py`, salidas `results/e6_a7/loao.json` y
 `loao.md`; chequeo de semillas en `loao_seeds.json`/`loao_seeds.md`):
 
 | dataset | folds | ΔAUROC mediana | a7 mejor | Wilcoxon |
 |---|---|---|---|---|
-| UNSW | 9 | −0.0009 | 2/9 | p=0.30 |
-| CIC strat | 7 | −0.0252 | 3/7 | p=0.30 |
+| UNSW | 9 | −0.0009 | 2/9 | p=0.30 (no ajustada; descriptiva) |
+| CIC strat | 7 | −0.0252 | 3/7 | p=0.30 (no ajustada; descriptiva) |
 
 En UNSW el empate se mantiene. En CIC el patrón no es uniforme: el gate
 derivado pierde de forma **consistente** en `dos_ddos` (0.60–0.63 en tres
-semillas vs 0.85 tipado) y `botnet` (0.57–0.59 vs 0.75), justo los folds donde
+semillas vs 0.85 typed seed 42) y `botnet` (0.57–0.59 vs 0.75 typed seed 42),
+justo los folds donde
 el choice head absorbe la familia nueva en `normal`; gana ligeramente en
 `recon` (+0.013) y `webattack` (+0.013); y en `exploitation` el seed 42 daba
-0.421 vs 0.970, pero las semillas 43/44 dan 0.943/0.871: **el colapso
-catastrófico era de una semilla, no del diseño**. El test de signos de 7
+0.421 vs 0.970 typed seed 42, pero las semillas 43/44 dan 0.943/0.871: **el colapso
+catastrófico era de una semilla, no del diseño**. El Wilcoxon no ajustado de 7
 folds no tiene potencia (p=0.30), así que se reporta el patrón por fold, no
 una media ganadora.
 
@@ -1187,8 +1190,9 @@ semillas 43/44 habríamos reportado un colapso de −0.55 que no replica.
 el score CORN tipado y el candidate set con `normal`. El gate derivado no es
 universal: depende de que exista una clase `normal` (en EMBER con `unknown`
 entrenado la semántica es distinta). La extensión OE está en §27: el gate
-derivado iguala la abstención (0.909 vs 0.879) pero pierde ranking de
-detección (AUROC 0.922 vs 0.965).
+derivado no muestra una diferencia fold-level clara de abstención (0.909 vs
+0.879; p no ajustada=0.15), pero exhibe menor ranking de detección en 8/9
+folds (AUROC 0.922 vs 0.965; p no ajustada=0.012).
 
 **Reproducir.**
 ```bash
@@ -1226,21 +1230,23 @@ Artefactos: `results/e6_a7/oe_a7.{json,md}`, dumps en `results/e6_a7/oe/`.
 
 | métrica | a7+OE | typed+OE | Δ (a7−typed) | a7 mejor | Wilcoxon |
 |---|---|---|---|---|---|
-| abstención | 0.909 | 0.879 | +0.030 ± 0.058 | 5/9 | p=0.15 |
-| false-att | 0.075 | 0.092 | −0.017 ± 0.037 | 5/9 | p=0.25 |
-| absorción | 0.015 | 0.029 | −0.013 ± 0.041 | 4/9 | p=0.56 |
-| gate AUROC | 0.922 | 0.965 | −0.043 ± 0.036 | 1/9 | **p=0.012** |
-| F1 conocidos | 0.478 | 0.469 | +0.009 ± 0.016 | 6/9 | p=0.13 |
-| max-prob mediana | 0.304 | 0.318 | −0.014 ± 0.011 | 8/9 | **p=0.012** |
+| abstención | 0.909 | 0.879 | +0.030 ± 0.058 | 5/9 | p=0.15 (sin ajuste) |
+| false-att | 0.075 | 0.092 | −0.017 ± 0.037 | 5/9 | p=0.25 (sin ajuste) |
+| absorción | 0.015 | 0.029 | −0.013 ± 0.041 | 4/9 | p=0.56 (sin ajuste) |
+| gate AUROC | 0.922 | 0.965 | −0.043 ± 0.036 | 1/9 | p=0.012 (sin ajuste) |
+| F1 conocidos | 0.478 | 0.469 | +0.009 ± 0.016 | 6/9 | p=0.13 (sin ajuste) |
+| max-prob mediana | 0.304 | 0.318 | −0.014 ± 0.011 | 8/9 | p=0.012 (sin ajuste) |
 
-**Lectura.** La abstención es una propiedad de la choice head, y el OE la
-enseña igual con gate derivado (de hecho, mediana de max-prob más baja en 8/9,
-p=0.012; sube en `dos` +0.109 y `fuzzing` +0.152). Lo que el gate dedicado
-compra es el **ranking de detección**: AUROC 0.965 vs 0.922, mejor en 8/9
-folds (p=0.012). Es la misma descomposición que LOAO: typing = primitiva
-binaria para detectar, no mecanismo para abstener. El claim de "abstención
-enseñable" de E9b sobrevive a la ablación; el claim de que el gate dedicado
-sea necesario para enseñarla, no.
+**Lectura (exploratoria, seed 42).** No se detecta una diferencia fold-level
+clara de abstención (p no ajustada=0.15), aunque la max-prob mediana es menor
+en 8/9 folds (p no ajustada=0.012); la **abstención** sube en `dos` +0.109 y
+`fuzzing` +0.152.
+El gate dedicado exhibe mejor ranking en 8/9 folds (AUROC 0.965 vs 0.922;
+p no ajustada=0.012), pero los seis contrastes no llevan ajuste familiar ni
+rerruns de semillas. Es evidencia descriptiva consistente con que OE actúa en
+Choice y el gate dedicado ayuda a detectar; no prueba equivalencia de
+abstención ni una ventaja universal. El claim de "abstención enseñable" de
+E9b sobrevive; el de que el gate dedicado sea necesario para enseñarla, no.
 
 **Reproducir.**
 ```bash

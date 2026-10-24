@@ -89,10 +89,10 @@ Tres correcciones aplicadas:
 1. `docs/EXPERIMENTS.md` §22 marcada como histórica inválida y sustituida por
    las cifras canónicas de §25 (se eliminaron las conclusiones 0.513→0.950 y
    0.00→0.94).
-2. Protocolo estadístico reescrito sin claim de pre-registro: declara que los
-   tests se añadieron tras la revisión externa, que los p-valores por fila son
-   exploratorios (hasta 60 contrastes sin ajuste global) y que los veredictos
-   descansan sólo en la regla por semillas y en Holm por fold.
+2. Protocolo estadístico reescrito como retrospectivo, no pre-registrado:
+   intervalos de filas descriptivos; veredictos de tablas principales por
+   semillas; Holm sólo para los tres baselines LOAO; y extensiones a7
+   explícitamente descriptivas con p no ajustadas.
 3. Autores de CRC 2024 corregidos: Angelopoulos, Bates, **Fisch, Lei,
    Schuster** (verificado en ICLR/arXiv 2208.02814).
 
@@ -103,8 +103,10 @@ score como primitivas separadas) o del multi-task sharing? Ablación a7:
 
 - **Diseño.** Un solo softmax de familia (misma CE ponderada por ω, mismo
   de-tilt analítico `z − log ω`, misma cabeza CORN de score, mismo trunk,
-  mismo presupuesto y early stopping). El gate se deriva como
-  `1 − p(normal)` de la distribución de choice; no hay cabeza de gate.
+  mismo presupuesto y early stopping). El gate es el marginal crudo
+  `1 − p(normal)` tras de-tilt, recortado y calibrado con temperatura binaria
+  propia; Choice conserva su temperatura, así que comparten logits, no la
+  probabilidad final calibrada. No hay cabeza de gate.
   Implementado en `src/models/network.py` (`HeadSpec.flat`, `_flat_forward`),
   `src/models/train.py` (`ablation == "a7"`), y registrado en el artefacto
   (`head_meta["flat"]`) para que `dump_outputs` reconstruya la red.
@@ -138,9 +140,10 @@ causal del revisor.
 `scripts/a7_loao_eval.py` + `results/e6_a7/loao.json`/`loao.md` y
 `loao_seeds.json`/`loao_seeds.md`. UNSW: empate (mediana ΔAUROC −0.0009, 2/9,
 Wilcoxon p=0.30). CIC: patrón no uniforme; el gate derivado pierde de forma
-consistente en `dos_ddos` (0.60–0.63 en 3 semillas vs 0.85) y `botnet`
-(0.57–0.59 vs 0.75), gana ligeramente en `recon`/`webattack`, y en
-`exploitation` el seed 42 daba 0.42 vs 0.97 pero 43/44 dan 0.94/0.87: el
+consistente en `dos_ddos` (0.60–0.63 en 3 semillas vs 0.85 typed seed 42) y `botnet`
+(0.57–0.59 vs 0.75 typed seed 42), gana ligeramente en `recon`/`webattack`, y en
+`exploitation` el seed 42 daba 0.42 vs 0.97 typed seed 42 pero 43/44 dan
+0.94/0.87: el
 colapso era de una semilla. El test de 7 folds no tiene potencia (p=0.30).
 Lectura: el typing importa en open-set solo donde la absorción benigna domina;
 sin la regla de semillas habríamos reportado un −0.55 que no replica.
@@ -148,13 +151,30 @@ sin la regla de semillas habríamos reportado un −0.55 que no replica.
 **Extensión OE (E9b-a7, 9 folds UNSW, seed 42).** Mismo pool OE que E9b
 (familia excluida como outliers, target uniforme, λ=0.5), única diferencia
 `--ablation a7`. `scripts/a7_e9b_eval.py` + `results/e6_a7/oe_a7.{json,md}`.
-El gate derivado **iguala la abstención** (0.909 vs 0.879, 5/9, p=0.15;
-mediana de max-prob más baja en 8/9, p=0.012) y el false-att (0.075 vs 0.092,
-p=0.25), pero **pierde ranking de detección** (gate AUROC 0.922 vs 0.965, 1/9,
-p=0.012). La abstención vive en la choice head y el OE la enseña sin gate
-dedicado; el gate dedicado compra detección. El claim de "abstención
-enseñable" de E9b sobrevive; el de que el gate dedicado sea necesario para
-enseñarla, no.
+En seed 42 no se detecta diferencia fold-level clara de abstención (0.909 vs
+0.879, 5/9, p no ajustada=0.15; max-prob menor en 8/9, p no ajustada=0.012)
+ni de false-att (0.075 vs 0.092, p no ajustada=0.25), mientras que el gate
+derivado rankea peor en detección (AUROC 0.922 vs 0.965, 1/9, p no
+ajustada=0.012). Son seis contrastes descriptivos sin ajuste familiar ni
+rerruns de semillas: sugieren que OE actúa en Choice y que el gate dedicado
+ayuda a detectar, sin probar equivalencia ni ventaja universal. El claim de
+"abstención enseñable" de E9b sobrevive; el de que el gate dedicado sea
+necesario para enseñarla, no.
+
+
+## Cierre V2 — cita JEV-as-a-Judge + auditoría Astra ✅ (2026-10-24)
+
+- Añadida la referencia independiente `li2026jevjudge`: Li, Miao, Krishnan y
+  Padman, *JEV-as-a-Judge: Accept When Confident, Escalate When Unsure*,
+  arXiv:2609.26550. Related Work la sitúa correctamente como evidencia de
+  routing de confianza en evaluación de lenguaje, complementaria y no
+  transferible a telemetría de red. Claims de "primera" acotados a seguridad
+  y a la triada completa.
+- Auditoría adversarial final por **GPT-6 Astra**, tres pasadas: corrigió
+  protocolo estadístico retrospectivo, agregaciones por fold, semántica
+  efectiva de a7 (marginal crudo + temperatura binaria propia), convenciones
+  de SD, alcance de semillas y p no ajustadas de extensiones. Veredicto final:
+  **APTO PARA CERRAR**; PDF 14 pp, sin citas ni errores LaTeX.
 
 ## Estado del paper
 
@@ -170,8 +190,6 @@ enseñarla, no.
 
 ## Pendiente antes de someter
 
-1. Commits/pushes del ciclo: `master` en `2ca8565` (a7, LOAO y OE) y
-   repo público en `3e44efa`; PDF/zip regenerados y tests en verde.
-2. Rellenar `\country{}` y `\acmConference{}` desde el portal ACM (no arXiv).
-3. Decidir si el resultado CIC de E9b (detección, no abstención) cambia el
-   título/claim de portada: el abstract ya lo dice con precisión.
+1. Rellenar `\country{}` y `\acmConference{}` desde el portal ACM (no arXiv).
+2. Envío: V2 quedó cerrada tras la auditoría; no abrir nuevos experimentos sin
+   una razón editorial concreta.
