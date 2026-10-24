@@ -1,0 +1,49 @@
+{
+  "artifact": "/vol/artifacts/cic_small_strat_abl_a7_s43.pt",
+  "source": "cic",
+  "scale": "small",
+  "split_scheme": "strat",
+  "exclude": null,
+  "temperatures": {
+    "noul": 1.0515237739542767,
+    "score": 0.7490632526895264,
+    "ddos": 1.1116336503009436,
+    "choice": 1.0515237739542767
+  },
+  "m_val": 0.9774166205277166,
+  "best_epoch": 14,
+  "candidates": [
+    "normal",
+    "dos_ddos",
+    "recon",
+    "bruteforce",
+    "webattack",
+    "botnet",
+    "infiltration",
+    "exploitation"
+  ],
+  "omega": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "mode": "abstain",
+  "tau_abs": 0.5,
+  "omega_ddos": [
+    0.3488540053367615,
+    0.7150029540061951,
+    0.5205590128898621,
+    2.415584087371826
+  ],
+  "ddos_candidates": [
+    "normal",
+    "tcp_flood",
+    "http_dos",
+    "slowloris"
+  ]
+}

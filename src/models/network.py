@@ -40,9 +40,13 @@ class HeadSpec:
     n_candidates: int          # choice_family (K)
     ddos_candidates: int = 0   # 0 = head ddos ausente
     has_score: bool = True     # False en EMBER (S6)
+    flat: bool = False         # A7: una sola cabeza K x 4 (familia, severidad)
+    normal_index: int = 0      # indice de "normal" en el candidate set
 
     @property
     def names(self) -> tuple[str, ...]:
+        if self.flat:
+            return ("flat",)
         ns = ["noul", "choice"]
         if self.has_score:
             ns.append("score")
@@ -118,8 +122,14 @@ class VXOneNet(nn.Module):
         self.blocks = nn.ModuleList([_Block(d_in, w)] + [_Block(w, w) for _ in range(L - 1)])
 
         # Cabezas (§2.3): Noul w+1; Choice wK+K; CORN w+3; ddos 4w+4
-        self.noul = nn.Linear(w, 1)
-        self.choice = nn.Linear(w, heads.n_candidates)
+        # A7: un solo softmax de familia (K); el gate se deriva como
+        # 1 - p(normal). La cabeza de score CORN se mantiene identica.
+        self.flat = nn.Linear(w, heads.n_candidates) if heads.flat else None
+        if heads.flat:
+            self.register_buffer("flat_logw", torch.zeros(heads.n_candidates))
+        if not heads.flat:
+            self.noul = nn.Linear(w, 1)
+            self.choice = nn.Linear(w, heads.n_candidates)
         self.has_score = heads.has_score
         if heads.has_score:
             self.corn_u = nn.Linear(w, 1, bias=False)   # u^T h
@@ -140,9 +150,130 @@ class VXOneNet(nn.Module):
             h = h + block(h) if i > 0 else block(h)
         return h
 
+    def _flat_forward(self, h: torch.Tensor) -> dict[str, torch.Tensor]:
+        """A7: softmax unico de familia; el gate se deriva de 1 - p(normal).
+
+        En eval se aplica el de-tilt analitico del tilt de familias (omega),
+        igual que el contrato de la cabeza choice de la referencia. El gate
+        derivado y la choice comparten la MISMA distribucion: es el contraste
+        "primitiva dedicada vs primitiva marginalizada".
+        """
+        z = self.flat(h)
+        if not self.training:
+            z = z - self.flat_logw
+        p_fam = torch.softmax(z, dim=1)
+        n = self.heads.normal_index
+        p_att = (1.0 - p_fam[:, n]).clamp(1e-6, 1.0 - 1e-6)
+        out = {"flat": z, "choice": z,
+               "noul": torch.log(p_att) - torch.log1p(-p_att)}
+        if self.has_score:
+            out["corn_logits"] = (self.corn_u(h).squeeze(-1).unsqueeze(1)
+                                  + self.corn_b.unsqueeze(0))
+        if self.has_ddos:
+            out["ddos"] = self.ddos(h)
+        return out
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return nn.functional.dropout(
+            nn.functional.gelu(self.ln(self.lin(x))), DROPOUT,
+            training=self.training,
+        )
+
+
+class VXOneNet(nn.Module):
+    """Motor VX-One v0.1. d_num incluye el flag de fila (d+1 ya aplicado
+    por el feature stage: la entrada de P0 es [u ; r] ∈ R^{d+1})."""
+
+    def __init__(
+        self,
+        source: str,
+        scale: str,
+        heads: HeadSpec,
+        d_num: int,               # d canónico (sin flag); P0 entra con d+1
+        vocab_sizes: dict[str, int] | None = None,  # {campo: V+2} (solo UNSW)
+    ) -> None:
+        super().__init__()
+        cfg = SCALES[scale]
+        self.source = source
+        self.scale = scale
+        self.heads = heads
+        if source == "ember":
+            w, d0, L = cfg["w_ember"], cfg["d0_ember"], cfg["L"]
+        else:
+            w = cfg["w_unsw"] if source == "unsw" else cfg["w_cic"]
+            d0 = cfg["d0_unsw"] if source == "unsw" else cfg["d0_cic"]
+            L = cfg["L"]
+        e = cfg["e"]
+        self.vocab_sizes = vocab_sizes or {}
+        m = len(self.vocab_sizes)
+
+        # P0: Linear((d+1) → d0) — el +1 es el flag de fila (§2.3)
+        self.proj = nn.Linear(d_num + 1, d0)
+        # Embeddings lookup: una tabla por campo, (V+2) × e
+        self.emb = nn.ModuleDict(
+            {f: nn.Embedding(vs, e) for f, vs in self.vocab_sizes.items()}
+        )
+        d_in = d0 + m * e
+        # Tronco: bloque 1 d_in→w, bloques 2..L w→w con residual
+        self.blocks = nn.ModuleList([_Block(d_in, w)] + [_Block(w, w) for _ in range(L - 1)])
+
+        # Cabezas (§2.3): Noul w+1; Choice wK+K; CORN w+3; ddos 4w+4
+        # A7: un solo softmax de familia (K); el gate se deriva como
+        # 1 - p(normal). La cabeza de score CORN se mantiene identica.
+        self.flat = nn.Linear(w, heads.n_candidates) if heads.flat else None
+        if heads.flat:
+            self.register_buffer("flat_logw", torch.zeros(heads.n_candidates))
+        if not heads.flat:
+            self.noul = nn.Linear(w, 1)
+            self.choice = nn.Linear(w, heads.n_candidates)
+        self.has_score = heads.has_score
+        if heads.has_score:
+            self.corn_u = nn.Linear(w, 1, bias=False)   # u^T h
+            self.corn_b = nn.Parameter(torch.tensor([1.0, 0.0, -1.0]))  # init §2.1
+        self.has_ddos = heads.ddos_candidates > 0
+        if self.has_ddos:
+            self.ddos = nn.Linear(w, heads.ddos_candidates)
+
+    # ── forward ──────────────────────────────────────────────────────
+    def trunk(self, u_r: torch.Tensor, txt_slots: dict[str, torch.Tensor] | None = None) -> torch.Tensor:
+        h = self.proj(u_r)
+        if self.emb:
+            parts = [h]
+            for f, tab in self.emb.items():
+                parts.append(tab(txt_slots[f]))
+            h = torch.cat(parts, dim=1)
+        for i, block in enumerate(self.blocks):
+            h = h + block(h) if i > 0 else block(h)
+        return h
+
+    def _flat_forward(self, h: torch.Tensor) -> dict[str, torch.Tensor]:
+        """A7: softmax unico de familia; el gate se deriva de 1 - p(normal).
+
+        En eval se aplica el de-tilt analitico del tilt de familias (omega),
+        igual que el contrato de la cabeza choice de la referencia. El gate
+        derivado y la choice comparten la MISMA distribucion: es el contraste
+        "primitiva dedicada vs primitiva marginalizada".
+        """
+        z = self.flat(h)
+        if not self.training:
+            z = z - self.flat_logw
+        p_fam = torch.softmax(z, dim=1)
+        n = self.heads.normal_index
+        p_att = (1.0 - p_fam[:, n]).clamp(1e-6, 1.0 - 1e-6)
+        out = {"flat": z, "choice": z,
+               "noul": torch.log(p_att) - torch.log1p(-p_att)}
+        if self.has_score:
+            out["corn_logits"] = (self.corn_u(h).squeeze(-1).unsqueeze(1)
+                                  + self.corn_b.unsqueeze(0))
+        if self.has_ddos:
+            out["ddos"] = self.ddos(h)
+        return out
+
     def forward(self, u_r: torch.Tensor, txt_slots: dict[str, torch.Tensor] | None = None) -> dict[str, torch.Tensor]:
         """u_r float32 [B, d+1]; txt_slots {campo: int64 [B]} (solo UNSW)."""
         h = self.trunk(u_r, txt_slots)
+        if self.heads.flat:
+            return self._flat_forward(h)
         out: dict[str, torch.Tensor] = {
             "noul": self.noul(h).squeeze(-1),          # logits [B]
             "choice": self.choice(h),                  # logits [B, K]

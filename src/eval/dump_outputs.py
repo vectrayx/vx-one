@@ -38,7 +38,8 @@ def _load_net(artifact: str | Path, device: str) -> tuple[VXOneNet, dict, dict]:
     heads = HeadSpec(
         n_candidates=len(hm["choice"]["candidates"]),
         ddos_candidates=4 if has_ddos else 0,
-        has_score="score" in hm)
+        has_score="score" in hm,
+        flat=bool(hm.get("flat", False)))
     net = VXOneNet(source, ckpt["config"]["scale"], heads,
                    ckpt["config"]["d_num"],
                    vocab_sizes={k: v.size for k, v in vocab.items()})

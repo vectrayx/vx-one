@@ -251,7 +251,8 @@ def ablation_seeds(kinds: str = "a2,a6", seeds: str = "43,44"):
 @app.local_entrypoint()
 def ablation(kind: str, source: str):
     """E6 §7: UN ablation a Small (misma receta que la referencia).
-    kind ∈ a1 (solo UNSW), a2 (3 single-head + merge), a3, a4, a5, a6.
+    kind ∈ a1 (solo UNSW), a2 (3 single-head + merge), a3, a4, a5, a6,
+    a7 (gate derivado de un unico softmax de familia; UNSW y CIC).
     Lanzar una invocación por combinación para que un fallo no cancele a
     los demás."""
     scheme = {"unsw": "oficial", "cic": "strat", "ember": "temporal"}[source]

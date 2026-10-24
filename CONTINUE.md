@@ -85,6 +85,40 @@ Tres correcciones aplicadas:
 3. Autores de CRC 2024 corregidos: Angelopoulos, Bates, **Fisch, Lei,
    Schuster** (verificado en ICLR/arXiv 2208.02814).
 
+## Fase 3 — ablación causal de typing (a7)
+
+Pregunta del revisor de Fase 1: ¿la ganancia viene del *typing* (gate/choice/
+score como primitivas separadas) o del multi-task sharing? Ablación a7:
+
+- **Diseño.** Un solo softmax de familia (misma CE ponderada por ω, mismo
+  de-tilt analítico `z − log ω`, misma cabeza CORN de score, mismo trunk,
+  mismo presupuesto y early stopping). El gate se deriva como
+  `1 − p(normal)` de la distribución de choice; no hay cabeza de gate.
+  Implementado en `src/models/network.py` (`HeadSpec.flat`, `_flat_forward`),
+  `src/models/train.py` (`ablation == "a7"`), y registrado en el artefacto
+  (`head_meta["flat"]`) para que `dump_outputs` reconstruya la red.
+- **Corridas.** UNSW-Small y CIC-strat-Small, semillas 42/43/44, Modal L4.
+  Artefactos/npz en el volumen `paper-results` (`outputs/*_abl_a7*`); los npz
+  no se versionan (`.gitignore`), los metadatos y el informe sí.
+- **Evaluador.** `scripts/a7_derived_gate_eval.py` (pareado por semilla y por
+  fila, bootstrap B=300 descriptivo, métricas canónicas vía `eval_vx_run`).
+  Salidas: `results/e6_a7/a7.json` y `a7.md`.
+
+Resultados (semilla 42 en Tabla 6; medias±sd de 3 semillas en el texto):
+
+| dataset | AUROC a7 vs typed | ΔAUROC | m-F1 a7 vs typed | Δm-F1 | ECE-ch a7 vs typed |
+|---|---|---|---|---|---|
+| UNSW | 0.9829±0.0014 vs 0.9837±0.0002 | −0.0008±0.0013 (1/3) | 0.4615±0.0121 vs 0.4560±0.0011 | +0.0055±0.0109 (2/3) | 0.0435 vs 0.0544 |
+| CIC strat | 0.9999±0.0000 vs 0.9999±0.0000 | −0.0000 (2/3) | 0.8981±0.0348 vs 0.8312±0.0902 | +0.0669±0.0995 (2/3) | 0.0004 vs 0.0007 |
+
+**Veredicto honesto:** nulo en detección. El gate dedicado no compra AUROC ni
+FPR@95; la diferencia de atribución en CIC está dentro de la inestabilidad de
+semillas ya documentada (typed 0.727–0.884). Lo que compra el typing es el
+contrato: BCE binaria sin tilt, temperatura propia y semántica `unknown`
+explícita. El paper lo declara así en §E6 (nuevo párrafo a7), en línea con
+§E2 ("not raw AUROC superiority"). Esto acota el claim de novedad y responde
+la objeción causal del revisor.
+
 ## Estado del paper
 
 - 14 páginas, 0 errores LaTeX, 0 citas rotas, abstract actualizado.
@@ -96,7 +130,9 @@ Tres correcciones aplicadas:
 
 ## Pendiente antes de someter
 
-1. **Aprobación explícita** para commit/push (no se ha hecho nada aún en este ciclo).
+1. Commit/push del ciclo: `661b656` en `origin/master` (corrección E9b,
+   inferencia pareada, revisión adversarial). La ablación a7 se commitea en
+   el mismo ciclo tras regenerar PDF/zip.
 2. Rellenar `\country{}` y `\acmConference{}` desde el portal ACM (no arXiv).
 3. Decidir si el resultado CIC de E9b (detección, no abstención) cambia el
    título/claim de portada: el abstract ya lo dice con precisión.

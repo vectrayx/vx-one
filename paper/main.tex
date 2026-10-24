@@ -302,7 +302,7 @@ Fri 07 & 702{,}713 & 288{,}785 & 0.5887 & 0.9979 & 0.9974 & 0.998 & 0.996 \\
 \subsection{E6 --- Ablations}
 \label{sec:e6}
 
-Table~\ref{tab:e6} summarizes the ablation suite (full 14-run table and per-dataset effects in the released results). Four findings survive sanity checks and are worth their ink:
+Table~\ref{tab:e6} summarizes the ablation suite (full table, including the three-seed a7, and per-dataset effects in the released results). Five findings survive sanity checks and are worth their ink:
 
 \begin{table}[t]
 \caption{Ablations (ref = corresponding Small reference run).}
@@ -319,12 +319,14 @@ UNSW a2     & single-heads    & 0.9784 & \textbf{0.4598} & 0.0552 \\
 UNSW a3     & no calibration  & 0.9834 & 0.4571 & \textbf{0.0980} \\
 UNSW a4     & no class tilt   & 0.9838 & 0.4545 & 0.0488 \\
 UNSW a6     & no dropout      & 0.9839 & 0.4507 & 0.0451 \\
+UNSW a7     & gate derived    & 0.9826 & \textbf{0.4727} & 0.0501 \\
 \midrule
 CIC ref     & ---             & 0.9999 & 0.8826 & 0.0003 \\
 CIC a3      & no calibration  & 0.9999 & 0.8826 & 0.0007 \\
 CIC a4      & no class tilt   & 0.9999 & \textbf{0.9313} & 0.0002 \\
 CIC a5      & abstention off  & 0.9999 & 0.8826 & 0.0004 \\
 CIC a6      & no dropout      & 0.9999 & 0.7360 & 0.0007 \\
+CIC a7      & gate derived    & 0.9999 & 0.8616 & 0.0007 \\
 \midrule
 EMBER ref   & ---             & 0.9969 & 0.7549 & 0.0076 \\
 EMBER a3    & no calibration  & 0.9969 & 0.7549 & 0.0112 \\
@@ -342,6 +344,8 @@ EMBER a6    & no dropout      & 0.9966 & 0.7821 & 0.0081 \\
 \textbf{Class tilts are not free (a4).} On saturated CIC, removing the tilt $\omega$ \emph{improves} attribution by $+4.9$ macro-F1 at the reference seed---the de-tilt pushes minority classes \emph{down} in a regime where the weighted cross-entropy had already pushed them up. Three-seed re-runs put the a4-CIC effect at $\Delta=+4.9/+4.3/+3.9$ points across seeds ($\sigma{=}0.005$), so the direction is stable and the magnitude is seed-tight. On weakly-distributed EMBER the tilt matters less. There is no free class-tilt knob; its effect is deployment-regime-dependent, and our own loss design contains a knob whose default is wrong for saturated datasets. We say so and flag the design revision.
 
 \textbf{Dropout is dataset-dependent and, on saturated CIC, seed-unstable (a6).} On UNSW, zero dropout is a stable no-effect ($0.4507/0.4522/0.4481$ macro-F1 across three seeds, $\sigma{=}0.002$; the single-head merge a2 is equally stable, $\sigma{=}0.003$). On CIC, zero dropout spans macro-F1 $0.736/0.663/0.912$ across seeds ($\sigma{=}0.128$) against a $0.883$ reference---the $-14.7$-point cost of the reference seed is within seed noise, and one seed even lands above it. On EMBER it \emph{gains} $+2.7$ (the majority class dominates and early stopping regulates). No universal recipe; report per dataset \emph{and per seed}.
+
+\textbf{Typing the gate is a contract choice, not a ranking win (a7).} To isolate the gate's typing causally we retrained UNSW and CIC-Small with a \emph{single} family softmax and no dedicated gate, deriving the gate as $1-p(\texttt{normal})$ from the same de-tilted, temperature-calibrated choice distribution; trunk, weighted CE, CORN score head, and budget are identical, so the only change is whether the gate is a primitive of its own. On UNSW the derived gate ties the dedicated one across three seeds (AUROC $0.9829\pm0.0014$ vs.\ $0.9837\pm0.0002$; $\Delta$FPR@95 $+0.008\pm0.008$; better on 1/3 seeds) and attribution moves by $+0.006\pm0.011$ macro-F1 (2/3), i.e.\ inside seed noise. On saturated CIC the gate is identical to the fourth decimal ($0.9999$ both) and the attribution difference ($+0.067\pm0.099$, 2/3) is dominated by the known seed instability of that metric (typed range $0.727$--$0.884$). \emph{The dedicated gate therefore does not buy detection accuracy on these benchmarks.} What it buys is a separately calibrated binary primitive---unweighted BCE, its own temperature, and an explicit \texttt{unknown} contract---which is an auditability and semantics property, not a ranking one. We report the null result because it bounds the typing claim: the triad is a semantic decomposition, and our data cannot show it is an accuracy decomposition.
 
 \textbf{Unknown is a measurable trade-off (a5-wide).} Removing the trained-unknown option from EMBER's 11-way choice improves macro-F1 by $+11.2$ points (10-way is more balanced). ``Honesty'' is not free accuracy; making the \texttt{unknown} option available is a deliberate spend.
 

@@ -8,6 +8,7 @@ A3 sin calibración (T=1; las métricas threshold-free no cambian — se
 A4 pesos uniformes ω≡1 (sin de-tilt: el posterior hereda el tilt del train)
 A5 unknown off (EMBER: 10-way sin unknown; UNSW/CIC: τ_abs→1, sin abstención)
 A6 dropout 0 (regularización)
+A7 gate derivado de la cabeza de familia (sin cabeza de gate dedicada)
 
 Cada ablation produce el MISMO artefacto/npz que una corrida normal, así que
 el evaluador E1-E3 estándar sirve para comparar contra la corrida completa.
@@ -31,6 +32,7 @@ ABLATIONS = {
     "a4": "pesos uniformes ω≡1",
     "a5": "unknown off",
     "a6": "dropout 0",
+    "a7": "gate derivado de un softmax unico de familia",
 }
 
 

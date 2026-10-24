@@ -179,6 +179,7 @@ def save_artifact(path: str | Path, net: VXOneNet, run_meta: dict,
         "feature_stage": run_meta["feature_stage"].to_dict(),
         "vocab": {k: v.to_dict() for k, v in (run_meta.get("vocab") or {}).items()},
         "head_meta": {
+            "flat": bool(getattr(net.heads, "flat", False)),
             "noul": {"temperature": temperatures["noul"]},
             "choice": {"candidates": run_meta["candidates"],
                        "class_weights": run_meta["omega"].numpy(),

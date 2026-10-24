@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2026.10.19)  23 OCT 2026 19:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2026.10.19)  23 OCT 2026 20:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1250,32 +1250,32 @@ Package fancyhdr Warning: \headheight is too small (13.0pt):
 
 
 [8.8]
-Underfull \hbox (badness 1019) in paragraph at lines 344--345
+Underfull \hbox (badness 1019) in paragraph at lines 346--347
 []\T1/LinuxLibertineT-TLF/b/n/9 (+20) Dropout is dataset-dependent and, on sat-
 u-rated CIC,
  []
 
 
-Underfull \hbox (badness 5726) in paragraph at lines 352--353
+Underfull \hbox (badness 5726) in paragraph at lines 356--357
 \T1/LinuxLibertineT-TLF/m/n/9 (+20) com-mer-cial \T1/LinuxLibertineT-TLF/m/it/9
  (+20) Sys-tem One \T1/LinuxLibertineT-TLF/m/n/9 (+20) deployments---TypeSafe's
  Jev, SKU
  []
 
 
-Underfull \hbox (badness 5147) in paragraph at lines 352--353
+Underfull \hbox (badness 5147) in paragraph at lines 356--357
 \T1/zi4/m/n/9 jev-1.13-free \T1/LinuxLibertineT-TLF/m/n/9 (+20) (the same model
  as the com-mer-cial SKU,
  []
 
 
-Underfull \hbox (badness 2221) in paragraph at lines 352--353
+Underfull \hbox (badness 2221) in paragraph at lines 356--357
 \T1/LinuxLibertineT-TLF/m/n/9 (+20) served through a zero-metered ac-cess tier)
  and Mi-crosoft's
  []
 
 
-Underfull \hbox (badness 7344) in paragraph at lines 352--353
+Underfull \hbox (badness 7344) in paragraph at lines 356--357
 \T1/zi4/m/n/9 Microsoft-Decision-1\T1/LinuxLibertineT-TLF/m/n/9 (+20) , preview
 )---both ex-pos-ing the same
  []
@@ -1284,6 +1284,9 @@ Underfull \hbox (badness 7344) in paragraph at lines 352--353
 Underfull \vbox (badness 4279) has occurred while \output is active []
 
 
+
+
+Underfull \vbox (badness 4713) has occurred while \output is active []
 
 
 
@@ -1295,35 +1298,32 @@ Package fancyhdr Warning: \headheight is too small (13.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.02701pt}.
 
 [9.9]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 3049) has occurred while \output is active []
 
 
 
 
-Underfull \hbox (badness 1048) in paragraph at lines 396--397
+Underfull \hbox (badness 1048) in paragraph at lines 400--401
 \T1/LinuxLibertineT-TLF/b/n/9 (+20) now au-dited. \T1/LinuxLibertineT-TLF/m/n/9
  (+20) Ex-act distribution-free cov-er-age ap-plies
  []
 
 
-Underfull \hbox (badness 2913) in paragraph at lines 400--401
+
+[10.10]
+Underfull \hbox (badness 2913) in paragraph at lines 404--405
 []\T1/LinuxLibertineT-TLF/b/n/9 (+20) Text-field at-tack sur-face \T1/LinuxLibe
 rtineT-TLF/m/n/9 (+20) (in-di-rect prompt in-jec-tion
  []
 
 
-Underfull \hbox (badness 2096) in paragraph at lines 400--401
+Underfull \hbox (badness 2096) in paragraph at lines 404--405
 \T1/LinuxLibertineT-TLF/m/n/9 (+20) through \T1/zi4/m/n/9 user_agent\T1/LinuxLi
 bertineT-TLF/m/n/9 (+20) , URIs) is real [[]]; V0.1 has no
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-[10.10]
-Underfull \vbox (badness 3049) has occurred while \output is active []
 
 
 
@@ -1337,13 +1337,13 @@ Package fancyhdr Warning: \headheight is too small (13.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-3.02701pt}.
 
 [11.11]
-Underfull \hbox (badness 10000) in paragraph at lines 440--441
+Underfull \hbox (badness 10000) in paragraph at lines 444--445
  []\T1/LinuxLibertineT-TLF/m/it/9 (+20) Lemma 4 (BER--TV; drift cer-ti-fi-ca-ti
 on is one-sided).[] \T1/LinuxLibertineT-TLF/m/n/9 (+20) For
  []
 
 
-Underfull \hbox (badness 1009) in paragraph at lines 440--441
+Underfull \hbox (badness 1009) in paragraph at lines 444--445
 \T1/LinuxLibertineT-TLF/m/n/9 (+20) any two dis-tri-bu-tions $\OML/nxlmi/m/it/9
  P; Q$\T1/LinuxLibertineT-TLF/m/n/9 (+20) , $\OML/nxlmi/m/it/9 d[]\LMS/ntxsy/m/
 n/9 ¹\OML/nxlmi/m/it/9 P; Q\LMS/ntxsy/m/n/9 º \U/ntxmia/m/it/9 = \OT1/LinuxLibe
@@ -1354,26 +1354,21 @@ rtineT-TLF/m/n/9 (+20) 1 \LMS/ntxsy/m/n/9 ^^@ \OT1/LinuxLibertineT-TLF/m/n/9 (+
 
 
 
-Underfull \hbox (badness 1755) in paragraph at lines 446--447
+Underfull \hbox (badness 1755) in paragraph at lines 450--451
 \T1/LinuxLibertineT-TLF/m/n/9 (+20) soft/top-label ECE the same maps are (near-
 )calibrated: the
  []
 
 
+
+[12.12]
 Underfull \vbox (badness 2073) has occurred while \output is active []
 
 
 
-[12.12]
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
+Underfull \vbox (badness 2073) has occurred while \output is active []
 
-
-(./main.bbl
-LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 7.0pt on input line 46.
-LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 7.3pt on input line 49.
 
 
 
@@ -1383,7 +1378,12 @@ Package fancyhdr Warning: \headheight is too small (13.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.02701pt}.
 
-[13.13]
+[13.13] (./main.bbl
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
+(Font)              scaled to size 7.0pt on input line 46.
+LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
+(Font)              scaled to size 7.3pt on input line 49.
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
@@ -1422,11 +1422,11 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 Here is how much of TeX's memory you used:
  21633 strings out of 475722
  352767 string characters out of 5783517
- 826785 words of memory out of 6000000
+ 833406 words of memory out of 6000000
  42667 multiletter control sequences out of 15000+600000
  794326 words of font info for 641 fonts, out of 8000000 for 9000
  175 hyphenation exceptions out of 8191
- 90i,12n,131p,4866b,698s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,13n,131p,4866b,634s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/jsantillana/texmf/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb>
 </home/jsantillana/texmf/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></
 home/jsantillana/texmf/fonts/type1/public/newtx/LibertineMathMI.pfb></home/jsan
@@ -1443,7 +1443,7 @@ home/jsantillana/texmf/fonts/type1/public/newtx/NewTXMI.pfb></home/jsantillana/
 texmf/fonts/type1/public/newtx/txexs.pfb></home/jsantillana/texmf/fonts/type1/p
 ublic/newtx/txmiaX.pfb></home/jsantillana/texmf/fonts/type1/public/newtx/txsym.
 pfb></home/jsantillana/texmf/fonts/type1/public/newtx/txsys.pfb>
-Output written on main.pdf (14 pages, 750469 bytes).
+Output written on main.pdf (14 pages, 751726 bytes).
 PDF statistics:
  602 PDF objects out of 1000 (max. 8388607)
  489 compressed objects within 5 object streams
