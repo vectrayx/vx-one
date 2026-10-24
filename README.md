@@ -36,6 +36,8 @@ no de los números aspiracionales del draft antiguo.
    mide: derivar el gate de un softmax único de familia empata al gate dedicado
    en AUROC/FPR@95 (UNSW ΔAUROC −0.0008±0.0013; CIC idéntico al cuarto
    decimal), así que el *typing* compra contrato y auditabilidad, no ranking.
+   Bajo LOAO el empate se rompe solo donde la absorción benigna domina
+   (`dos_ddos`, `botnet` en CIC); `exploitation` es inestable entre semillas.
    Los claims del paper: (a) honestidad ante ataques desconocidos métricamente (LOAO + opción
    `unknown` + abstención), (b) medición de la zona gris de una cascada real
    (Suricata+ET deja ~99.9% del tráfico en zona gris sin payload), (c)

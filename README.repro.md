@@ -60,10 +60,23 @@ python scripts/a7_derived_gate_eval.py --a7 results/e6_a7 \
   --typed results/outputs_seed --out results/e6_a7
 ```
 
-Result: detection is a tie (UNSW ΔAUROC -0.0008±0.0013 across seeds; CIC
-identical to the fourth decimal), so the dedicated gate buys a contract
-(separate binary calibration, explicit `unknown`), not ranking. See
-`results/e6_a7/a7.md` and `docs/EXPERIMENTS.md` §26.
+Result: in-distribution detection is a tie (UNSW ΔAUROC -0.0008±0.0013 across
+seeds; CIC identical to the fourth decimal), so the dedicated gate buys a
+contract (separate binary calibration, explicit `unknown`), not ranking. Under
+LOAO the null splits by regime: UNSW stays a tie, while saturated CIC loses
+consistently on `dos_ddos` and `botnet` (the folds where the choice head
+absorbs the unseen family into `normal`); `exploitation` is seed-unstable.
+The LOAO extension is reproducible with:
+
+```bash
+modal run modal/app.py::loao_a7 --source unsw
+modal run modal/app.py::loao_a7 --source cic
+python scripts/a7_loao_eval.py --a7 results/e6_a7/loao \
+  --typed results/e6_a7/loao_typed --out results/e6_a7
+```
+
+See `results/e6_a7/a7.md`, `loao.md`, `loao_seeds.md` and
+`docs/EXPERIMENTS.md` §26.
 
 Results aggregated in `results/`. No raw parquets are shipped.
 
