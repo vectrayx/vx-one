@@ -103,6 +103,10 @@ score como primitivas separadas) o del multi-task sharing? Ablación a7:
 - **Evaluador.** `scripts/a7_derived_gate_eval.py` (pareado por semilla y por
   fila, bootstrap B=300 descriptivo, métricas canónicas vía `eval_vx_run`).
   Salidas: `results/e6_a7/a7.json` y `a7.md`.
+- **Documentación.** `docs/EXPERIMENTS.md` §26 (protocolo, tabla, alcance y
+  comando de reproducción); `README.repro.md` con la sección de la ablación.
+- **Repo público.** `public-sync` → `origin/main` `570a839`: código a7 en
+  inglés, script, resultados JSON/MD, paper y zip actualizados.
 
 Resultados (semilla 42 en Tabla 6; medias±sd de 3 semillas en el texto):
 

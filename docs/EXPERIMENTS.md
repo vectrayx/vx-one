@@ -1110,3 +1110,71 @@ Corregido en §E7.
 **Paper**: abstract, Tabla 1, §E1, §E2 (sweep + LOAO), §E9b y apéndice
 actualizados; añadidas Proposición 5 (label shift es un vector) y el
 protocolo estadístico pre-declarado; cita CRC 2024 (ICLR).
+
+## 26. E6-a7 — ablación causal de typing: gate derivado vs gate dedicado ✅ (2026-10-23)
+
+**Pregunta.** El revisor de Fase 1 objetó que la ganancia del motor podía venir
+del multi-task sharing y no del *typing* (gate/choice/score como primitivas
+separadas). La a7 aísla esa pregunta para el gate: mismo trunk, misma CE de
+familia ponderada por ω, mismo de-tilt analítico `z − log ω`, misma cabeza
+CORN de score, mismo presupuesto y early stopping; la única diferencia es que
+**no hay cabeza de gate** y el gate se deriva como `1 − p(normal)` de la
+distribución de choice.
+
+**Implementación.**
+- `src/models/network.py`: `HeadSpec.flat` + `normal_index`; `_flat_forward`
+  devuelve `choice` (logits de familia), `noul` (logit derivado), `corn_logits`
+  y `ddos`; el de-tilt ω se aplica solo en eval (`flat_logw`).
+- `src/models/train.py`: `ablation == "a7"` marca `flat=True`, guarda
+  `a7_omega_train`, fija `omega=1` en el artefacto (para que `vx_calibrated`
+  no aplique el de-tilt dos veces), y entrena CE de familia + CORN + ddos con
+  Kendall sobre `("choice","score","ddos")`.
+- `src/models/engine.py`: `head_meta["flat"]` para que `dump_outputs`
+  reconstruya la red plana.
+- `scripts/a7_derived_gate_eval.py`: evaluador pareado por semilla y por fila
+  (bootstrap B=300 descriptivo, métricas canónicas vía `eval_vx_run`,
+  `--selftest` sintético que valida AUROC contra sklearn y delta cero).
+
+**Corridas.** 6 jobs Small en Modal L4: UNSW `oficial` y CIC `strat`, semillas
+42/43/44. Artefactos y npz en el volumen `paper-results`
+(`outputs/*_abl_a7*`); los npz no se versionan (`.gitignore`), los JSON y el
+informe sí (`results/e6_a7/`).
+
+**Resultados (semilla 42 en Tabla 6 del paper; medias±sd de 3 semillas aquí).**
+
+| dataset | AUROC a7 | AUROC typed | ΔAUROC | m-F1 a7 | m-F1 typed | Δm-F1 |
+|---|---|---|---|---|---|---|
+| UNSW | 0.9829±0.0014 | 0.9837±0.0002 | −0.0008±0.0013 (1/3) | 0.4615±0.0121 | 0.4560±0.0011 | +0.0055±0.0109 (2/3) |
+| CIC strat | 0.9999±0.0000 | 0.9999±0.0000 | −0.0000 (2/3) | 0.8981±0.0348 | 0.8312±0.0902 | +0.0669±0.0995 (2/3) |
+
+FPR@95 UNSW: 0.1304±0.0082 (a7) vs 0.1222±0.0010 (typed); ECE-ch UNSW:
+0.0435 vs 0.0544. En CIC todo está en el cuarto decimal salvo la atribución.
+
+**Lectura honesta.** Nulo en detección: el gate dedicado no compra AUROC ni
+FPR@95; la diferencia de atribución en CIC (+6.7 pts, 2/3) está dentro de la
+inestabilidad de semillas ya documentada (typed 0.727–0.884). Lo que compra el
+typing es el **contrato**: BCE binaria sin tilt, temperatura propia y semántica
+`unknown` explícita; es una propiedad de auditabilidad, no de ranking. El
+paper lo declara así en §E6 y en §E2 ("not raw AUROC superiority").
+
+**Alcance / lo que NO prueba.** La a7 elimina solo la cabeza de gate; conserva
+el score CORN tipado y el candidate set con `normal`. El gate derivado no es
+universal: depende de que exista una clase `normal` (en EMBER con `unknown`
+entrenado y en LOAO la semántica del gate dedicado es distinta). No se corrió
+a7 bajo LOAO ni sobre el pool OE de E9b; esa es la extensión natural si se
+quiere probar si el gate dedicado importa en open-set.
+
+**Reproducir.**
+```bash
+for src in unsw cic; do
+  sch=oficial; [ "$src" = cic ] && sch=strat
+  for s in 42 43 44; do
+    modal run modal/app.py::train_vx --source $src --scale small \
+      --scheme $sch --ablation a7 --seed $s
+  done
+done
+# bajar npz/json del volumen y evaluar
+modal volume get paper-results outputs/unsw_small_oficial_abl_a7.npz results/e6_a7/
+python scripts/a7_derived_gate_eval.py --a7 results/e6_a7 \
+  --typed results/outputs_seed --out results/e6_a7
+```
