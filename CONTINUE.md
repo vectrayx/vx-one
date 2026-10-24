@@ -19,6 +19,17 @@
   suscripción. Grok 4.7: sin capacidad. **GPT-5.6 Terra: OK** (reviewer).
 - DeepSeek V4 Pro: OK. Mistral: no aparece en el catálogo del proveedor Azure.
 
+## Recursos GPU (Modal)
+
+- Perfil activo en el host: **`billing-95315`** (primera cuenta, ~$5
+  restantes). Es la cuenta dueña de los volúmenes `paper-data` y
+  `paper-results`, así que es la única que puede leer los artefactos.
+- El perfil `jssantillanajuan` del contenedor podman está **sin crédito y mal
+  configurado** (`Unknown workspace`): no usarlo.
+- Todos los jobs de a7 y a7-LOAO corrieron con `billing-95315`; las apps
+  quedaron detenidas. Para verificar: `modal profile current` y
+  `modal app list`.
+
 ## Hallazgos de Fase 1 y resolución
 
 ### V1 (CRÍTICO, resuelto) — E9b usaba otro estimador que E2
