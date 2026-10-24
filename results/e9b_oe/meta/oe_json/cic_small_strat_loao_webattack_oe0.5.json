@@ -1,0 +1,47 @@
+{
+  "artifact": "/vol/artifacts/cic_small_strat_loao_webattack_oe0.5.pt",
+  "source": "cic",
+  "scale": "small",
+  "split_scheme": "strat",
+  "exclude": "webattack",
+  "temperatures": {
+    "noul": 1.0909014920501945,
+    "score": 1.0628070376013534,
+    "ddos": 1.0366498306635856,
+    "choice": 1.0686620324753262
+  },
+  "m_val": 0.9733790841018451,
+  "best_epoch": 15,
+  "candidates": [
+    "normal",
+    "dos_ddos",
+    "recon",
+    "bruteforce",
+    "botnet",
+    "infiltration",
+    "exploitation"
+  ],
+  "omega": [
+    0.00930467713624239,
+    0.022736594080924988,
+    0.03518903627991676,
+    0.1192701980471611,
+    0.3164099454879761,
+    2.347412109375,
+    4.149677276611328
+  ],
+  "mode": "abstain",
+  "tau_abs": 0.5,
+  "omega_ddos": [
+    0.3488540053367615,
+    0.7150029540061951,
+    0.5205590128898621,
+    2.415584087371826
+  ],
+  "ddos_candidates": [
+    "normal",
+    "tcp_flood",
+    "http_dos",
+    "slowloris"
+  ]
+}

@@ -960,7 +960,12 @@ a "réplica de dos vendedores en un dominio". Resultados:
 choices[{value,description}]/levels[{label,description}] — documentado en
 `scripts/e7_azure_decision.py` por si se necesita.
 
-## 22. E9b — outlier exposure: la honestidad es enseñable ✅ (2026-10-22, noche)
+## 22. E9b — outlier exposure (histórico; cifras invalidadas por §25) ⚠️ (2026-10-22, noche)
+
+> **AVISO:** esta sección se calculó con un estimador distinto (solo
+> temperatura) y sus cifras de abstención/absorción NO son comparables con E2.
+> Las cifras canónicas están en §25 y en `results/e9b_oe/e9b_oe_contract.json`.
+> Se conserva como registro histórico del bug.
 
 El ítem opcional del informe resultó la contribución constructiva del ciclo.
 Diseño (Hendrycks OE 2019): en cada fold LOAO, la familia excluida VUELVE al
@@ -982,7 +987,7 @@ Implementación: `src/models/train.py` (oe dict, aditivo; EMBER intacta),
 | recon | 0.9523→0.9519 | 0.250→0.965 | 0.448→0.441 |
 | shellcode | 0.9688→0.9645 | 0.479→0.974 | 0.498→0.498 |
 | worms | 0.9871→0.9904 | 0.227→0.977 | 0.499→0.484 |
-| **media** | ~igual | **0.513→0.950** | **−0.008** |
+| **media** | ~igual | 0.513→0.950 (inválido; §25: **0.375→0.879**) | −0.008 (válido: −0.007) |
 
 **CIC estratificado (la patología saturada) — reparación completa**:
 
@@ -995,17 +1000,19 @@ Implementación: `src/models/train.py` (oe dict, aditivo; EMBER intacta),
 | botnet | 0.7499→0.9878 | 0.000→1.000 | 1.000→0.000 | −0.132 |
 | infiltration (n=5) | 0.5329→0.8120 | 0.000→0.600 | 1.000→0.400 | −0.049 |
 | exploitation | 0.9703→0.9976 | 0.000→1.000 | 1.000→0.000 | +0.085 |
-| **media** | **+0.186 (todos ↑)** | **0.00→0.94** | **→0.00** | **−0.033** |
+| **media** | **+0.186 (todos ↑)** | 0.00→0.94 (inválido; §25: **0.000→0.000**) | →0.00 (inválido; §25: **0.945→1.000**) | −0.033 (válido: +0.039) |
 
-Lectura: (1) la honestidad es ENSEÑABLE con labels retrasadas + OE — no es
-propiedad de un umbral; (2) en el régimen saturado OE repara TAMBIÉN la gate
-(el encoder, empujado a un no-man's-land para la familia expuesta, deja de
-absorberla como normal: recon 0.43→0.99, botnet 0.75→0.99); (3) el coste de
-atribución conocida es medible y acotado (−0.008 UNSW, −0.033 CIC, peor fold
-−0.132 botnet). Pareja con E9: "freshness compra discriminación, OE compra
-honestidad (y en saturado, detección); ninguno compra calibración".
-Pareja con E7: los vendors NO pueden hacer esto zero-shot; requiere el
-re-entrenamiento con cabezas tipadas que el paper propone.
+Lectura corregida (§25): (1) en UNSW la honestidad es ENSEÑABLE con
+labels retrasadas + OE bajo el contrato de calibración del paper (abst
+0.375→0.879; false-att 0.550→0.092; absorción 0.075→0.029); (2) en el régimen
+saturado de CIC el mismo recetario NO mueve la abstención del choice head
+(0.000→0.000) ni la absorción benigna (0.945→1.000), pero SÍ repara la
+detección del gate (0.783→0.969; recon 0.426→0.991; 7/7 folds), y el coste de
+atribución conocida es mixto (+0.039 de media, botnet −0.260). El antiguo
+"0.00→0.94" era artefacto del estimador sin de-tilt ω. Pareja con E9:
+"freshness compra discriminación; OE compra abstención donde la confianza
+aún informa (UNSW) y detección en el régimen saturado (CIC); ninguno compra
+calibración".
 Resultados: `results/e9b_oe/e9b_oe.{json,md}`, npz en `results/outputs_oe/`.
 
 ## 23. E7-var — varianza de llamadas vendor (N=5) ✅ Decision-1 (2026-10-23)
@@ -1046,3 +1053,60 @@ s43/s44): σ gate AUROC ≤0.0013 (UNSW/EMBER), **0.017–0.027 by-day CIC**
 0.9835±0.0013 EMPATA a VX 0.9834 (single seed dentro del rango MLP) →
 el E1 in-distribución es empate, no victoria; la ventaja por-day
 (0.711 vs 0.637±0.027) es ~3σ. Abstract/Tabla 1/§e1 actualizados.
+
+## 25. Corrección de estimador en E9b + inferencia pareada E1/E2 ✅ (2026-10-23)
+
+**Bug de estimador (crítico, corregido).** E9b evaluaba la abstención con
+`softmax(z/T)` (solo temperatura), mientras E2 y todas las tablas usan el
+contrato del engine `vx_calibrated` (temperatura **+ de-tilt ω**). Mismo
+checkpoint, números distintos: UNSW/dos daba 0.028 con el contrato y 0.710
+sin él. Se reescribió el evaluador (`scripts/e9b_oe_eval.py`, inglés, con
+`--selftest` que reproduce E2 al cuarto decimal) y se recalcularon **todas**
+las variantes (λ, ruido, CIC) bajo el contrato único:
+
+| bloque | métrica | ref | OE λ=0.5 |
+|---|---|---|---|
+| UNSW (9 folds) | abst@0.5 | 0.375 | **0.879** |
+| UNSW | normal absorption | 0.075 | 0.029 |
+| UNSW | known macro-F1 | 0.476 | 0.469 |
+| UNSW | gate AUROC | 0.967 | 0.965 |
+| CIC (7 folds) | abst@0.5 | 0.000 | 0.000 |
+| CIC | normal absorption | 0.945 | 1.000 |
+| CIC | known macro-F1 | 0.775 | **0.815** |
+| CIC | gate AUROC | 0.783 | **0.969** |
+
+λ ∈ {0.2,0.5,1.0} → abst UNSW 0.759/0.879/0.900; pool sintético 0.354.
+**El claim de CIC “0.000→0.94 abstención y absorción 94%→0%” era artefacto
+del estimador y se retira del paper.** El resultado honesto en CIC es de
+*detección*: el gate recupera la familia nueva (recon 0.426→0.991, botnet
+0.750→0.988, infiltration 0.533→0.812; 7/7 folds mejoran), la abstención
+del choice head no se mueve bajo el contrato, y el macro-F1 de clases
+conocidas sube +0.039 de media pero es mixto (botnet −0.260).
+Artefactos: `results/e9b_oe/e9b_oe_contract.json` (canónico),
+`e9b_oe_e2estimator.json` y `e9b_oe_cic_e2estimator.json` (histórico).
+
+**Inferencia pareada E1** (`scripts/e1_paired_stats.py`, `--selftest`
+reproduce la Tabla 1; `results/e1e3/paired_stats.json`): bootstrap de filas
+pareado B=300 (mismas filas para ambos modelos) + semillas 42/43/44.
+- UNSW: VX−MLP ΔAUROC +0.0013 [+0.0010,+0.0016]; ΔF1 +0.012
+  [+0.003,+0.023]; ΔECE −0.008; ΔBrier −0.015. A nivel de semilla VX
+  0.9837±0.0002 vs MLP 0.9835±0.0013 → **empate** (la ventaja por filas es
+  del orden del reentrenamiento).
+- CIC by-day: ΔAUROC +0.074 [+0.073,+0.075], ΔFPR@95 −0.427
+  [−0.429,−0.425]; semillas 0.734±0.022 vs 0.639±0.027 (Δ +0.095).
+- EMBER: VX gate 0.9965±0.0005 vs XGB 0.9981±0.0001 (Δ −0.0017) — pérdida
+  pequeña y consistente, reportada.
+- CIC strat: todas las diferencias en el cuarto decimal (sin headroom).
+
+**LOAO pareado por fold** (Wilcoxon signed-rank + Holm sobre 3 baselines):
+UNSW empate (VX vs MLP p=0.73; vs XGB p=0.16, Holm 0.49). CIC, excluyendo
+los folds degenerados (n=1, n=5): XGBoost gana 5/5 folds (Δ mediana −0.123,
+p exacta 0.0625) → **se reporta como pérdida**, no como empate.
+
+**Recuento de filas E7**: el run de varianza de Decision-1 usó 2,041 filas
+(10,205 llamadas), no 2,021/10,105 (el run principal sí usa 2,021).
+Corregido en §E7.
+
+**Paper**: abstract, Tabla 1, §E1, §E2 (sweep + LOAO), §E9b y apéndice
+actualizados; añadidas Proposición 5 (label shift es un vector) y el
+protocolo estadístico pre-declarado; cita CRC 2024 (ICLR).

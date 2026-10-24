@@ -1,0 +1,38 @@
+{
+  "artifact": "/vol/artifacts/unsw_small_oficial_loao_recon_oe0.5noise.pt",
+  "source": "unsw",
+  "scale": "small",
+  "split_scheme": "oficial",
+  "exclude": "recon",
+  "temperatures": {
+    "noul": 1.0638629267182327,
+    "score": 0.9243467321465935,
+    "choice": 1.0190350840242581
+  },
+  "m_val": 0.8320103635196467,
+  "best_epoch": 14,
+  "candidates": [
+    "normal",
+    "dos",
+    "exploitation",
+    "shellcode",
+    "backdoor",
+    "analysis",
+    "fuzzing",
+    "generic",
+    "worms"
+  ],
+  "omega": [
+    0.19538119435310364,
+    0.41751205921173096,
+    0.2530168294906616,
+    1.3736404180526733,
+    1.1065454483032227,
+    1.0338600873947144,
+    0.34287646412849426,
+    0.2311781346797943,
+    4.045989513397217
+  ],
+  "mode": "abstain",
+  "tau_abs": 0.5
+}
