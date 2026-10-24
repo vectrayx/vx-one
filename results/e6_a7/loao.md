@@ -2,7 +2,7 @@
 
 One-vs-normal detection on the excluded family (same folds, seed 42).
 Delta = A7 - typed; positive is better. Bootstrap intervals are
-descriptive (B=300); the fold-level sign test is the verdict.
+descriptive (B=300); unadjusted fold-level Wilcoxon p-values are descriptive too.
 
 | fold | AUROC a7 | AUROC typed | delta | 95% CI |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ descriptive (B=300); the fold-level sign test is the verdict.
 - median delta: -0.0012
 - mean delta: -0.0501 ± 0.1546
 - A7 better on 5/16 folds
-- exact Wilcoxon signed-rank p = 0.2522
+- unadjusted exact Wilcoxon signed-rank p = 0.2522 (descriptive)
 
 ### cic
 
@@ -39,7 +39,7 @@ descriptive (B=300); the fold-level sign test is the verdict.
 - median delta: -0.0252
 - mean delta: -0.1124 ± 0.2270
 - A7 better on 3/7 folds
-- exact Wilcoxon signed-rank p = 0.2969
+- unadjusted exact Wilcoxon signed-rank p = 0.2969 (descriptive)
 
 ### unsw
 
@@ -47,5 +47,5 @@ descriptive (B=300); the fold-level sign test is the verdict.
 - median delta: -0.0009
 - mean delta: -0.0016 ± 0.0107
 - A7 better on 2/9 folds
-- exact Wilcoxon signed-rank p = 0.3008
+- unadjusted exact Wilcoxon signed-rank p = 0.3008 (descriptive)
 

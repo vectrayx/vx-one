@@ -115,7 +115,7 @@ def write_report(res: dict, out_dir: Path) -> None:
         "",
         "One-vs-normal detection on the excluded family (same folds, seed 42).",
         "Delta = A7 - typed; positive is better. Bootstrap intervals are",
-        "descriptive (B=300); the fold-level sign test is the verdict.",
+        "descriptive (B=300); unadjusted fold-level Wilcoxon p-values are descriptive too.",
         "",
         "| fold | AUROC a7 | AUROC typed | delta | 95% CI |",
         "|---|---|---|---|---|",
@@ -136,7 +136,7 @@ def write_report(res: dict, out_dir: Path) -> None:
         lines.append(f"- mean delta: {s['delta_mean']:+.4f} ± {s['delta_sd']:.4f}")
         lines.append(f"- A7 better on {s['wins']}/{s['n_folds']} folds")
         if s.get("wilcoxon_p") is not None:
-            lines.append(f"- exact Wilcoxon signed-rank p = {s['wilcoxon_p']:.4f}")
+            lines.append(f"- unadjusted exact Wilcoxon signed-rank p = {s['wilcoxon_p']:.4f} (descriptive)")
         lines.append("")
     (out_dir / "loao.md").write_text("\n".join(lines) + "\n")
 

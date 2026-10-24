@@ -12,7 +12,7 @@ Metrics are the E9b ones, evaluated at tau=0.5 with the ``vx_calibrated``
 contract: abstention, false attribution, benign absorption, gate AUROC,
 known-class macro-F1, and the median max choice probability on excluded rows.
 Deltas are a7 - typed; the direction of "better" depends on the metric and is
-declared in ``DIRECTION``. The fold-level exact Wilcoxon is the verdict.
+declared in ``DIRECTION``. Unadjusted fold-level Wilcoxon p-values are descriptive, not verdicts.
 
 Usage
 -----
