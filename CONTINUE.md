@@ -159,17 +159,19 @@ enseñarla, no.
 ## Estado del paper
 
 - 14 páginas, 0 errores LaTeX, 0 citas rotas, abstract actualizado.
-- Todas las cifras del paper trazables a `results/` y `docs/EXPERIMENTS.md` §25.
+- Todas las cifras del paper trazables a `results/` y `docs/EXPERIMENTS.md`
+  §25--§27.
 - Paquete arXiv regenerado tras los cambios (5 archivos, ~906 KB).
 - `pytest -q`: **60 passed** (174 s).
 - Self-tests: `scripts/e9b_oe_eval.py --selftest` reproduce E2 al cuarto
-  decimal; `scripts/e1_paired_stats.py --selftest` reproduce la Tabla 1.
+  decimal; `scripts/e1_paired_stats.py --selftest` reproduce la Tabla 1;
+  `scripts/a7_loao_eval.py --selftest` y `scripts/a7_e9b_eval.py --selftest`
+  verifican el pareado.
 
 ## Pendiente antes de someter
 
-1. Commit/push del ciclo: `661b656` en `origin/master` (corrección E9b,
-   inferencia pareada, revisión adversarial). La ablación a7 se commitea en
-   el mismo ciclo tras regenerar PDF/zip.
+1. Commits/pushes del ciclo: `master` en `2ca8565` (a7, LOAO y OE) y
+   repo público en `3e44efa`; PDF/zip regenerados y tests en verde.
 2. Rellenar `\country{}` y `\acmConference{}` desde el portal ACM (no arXiv).
 3. Decidir si el resultado CIC de E9b (detección, no abstención) cambia el
    título/claim de portada: el abstract ya lo dice con precisión.
